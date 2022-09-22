@@ -1,12 +1,19 @@
 import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 
+enum UserRole {
+  User,
+  Admin,
+  Manager,
+}
+
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
       discriminator: string;
       accessToken: string;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 }

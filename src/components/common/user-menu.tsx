@@ -8,6 +8,7 @@ export const UserMenu = () => {
   const { data } = useSession();
   if (!data) return <></>;
   const { image, name } = data.user;
+
   return (
     <Menu as="div" className="relative ml-3 w-fit">
       <Menu.Button className="flex items-center rounded-xl px-2 py-1.5 transition-all duration-300 hover:bg-black/5">
