@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactElement, ReactNode, useMemo } from "react";
+import { UserRole } from "~/types/user";
 import { MainLayout } from "./main";
 
 type NavFieldType = {
@@ -79,7 +80,7 @@ export const SettingLayout = ({ children }: props) => {
   }, [pathname]);
 
   if (!data) return <></>;
-  const { image, name } = data.user;
+  const { image, name, role } = data.user;
 
   return (
     <MainLayout>
@@ -93,7 +94,10 @@ export const SettingLayout = ({ children }: props) => {
         />
         <div className="ml-4 flex flex-col">
           <div className="flex items-center gap-3 text-xl font-bold text-gray-700">
-            <div className="">{name}</div>
+            <div className="">
+              {name}
+              {role === UserRole.Admin ? " [소유자]" : ""}
+            </div>
             {/* <span className="mr-0.5 h-3 w-3 rotate-45 transform cursor-default border-t border-r border-gray-500" /> */}
             <div className="mb-1 font-normal text-gray-400">/</div>
             <div>{curPage?.name}</div>

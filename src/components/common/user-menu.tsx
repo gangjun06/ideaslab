@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { Transition } from "./transition";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const UserMenu = () => {
   const { data } = useSession();
@@ -29,16 +30,14 @@ export const UserMenu = () => {
             "border-[0.5px] border-gray-300 bg-gray-100 opacity-80"
           )}
         >
-          <Menu.Item>
-            <button
-              className={
-                "block w-full rounded-lg px-3.5 py-2 text-left font-light transition-colors duration-300 hover:bg-black hover:bg-opacity-5"
-              }
-              onClick={() => signOut()}
+          <Link href="/settings/profile">
+            <Menu.Item
+              as="a"
+              className="block w-full rounded-lg px-3.5 py-2 text-left font-light transition-colors duration-300 hover:bg-black hover:bg-opacity-5"
             >
-              프로필 설정
-            </button>
-          </Menu.Item>
+              설정
+            </Menu.Item>
+          </Link>
           <Menu.Item>
             <button
               className={

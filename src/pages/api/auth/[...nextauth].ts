@@ -1,11 +1,7 @@
 import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
-
-enum UserRole {
-  User,
-  Admin,
-  Manager,
-}
+import discord from "~/lib/discord";
+import { UserRole } from "~/types/user";
 
 declare module "next-auth" {
   interface Session {
@@ -48,8 +44,15 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token, user: _user }) {
+      console.log("Session Called");
+      const id = (token.sub as string) || "";
       session.user.accessToken = (token.accessToken as string) || "";
-      session.user.id = (token.sub as string) || "";
+      session.user.id = id;
+      const guild = discord.guilds.cache.get(process.env.SERVER_ID || "");
+      if (guild?.ownerId === id) {
+        session.user.role = UserRole.Admin;
+      } else {
+      }
       return session;
     },
 
