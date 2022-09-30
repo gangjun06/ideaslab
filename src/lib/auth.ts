@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { Middleware } from "next-connect";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { authOptions } from "~/pages/api/auth/[...nextauth]";
 import { DefaultRequest, DefaultResponse } from "types/api";
 import { UserRole } from "~/types/user";
 
