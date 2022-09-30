@@ -24,7 +24,7 @@ export const auth = (userRole: UserRole) => {
     if (!session || !session.user) return unauthorization();
     req.user = session.user;
 
-    if (userRole === UserRole.Admin) {
+    if (session.user.role === UserRole.Admin) {
       return next();
     }
 

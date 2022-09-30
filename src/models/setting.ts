@@ -9,7 +9,7 @@ export const getSetting = async (key: Keys) => {
 
   const result = await prisma.setting.findUnique({ where: { key } });
   getCache(Caches.Setting).set(key, result?.value);
-  return result?.value;
+  return result?.value || "";
 };
 
 export const setSetting = async (key: Keys, value: string) => {

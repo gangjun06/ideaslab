@@ -2,10 +2,17 @@ import { Listbox, Transition } from "@headlessui/react";
 import classNames from "classnames";
 import { forwardRef, Fragment, useCallback, useEffect, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { FormBlock, FormBlockProps, formBlockPropsRemover } from "./form";
+import {
+  FormBlock,
+  FormBlockProps,
+  formBlockPropsRemover,
+  FormFieldBuilder,
+} from "./form";
 import { Overwrite } from "~/types/utils";
+import { useFormContext } from "react-hook-form";
 
-type OptionType = { label: string; value: string | number | null };
+type Value = string | number | null;
+type OptionType = { label: string; value: Value };
 
 export interface SelectProps
   extends Overwrite<
@@ -13,6 +20,7 @@ export interface SelectProps
     FormBlockProps
   > {
   options: OptionType[];
+  value?: Value;
 }
 
 export const Select = forwardRef<HTMLDivElement, SelectProps>(
@@ -32,13 +40,22 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
     );
 
     return (
-      <Listbox as="div" value={selected} onChange={onSelect} {...otherProps}>
+      <Listbox
+        as="div"
+        value={props.value ?? selected}
+        name={name}
+        onChange={onSelect}
+        {...otherProps}
+      >
         {({ open }) => (
           <FormBlock {...props} customLabel={Listbox.Label}>
             <div ref={ref} className="relative">
               <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white border border-gray-300 shadow-sm py-2 pl-3 pr-10 text-left sm:text-sm">
                 <span className="block truncate">
-                  {options.find((o) => o.value === selected)?.label}
+                  {
+                    options.find((o) => o.value === (props.value ?? selected))
+                      ?.label
+                  }
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <ChevronDownIcon
@@ -104,3 +121,16 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 );
 
 Select.displayName = "components/Form/Select";
+
+export const SelectField = ({
+  name,
+  ...props
+}: Overwrite<SelectProps, { name: string }>) => {
+  return (
+    <>
+      <FormFieldBuilder name={name}>
+        {({ field, error }) => <Select {...props} {...field} error={error} />}
+      </FormFieldBuilder>
+    </>
+  );
+};

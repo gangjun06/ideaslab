@@ -81,6 +81,7 @@ interface HandlerOptions<
   options?: any;
   auth?: UserRole | null;
   query?: U;
+  skip?: boolean;
 }
 
 export const defaultHandlerOptions: HandlerOptions<any, any> = {
@@ -89,6 +90,27 @@ export const defaultHandlerOptions: HandlerOptions<any, any> = {
 };
 
 export const handler = <T extends parserSchemaType, U extends parserSchemaType>(
+  options?: HandlerOptions<T, U>
+) => {
+  let handler = nextConnect<
+    DefaultRequest<z.infer<T>, z.infer<U>>,
+    DefaultResponse
+  >(options?.options ?? defaultHandlerOptions.options);
+
+  if (options?.skip !== true) {
+    const middlewares = getMiddlewares(options);
+    if (middlewares.length) {
+      handler.use(...middlewares);
+    }
+  }
+
+  return handler;
+};
+
+export const getMiddlewares = <
+  T extends parserSchemaType,
+  U extends parserSchemaType
+>(
   options?: HandlerOptions<T, U>
 ) => {
   let {
@@ -102,14 +124,11 @@ export const handler = <T extends parserSchemaType, U extends parserSchemaType>(
     useAuth = defaultHandlerOptions.auth;
   }
 
-  let handler = nextConnect<
-    DefaultRequest<z.infer<T>, z.infer<U>>,
-    DefaultResponse
-  >(ncOptions);
+  const result = [];
 
-  if (useAuth) handler = handler.use(auth(useAuth));
-  if (query) handler = handler.use(parseQuery(query));
-  if (schema) handler = handler.use(parser(schema));
+  if (useAuth) result.push(auth(useAuth));
+  if (query) result.push(parseQuery(query));
+  if (schema) result.push(parser(schema));
 
-  return handler;
+  return result;
 };

@@ -2,13 +2,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Button } from "~/components/common";
-import { Form, Input, Select } from "~/components/form";
+import { Form, SelectField } from "~/components/form";
+import { useDiscordRoles } from "~/hooks/use-discord";
 import { SettingLayout } from "~/layouts";
 import { UserRole } from "~/types/user";
+import { ownerSettingValidator } from "../api/setting/owner.schema";
+import { SettingOwnerURL } from "../api/url";
 
 const OwnerSettingPage = () => {
   const { data, status } = useSession();
   const router = useRouter();
+  const { data: roles } = useDiscordRoles();
 
   useEffect(() => {
     const role = data?.user.role;
@@ -23,26 +27,28 @@ const OwnerSettingPage = () => {
 
   return (
     <SettingLayout>
-      <Form url=".">
-        {({ registerForm }) => (
+      <Form
+        url={SettingOwnerURL()}
+        schema={ownerSettingValidator}
+        getInitialValues
+      >
+        {({}) => (
           <>
-            <Input
-              label="Test"
-              {...registerForm("test", { required: true, customLabel: "Test" })}
-            />
-            <Select
-              label="Roles"
-              options={[
-                { label: "Role1", value: "Role1" },
-                { label: "Role2", value: "Role2" },
-                { label: "Role3", value: "Role3" },
-              ]}
-            />
-            <div className="flex flex-row-reverse">
-              <Button type="submit" primary>
-                저장하기
-              </Button>
-            </div>
+            {roles?.list ? (
+              <SelectField
+                name="managerRole"
+                label="관리자 역할"
+                options={roles.list.map(({ id, name }) => ({
+                  label: name,
+                  value: id,
+                }))}
+              />
+            ) : (
+              "로딩중"
+            )}
+            <Button type="submit" primary>
+              저장하기
+            </Button>
           </>
         )}
       </Form>

@@ -1,18 +1,33 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames";
-import { ReactElement, ReactNode, Ref, useCallback } from "react";
 import {
+  ComponentProps,
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  Ref,
+  useCallback,
+  useEffect,
+} from "react";
+import {
+  Controller,
   FieldPath,
   FieldValues,
+  FormProvider,
   RegisterOptions,
   SubmitHandler,
   useForm,
+  useFormContext,
   UseFormRegisterReturn,
   UseFormReturn,
 } from "react-hook-form";
 import { formatError } from "~/utils/form";
 import superjson from "superjson";
 import toast from "react-hot-toast";
+import { z } from "zod";
+import useSWR, { mutate } from "swr";
+import { fetcher } from "~/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface FormBlockProps {
   label?: string;
@@ -92,30 +107,47 @@ export declare type UseFormRegister<TFieldValues extends FieldValues> = <
   withAsterisk: boolean;
 };
 
-type FormProps<TFormValues extends FieldValues> = {
-  onSubmit?: SubmitHandler<TFormValues>;
+type FormProps<TSchema extends z.ZodType<any, any>> = {
+  onSubmit?: SubmitHandler<z.infer<TSchema>>;
   children: (
-    methods: UseFormReturn<TFormValues> & {
-      registerForm: UseFormRegister<TFormValues>;
+    methods: UseFormReturn<z.infer<TSchema>> & {
+      registerForm: UseFormRegister<z.infer<TSchema>>;
     }
   ) => React.ReactNode;
   url?: string;
   method?: string;
   onSuccess?: () => void;
+  schema?: TSchema;
+  getInitialValues?: boolean;
 };
 
-export const Form = <TFormValues extends FieldValues>({
+export const Form = <TSchema extends z.ZodType<any, any, any>>({
   onSubmit,
   children,
   method = "POST",
   url,
   onSuccess,
-}: FormProps<TFormValues>) => {
-  const methods = useForm<TFormValues>({ mode: "onChange" });
+  schema,
+  getInitialValues = false,
+}: FormProps<TSchema>) => {
+  const resultURL = getInitialValues ? url : null;
+
+  const { data, error } = useSWR(resultURL, fetcher);
+  const methods = useForm<z.infer<TSchema>>({
+    mode: "onChange",
+    resolver: schema ? zodResolver(schema) : undefined,
+    defaultValues: data,
+  });
+
+  useEffect(() => {
+    if (!error && data) {
+      methods.reset(data);
+    }
+  }, [error, data, methods]);
 
   const { errors } = methods.formState;
   const registerFormValue = useCallback(
-    (name: string, options: UseFormRegisterOption<TFormValues, any>) => {
+    (name: string, options: UseFormRegisterOption<z.infer<TSchema>, any>) => {
       return {
         error: formatError(errors, name as any, options.customLabel),
         withAsterisk: !!options.required,
@@ -124,31 +156,35 @@ export const Form = <TFormValues extends FieldValues>({
     [errors]
   );
 
-  const registerForm: UseFormRegister<TFormValues> = (name, options) => {
+  const registerForm: UseFormRegister<z.infer<TSchema>> = (name, options) => {
     return {
       ...methods.register(name, options),
       ...registerFormValue(name, options as any),
     };
   };
 
-  const onSubmitRequest = async (data: TFormValues) => {
+  const onSubmitRequest = async (data: z.infer<TSchema>) => {
+    let toastId;
+    if (typeof onSuccess !== "function")
+      toastId = toast.loading("요청을 전송 중입니다");
     try {
-      if (typeof onSuccess !== "function")
-        toast.loading("요청을 전송 중입니다");
-      await fetch(url!, {
+      const res = await fetch(url!, {
         headers: {
           "Content-Type": "application/json",
         },
         ...(data ? { body: superjson.stringify(data) } : {}),
         method,
       });
+      if (res.status > 210) throw new Error("Error");
+
       if (typeof onSuccess === "function") onSuccess();
       else {
-        toast.success("성공적으로 전송되었습니다.");
+        toast.success("성공적으로 전송되었습니다.", { id: toastId });
       }
       methods.reset({ ...data });
+      mutate({ ...data });
     } catch (e) {
-      toast.error("요청중 에러가 발생하였습니다.");
+      toast.error("요청중 에러가 발생하였습니다.", { id: toastId });
       console.error(e);
     }
   };
@@ -158,15 +194,51 @@ export const Form = <TFormValues extends FieldValues>({
   }
 
   return (
-    <form
-      onSubmit={
-        url
-          ? methods.handleSubmit(onSubmitRequest)
-          : methods.handleSubmit(onSubmit!)
-      }
-      className="flex flex-col gap-y-3"
-    >
-      {children({ ...methods, registerForm })}
-    </form>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={
+          url
+            ? methods.handleSubmit(onSubmitRequest)
+            : methods.handleSubmit(onSubmit!)
+        }
+        className="flex flex-col gap-y-3"
+      >
+        {!resultURL || data || error
+          ? children({ ...methods, registerForm })
+          : "Loading"}
+      </form>
+    </FormProvider>
+  );
+};
+
+export type ControllerRender = Parameters<
+  ComponentProps<typeof Controller>["render"]
+>[0];
+
+export type FormFieldProps<
+  T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>
+> = ComponentProps<T> & {
+  name: string;
+};
+
+interface FormFieldBuilderProps {
+  name: string;
+  children: (data: ControllerRender & { error?: string }) => ReactElement;
+}
+
+export const FormFieldBuilder = ({ name, children }: FormFieldBuilderProps) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  const error = formatError(errors, name);
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={(props) => <>{children({ ...props, error })}</>}
+    />
   );
 };
