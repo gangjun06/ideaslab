@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { forwardRef } from "react";
 import { Overwrite } from "~/types/utils";
 import { FormBlock, FormBlockProps, formBlockPropsRemover } from "./form";
@@ -16,7 +17,14 @@ export const Input = forwardRef<HTMLInputElement, TextFieldProps>(
 
     return (
       <FormBlock {...props} name={name}>
-        <input type={type} className={props.className} {...inputProps} />
+        <input
+          type={type}
+          className={classNames(
+            "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm",
+            props.className
+          )}
+          {...inputProps}
+        />
       </FormBlock>
     );
   }

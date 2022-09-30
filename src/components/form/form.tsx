@@ -33,7 +33,7 @@ export const FormBlock = ({
   children,
 }: FormBlockProps) => {
   return (
-    <div className={classNames(className)}>
+    <div className={classNames("w-56", className)}>
       {label && (
         <label
           htmlFor={name}
@@ -69,7 +69,7 @@ type UseFormRegisterOption<
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = RegisterOptions<TFieldValues, TFieldName> &
   Partial<{
-    customClass: string;
+    customLabel: string;
   }>;
 
 export declare type UseFormRegister<TFieldValues extends FieldValues> = <
@@ -107,7 +107,7 @@ export const Form = <TFormValues extends FieldValues>({
   const registerFormValue = useCallback(
     (name: string, options: UseFormRegisterOption<TFormValues, any>) => {
       return {
-        error: formatError(errors, name as any, options.customClass),
+        error: formatError(errors, name as any, options.customLabel),
         withAsterisk: !!options.required,
       };
     },
@@ -154,6 +154,7 @@ export const Form = <TFormValues extends FieldValues>({
           ? methods.handleSubmit(onSubmitRequest)
           : methods.handleSubmit(onSubmit!)
       }
+      className="flex flex-col gap-y-3"
     >
       {children({ ...methods, registerForm })}
     </form>

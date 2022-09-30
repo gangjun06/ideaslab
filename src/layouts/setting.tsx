@@ -87,59 +87,61 @@ export const SettingLayout = ({ children }: props) => {
 
   return (
     <MainLayout>
-      <div className="mb-4 flex items-center">
-        <Image
-          src={image || ""}
-          className="rounded-full"
-          alt="profile"
-          width={64}
-          height={64}
-        />
-        <div className="ml-4 flex flex-col">
-          <div className="flex items-center gap-3 text-xl font-bold text-gray-700">
-            <div className="">
-              {name}
-              {role === UserRole.Admin ? " [소유자]" : ""}
-            </div>
-            {/* <span className="mr-0.5 h-3 w-3 rotate-45 transform cursor-default border-t border-r border-gray-500" /> */}
-            <div className="mb-1 font-normal text-gray-400">/</div>
-            <div>{curPage?.name}</div>
-          </div>
-          <div className="text-gray-500">{curPage?.description}</div>
-        </div>
-      </div>
-      <div className="grid grid-flow-col gap-x-12">
-        <div className="col-span-3 flex flex-col gap-x-1 gap-y-2 tracking-wide">
-          {navList
-            .filter(
-              ({ adminOnly }) =>
-                !adminOnly ||
-                role === UserRole.Admin ||
-                role === UserRole.Manager
-            )
-            .map(({ title, fields }) => (
-              <div key={title}>
-                <div className="text-lg font-bold text-gray-600">{title}</div>
-                {fields.map(({ icon: Icon, name, url }) => (
-                  <Link href={url} passHref key={url}>
-                    <a
-                      className={`${
-                        pathname === url
-                          ? "bg-gray-200 font-bold"
-                          : "hover:bg-gray-100"
-                      } flex items-center gap-x-3 rounded-lg px-2 py-2`}
-                    >
-                      <div className="text-xl">
-                        <Icon width={20} height={20} />
-                      </div>
-                      <div>{name}</div>
-                    </a>
-                  </Link>
-                ))}
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-4 flex items-center">
+          <Image
+            src={image || ""}
+            className="rounded-full"
+            alt="profile"
+            width={64}
+            height={64}
+          />
+          <div className="ml-4 flex flex-col">
+            <div className="flex items-center gap-3 text-xl font-bold text-gray-700">
+              <div className="">
+                {name}
+                {role === UserRole.Admin ? " [소유자]" : ""}
               </div>
-            ))}
+              {/* <span className="mr-0.5 h-3 w-3 rotate-45 transform cursor-default border-t border-r border-gray-500" /> */}
+              <div className="mb-1 font-normal text-gray-400">/</div>
+              <div>{curPage?.name}</div>
+            </div>
+            <div className="text-gray-500">{curPage?.description}</div>
+          </div>
         </div>
-        <div className="col-span-9">{children}</div>
+        <div className="grid grid-flow-col gap-x-12">
+          <div className="col-span-3 flex flex-col gap-x-1 gap-y-2 tracking-wide">
+            {navList
+              .filter(
+                ({ adminOnly }) =>
+                  !adminOnly ||
+                  role === UserRole.Admin ||
+                  role === UserRole.Manager
+              )
+              .map(({ title, fields }) => (
+                <div key={title}>
+                  <div className="text-lg font-bold text-gray-600">{title}</div>
+                  {fields.map(({ icon: Icon, name, url }) => (
+                    <Link href={url} passHref key={url}>
+                      <a
+                        className={`${
+                          pathname === url
+                            ? "bg-gray-200 font-bold"
+                            : "hover:bg-gray-100"
+                        } flex items-center gap-x-3 rounded-lg px-2 py-2`}
+                      >
+                        <div className="text-xl">
+                          <Icon width={20} height={20} />
+                        </div>
+                        <div>{name}</div>
+                      </a>
+                    </Link>
+                  ))}
+                </div>
+              ))}
+          </div>
+          <div className="col-span-9">{children}</div>
+        </div>
       </div>
     </MainLayout>
   );

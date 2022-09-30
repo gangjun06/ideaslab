@@ -16,3 +16,17 @@ body,
   height: 100%;
   @apply bg-zinc-50;
 }
+
+.btn {
+  @apply transition-all duration-300;
+  @apply inline-flex items-center rounded-md border px-4 py-2 text-sm;
+  @apply font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+.btn.large {
+  @apply w-48 text-lg font-semibold;
+}
+
+.btn.small {
+  @apply py-1 px-3 text-sm;
+}

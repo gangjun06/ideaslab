@@ -1,6 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Button } from "~/components/common/Button";
+import { Form, Input } from "~/components/form";
 import { SettingLayout } from "~/layouts";
 import { UserRole } from "~/types/user";
 
@@ -21,19 +23,20 @@ const OwnerSettingPage = () => {
 
   return (
     <SettingLayout>
-      <div className="w-56">
-        <label
-          htmlFor="test"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Test
-        </label>
-        <input
-          type="text"
-          name="test"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-        />
-      </div>
+      <Form url=".">
+        {({ registerForm }) => (
+          <>
+            <Input
+              label="Test"
+              {...registerForm("test", { required: true, customLabel: "Test" })}
+            />
+            <Button type="submit" primary>
+              저장하기
+            </Button>
+            <Button type="submit">저장하기</Button>
+          </>
+        )}
+      </Form>
     </SettingLayout>
   );
 };
