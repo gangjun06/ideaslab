@@ -21,6 +21,7 @@ type NavFieldType = {
 type NavType = {
   title: string;
   fields: NavFieldType[];
+  adminOnly?: boolean;
 };
 
 const navList: NavType[] = [
@@ -43,6 +44,7 @@ const navList: NavType[] = [
   },
   {
     title: "서버 소유자 설정",
+    adminOnly: true,
     fields: [
       {
         url: "/settings/owner",
@@ -54,6 +56,7 @@ const navList: NavType[] = [
   },
   {
     title: "서버 관리자 설정",
+    adminOnly: true,
     fields: [
       {
         url: "/settings/manager",
@@ -71,7 +74,7 @@ export type props = {
 
 export const SettingLayout = ({ children }: props) => {
   const { pathname } = useRouter();
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   const curPage = useMemo(() => {
     return navList
@@ -79,7 +82,7 @@ export const SettingLayout = ({ children }: props) => {
       .find((item) => pathname === `${item.url}`);
   }, [pathname]);
 
-  if (!data) return <></>;
+  if (!data || status !== "authenticated") return <></>;
   const { image, name, role } = data.user;
 
   return (
@@ -107,27 +110,34 @@ export const SettingLayout = ({ children }: props) => {
       </div>
       <div className="grid grid-flow-col gap-x-12">
         <div className="col-span-3 flex flex-col gap-x-1 gap-y-2 tracking-wide">
-          {navList.map(({ title, fields }) => (
-            <div key={title}>
-              <div className="text-lg font-bold text-gray-600">{title}</div>
-              {fields.map(({ icon: Icon, name, url }) => (
-                <Link href={url} passHref key={url}>
-                  <a
-                    className={`${
-                      pathname === url
-                        ? "bg-gray-200 font-bold"
-                        : "hover:bg-gray-100"
-                    } flex items-center gap-x-3 rounded-lg px-2 py-2`}
-                  >
-                    <div className="text-xl">
-                      <Icon width={20} height={20} />
-                    </div>
-                    <div>{name}</div>
-                  </a>
-                </Link>
-              ))}
-            </div>
-          ))}
+          {navList
+            .filter(
+              ({ adminOnly }) =>
+                !adminOnly ||
+                role === UserRole.Admin ||
+                role === UserRole.Manager
+            )
+            .map(({ title, fields }) => (
+              <div key={title}>
+                <div className="text-lg font-bold text-gray-600">{title}</div>
+                {fields.map(({ icon: Icon, name, url }) => (
+                  <Link href={url} passHref key={url}>
+                    <a
+                      className={`${
+                        pathname === url
+                          ? "bg-gray-200 font-bold"
+                          : "hover:bg-gray-100"
+                      } flex items-center gap-x-3 rounded-lg px-2 py-2`}
+                    >
+                      <div className="text-xl">
+                        <Icon width={20} height={20} />
+                      </div>
+                      <div>{name}</div>
+                    </a>
+                  </Link>
+                ))}
+              </div>
+            ))}
         </div>
         <div className="col-span-9">{children}</div>
       </div>
