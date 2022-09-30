@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { signIn, useSession } from "next-auth/react";
 import { UserMenu } from "~/components/common";
 import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
 
 type props = {
   children: ReactNode;
@@ -40,6 +41,7 @@ export const MainLayout = ({ children }: props) => {
 
   return (
     <>
+      <Toaster />
       <nav className="px-4 py-3 shadow sticky bg-white">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <Link href="/" passHref>
