@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Button } from "~/components/common/Button";
-import { Form, Input } from "~/components/form";
+import { Button } from "~/components/common";
+import { Form, Input, Select } from "~/components/form";
 import { SettingLayout } from "~/layouts";
 import { UserRole } from "~/types/user";
 
@@ -30,10 +30,19 @@ const OwnerSettingPage = () => {
               label="Test"
               {...registerForm("test", { required: true, customLabel: "Test" })}
             />
-            <Button type="submit" primary>
-              저장하기
-            </Button>
-            <Button type="submit">저장하기</Button>
+            <Select
+              label="Roles"
+              options={[
+                { label: "Role1", value: "Role1" },
+                { label: "Role2", value: "Role2" },
+                { label: "Role3", value: "Role3" },
+              ]}
+            />
+            <div className="flex flex-row-reverse">
+              <Button type="submit" primary>
+                저장하기
+              </Button>
+            </div>
           </>
         )}
       </Form>

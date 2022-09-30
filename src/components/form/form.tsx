@@ -1,6 +1,6 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames";
-import { ReactNode, useCallback } from "react";
+import { ReactElement, ReactNode, Ref, useCallback } from "react";
 import {
   FieldPath,
   FieldValues,
@@ -22,9 +22,11 @@ export interface FormBlockProps {
   name?: string;
   error?: string;
   children?: ReactNode;
+  customLabel?: any;
 }
 export const FormBlock = ({
   label,
+  customLabel: CustomLabel,
   description,
   withAsterisk,
   name,
@@ -34,14 +36,22 @@ export const FormBlock = ({
 }: FormBlockProps) => {
   return (
     <div className={classNames("w-56", className)}>
-      {label && (
-        <label
-          htmlFor={name}
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          {label}
-        </label>
-      )}
+      {label &&
+        (CustomLabel ? (
+          <CustomLabel
+            htmlFor={name}
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            {label}
+          </CustomLabel>
+        ) : (
+          <label
+            htmlFor={name}
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            {label}
+          </label>
+        ))}
       {children}
       {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
     </div>
