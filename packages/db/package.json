@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "TIMING=1 eslint \"src/**/*.ts\"",
-    "dev": "tsup --watch",
+    "dev": "tsup --watch src/*",
     "format": "prisma format",
     "studio": "prisma studio",
     "db:migrate:deploy": "prisma migrate deploy",

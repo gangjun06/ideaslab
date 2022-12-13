@@ -1,0 +1,34 @@
+{
+  "name": "@ideaslab/server",
+  "version": "1.0.0",
+  "license": "AGPL",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "yarn build && node .",
+    "start:node": "node .",
+    "dev": "nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src",
+    "register": "nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
+    "generate": "prisma generate",
+    "build": "tsc && tsc-alias",
+    "lint": "TIMING=1 eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@trpc/server": "^10.5.0",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "module-alias": "^2.2.2",
+    "superjson": "^1.12.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@ideaslab/eslint-config": "*",
+    "@types/node": "^18.11.14",
+    "@types/uuid": "^9.0.0",
+    "nodemon": "^2.0.20",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.2",
+    "tsconfig-paths": "^4.1.1",
+    "typescript": "^4.9.4"
+  }
+}
