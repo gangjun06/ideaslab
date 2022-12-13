@@ -1,0 +1,64 @@
+datasource db {
+        url      = env("DATABASE_URL")
+        provider = "postgresql"
+}
+
+generator client {
+        provider = "prisma-client-js"
+}
+
+model User {
+        discordId   String  @id
+        displayName String?
+        posts       Post[]
+
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+        Like      Like[]
+}
+
+model Category {
+        id             Int    @id
+        name           String
+        discordChannel String
+        Posts          Post[]
+        defaultOrder   Int    @default(0)
+
+        createdAt DateTime @default(now())
+        updateAt  DateTime @updatedAt
+}
+
+model Tag {
+        id    Int    @id
+        name  String @unique
+        posts Post[]
+
+        createdAt DateTime @default(now())
+}
+
+model Post {
+        id          Int      @id @default(autoincrement())
+        name        String
+        attachments String[]
+        title       String
+        content     String
+        color       String?
+        category    Category @relation(fields: [categoryId], references: [id])
+        categoryId  Int
+        channelId   String
+        author      User     @relation(fields: [authorId], references: [discordId])
+        authorId    String
+        tags        Tag[]
+
+        createdAt DateTime @default(now())
+        updateAt  DateTime @updatedAt
+        Like      Like[]
+}
+
+model Like {
+        id     Int    @id @default(autoincrement())
+        user   User   @relation(fields: [userId], references: [discordId])
+        userId String
+        post   Post   @relation(fields: [postId], references: [id])
+        postId Int
+}

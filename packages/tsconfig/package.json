@@ -1,0 +1,6 @@
+{
+  "name": "@ideaslab/tsconfig",
+  "files": [
+    "tsconfig.json"
+  ]
+}
