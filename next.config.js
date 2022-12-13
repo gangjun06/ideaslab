@@ -7,14 +7,7 @@ const nextConfig = {
   },
   pageExtensions: ["page.tsx", "api.ts", "ts"],
   experimental: {
-    swcPlugins: [
-      [
-        "next-superjson-plugin",
-        {
-          excluded: [],
-        },
-      ],
-    ],
+    swcPlugins: [["next-superjson-plugin", {}]],
   },
 };
 

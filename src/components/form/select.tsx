@@ -1,6 +1,6 @@
 import { Listbox, Transition } from "@headlessui/react";
 import classNames from "classnames";
-import { forwardRef, Fragment, useCallback, useEffect, useState } from "react";
+import { forwardRef, Fragment, useCallback, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import {
   FormBlock,
@@ -9,7 +9,6 @@ import {
   FormFieldBuilder,
 } from "./form";
 import { Overwrite } from "~/types/utils";
-import { useFormContext } from "react-hook-form";
 
 type Value = string | number | null;
 type OptionType = { label: string; value: Value };
@@ -21,6 +20,7 @@ export interface SelectProps
   > {
   options: OptionType[];
   value?: Value;
+  disabled?: boolean;
 }
 
 export const Select = forwardRef<HTMLDivElement, SelectProps>(

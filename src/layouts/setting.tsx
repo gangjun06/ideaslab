@@ -59,9 +59,9 @@ const navList: NavType[] = [
     adminOnly: true,
     fields: [
       {
-        url: "/settings/manager",
-        name: "기본 설정",
-        description: "각종 권한에 관해 설정합니다",
+        url: "/settings/manager/category",
+        name: "갤러리 카테고리",
+        description: "갤러리의 카테고리 및 채널을 설정합니다.",
         icon: RectangleStackIcon,
       },
     ],

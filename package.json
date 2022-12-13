@@ -22,6 +22,7 @@
     "next-superjson-plugin": "^0.4.2",
     "node-cache": "^5.1.2",
     "react": "18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.36.1",
     "react-hot-toast": "^2.4.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",
+    "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.12",
     "eslint": "8.23.1",
