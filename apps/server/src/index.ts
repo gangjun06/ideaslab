@@ -7,6 +7,7 @@ import BotClient from './bot/client'
 import { exit } from 'process'
 import { createHTTPServer } from '@trpc/server/adapters/standalone'
 import { appRouter } from './router/_app'
+import { createContext } from './api/context'
 
 const logger = new Logger('main')
 
@@ -30,8 +31,6 @@ if (process.argv.includes('--register')) {
 
   createHTTPServer({
     router: appRouter,
-    createContext() {
-      return {}
-    },
+    createContext,
   }).listen(2022)
 }
