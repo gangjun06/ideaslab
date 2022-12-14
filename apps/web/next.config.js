@@ -3,12 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["cdn.discordapp.com"],
+    domains: ['cdn.discordapp.com'],
   },
-  pageExtensions: ["page.tsx", "api.ts", "ts"],
+  // pageExtensions: ["page.tsx", "api.ts", "ts"],
   experimental: {
-    swcPlugins: [["next-superjson-plugin", {}]],
+    swcPlugins: [['next-superjson-plugin', {}]],
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
