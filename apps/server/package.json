@@ -2,7 +2,10 @@
   "name": "@ideaslab/server",
   "version": "1.0.0",
   "license": "AGPL",
-  "main": "build/index.js",
+  "main": "dist/index.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "start": "yarn build && node .",
     "start:node": "node .",
@@ -25,6 +28,7 @@
   },
   "devDependencies": {
     "@ideaslab/eslint-config": "*",
+    "@ideaslab/validator": "*",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^18.11.15",
     "@types/uuid": "^9.0.0",

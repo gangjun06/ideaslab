@@ -7,18 +7,36 @@ import MainImage from '~/assets/main-image.svg'
 import Typed from 'react-typed'
 import { TabSelect } from '~/components/common/tab-select'
 import { useCallback, useState } from 'react'
-import dynamic from 'next/dynamic'
 import { PinInput } from '~/components/common/pin-input'
 import { ButtonLink } from '~/components/common'
-
-const ReactCodeInput = dynamic(import('react-code-input'))
+import { toast } from 'react-hot-toast'
 
 const LoginPage: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0)
+  const [toastId, setToastId] = useState<string>('')
 
-  const onEnterAll = useCallback((pin: string) => {
-    console.log(pin)
-  }, [])
+  const loginWithPinMutation = trpc.auth.loginWithPin.useMutation({
+    onMutate: () => {
+      toast.loading('요청 중...', { id: 'mutation' })
+    },
+    onError: () => {
+      toast.error('요청 중 에러가 발생하였어요', { id: 'mutation' })
+    },
+    onSuccess: ({ token }) => {
+      if (!token) {
+        toast.error('잘못된 핀 번호에요', { id: 'mutation' })
+        return
+      }
+      toast.success('성공적으로 토큰이 발급되었어요', { id: 'mutation' })
+    },
+  })
+
+  const onEnterAll = useCallback(
+    (pin: string) => {
+      loginWithPinMutation.mutate({ pin })
+    },
+    [loginWithPinMutation],
+  )
 
   return (
     <MainLayout title="로그인" showTitle tinyContainer>
@@ -55,7 +73,7 @@ const LoginPage: NextPage = () => {
             </div>
             <a
               rel="noopener noreferrer"
-              href={process.env.DISCORD_INVITE_URL}
+              href={process.env.NEXT_PUBLIC_DISCORD_INVITE_URL}
               className="px-8 py-3 text-lg font-semibold rounded bg-primary-600 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
             >
               가입하기

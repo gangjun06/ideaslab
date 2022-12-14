@@ -1,14 +1,10 @@
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
-import { AppRouter } from '../../../server/src/api/trpc'
+import type { AppRouter } from '../../../server/src/router/_app'
 import superjson from 'superjson'
 
 function getBaseUrl() {
-  if (typeof window !== 'undefined') {
-    return ''
-  }
-
-  return `${process.env.BACKEND_URL}`
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL}`
 }
 
 export const trpc = createTRPCNext<AppRouter>({
@@ -19,7 +15,7 @@ export const trpc = createTRPCNext<AppRouter>({
         transformer: superjson, // optional - adds superjson serialization
         links: [
           httpBatchLink({
-            url: '/api/trpc',
+            url: getBaseUrl(),
           }),
         ],
       }
@@ -29,7 +25,7 @@ export const trpc = createTRPCNext<AppRouter>({
       links: [
         httpBatchLink({
           // The server needs to know your app's full url
-          url: `${getBaseUrl()}/api/trpc`,
+          url: `${getBaseUrl()}`,
           /**
            * Set custom request headers on every request from tRPC
            * @link https://trpc.io/docs/v10/header
@@ -52,5 +48,5 @@ export const trpc = createTRPCNext<AppRouter>({
       ],
     }
   },
-  ssr: true,
+  ssr: false,
 })

@@ -4,7 +4,8 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "ES2021"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -28,9 +29,14 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
   ],
   "exclude": [
     "node_modules"
+  ],
+  "references": [
+    {
+      "path": "../server"
+    }
   ]
 }

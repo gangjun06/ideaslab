@@ -3,11 +3,12 @@ import 'module-alias/register'
 import { Logger } from '~/utils/logger'
 import config from './config'
 
+import http from 'http'
 import BotClient from './bot/client'
 import { exit } from 'process'
-import { createHTTPServer } from '@trpc/server/adapters/standalone'
-import { appRouter } from './router/_app'
+import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 import { createContext } from './api/context'
+import { appRouter } from './router/_app'
 
 const logger = new Logger('main')
 
@@ -29,8 +30,29 @@ if (process.argv.includes('--register')) {
 
   logger.info('Create HTTPS Server')
 
-  createHTTPServer({
+  const trpcHandler = createHTTPHandler({
     router: appRouter,
     createContext,
-  }).listen(2022)
+  })
+
+  http
+    .createServer((req, res) => {
+      // act on the req/res objects
+
+      // enable CORS
+      res.setHeader('Access-Control-Allow-Origin', '*')
+      res.setHeader('Access-Control-Request-Method', '*')
+      res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET')
+      res.setHeader('Access-Control-Allow-Headers', '*')
+
+      // accepts OPTIONS
+      if (req.method === 'OPTIONS') {
+        res.writeHead(200)
+        return res.end()
+      }
+
+      // then we can pass the req/res to the tRPC handler
+      trpcHandler(req, res)
+    })
+    .listen(2022)
 }

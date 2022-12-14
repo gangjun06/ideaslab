@@ -1,7 +1,7 @@
 {
 	"extends": "@ideaslab/tsconfig/node16.json",
 	"include": [
-		"**/*.ts",
+		"src/**/*.ts",
 	],
 	"exclude": [
 		"node_modules",
@@ -9,6 +9,7 @@
 	],
 	"compilerOptions": {
 		"outDir": "dist",
+		"composite": true,
 		"baseUrl": "src",
 		"paths": {
 			"~/*": [
