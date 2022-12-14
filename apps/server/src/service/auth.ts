@@ -14,17 +14,6 @@ const randomNumber = (length: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-const randomAlphabet = (length: number) => {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  let result = ''
-
-  for (let i = 0; i < length; i++) {
-    result += alphabet[Math.floor(Math.random() * alphabet.length)]
-  }
-
-  return result
-}
-
 const createAuthToken = (userId: string, isAdmin: boolean) => {
   const token = jwt.sign({ isAdmin }, config.jwtSecret, {
     issuer: 'ideaslab',
@@ -36,7 +25,7 @@ const createAuthToken = (userId: string, isAdmin: boolean) => {
 }
 
 const generatePin = async (): Promise<string> => {
-  const pin = `${randomNumber(6)}${randomAlphabet(1)}`
+  const pin = `${randomNumber(6)}`
 
   if ((await redis.get(redisLoginPinKey(pin))) !== null) {
     const newPin = generatePin()

@@ -166,11 +166,13 @@ __metadata:
     eslint-config-next: 12.3.1
     jotai: ^1.11.2
     next: 12.3.1
+    next-seo: ^5.15.0
     next-superjson-plugin: ^0.4.2
     postcss: ^8.4.16
     prisma: 4.1.0
     react: 18.2.0
     react-beautiful-dnd: ^13.1.1
+    react-code-input: ^3.10.1
     react-dom: 18.2.0
     react-hook-form: ^7.36.1
     react-hot-toast: ^2.4.0
@@ -1017,7 +1019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.3.2":
+"classnames@npm:^2.2.5, classnames@npm:^2.3.2":
   version: 2.3.2
   resolution: "classnames@npm:2.3.2"
   checksum: 2c62199789618d95545c872787137262e741f9db13328e216b093eea91c85ef2bfb152c1f9e63027204e2559a006a92eb74147d46c800a9f96297ae1d9f96f4e
@@ -2722,6 +2724,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-seo@npm:^5.15.0":
+  version: 5.15.0
+  resolution: "next-seo@npm:5.15.0"
+  peerDependencies:
+    next: ^8.1.1-canary.54 || >=9.0.0
+    react: ">=16.0.0"
+    react-dom: ">=16.0.0"
+  checksum: 05b0769d9c9abcc6a0179e5d724e87b1a3a7591a9c2caa4ef5b791769fcf868cb97fbcd90264106101cf7fbc073b0375ab90026aa519d2e899fbabea12cafbfb
+  languageName: node
+  linkType: hard
+
 "next-superjson-plugin@npm:^0.4.2":
   version: 0.4.2
   resolution: "next-superjson-plugin@npm:0.4.2"
@@ -3200,7 +3213,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.0, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -3257,6 +3270,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-code-input@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "react-code-input@npm:3.10.1"
+  dependencies:
+    classnames: ^2.2.5
+    react: ^16.3.2
+    react-dom: ^16.3.2
+  peerDependencies:
+    react: ^15.5.4 ||^16.2.0 || ^17.0.0
+    react-dom: ^15.5.4 ||^16.2.0 || ^17.0.0
+  checksum: 8cca36dd58965a869971ea6fd5ae3f9bdabf955e1f9ea714177dd5f50687f303e64d69f212447ed058b83326c0bc05c767a97162ce63cd9823802e51472e0116
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
@@ -3266,6 +3293,20 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+  languageName: node
+  linkType: hard
+
+"react-dom@npm:^16.3.2":
+  version: 16.14.0
+  resolution: "react-dom@npm:16.14.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+    scheduler: ^0.19.1
+  peerDependencies:
+    react: ^16.14.0
+  checksum: 5a5c49da0f106b2655a69f96c622c347febcd10532db391c262b26aec225b235357d9da1834103457683482ab1b229af7a50f6927a6b70e53150275e31785544
   languageName: node
   linkType: hard
 
@@ -3353,6 +3394,17 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
+  languageName: node
+  linkType: hard
+
+"react@npm:^16.3.2":
+  version: 16.14.0
+  resolution: "react@npm:16.14.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+  checksum: 8484f3ecb13414526f2a7412190575fc134da785c02695eb92bb6028c930bfe1c238d7be2a125088fec663cc7cda0a3623373c46807cf2c281f49c34b79881ac
   languageName: node
   linkType: hard
 
@@ -3532,6 +3584,16 @@ __metadata:
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
   checksum: cab8f25ae6f1434abee8d80023d7e72b598cf1327164ddab31003c51215526801e40b66c5e65d658a0af1e9d6478cadcb4c745f4bd6751f97d8644786c0978b0
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.19.1":
+  version: 0.19.1
+  resolution: "scheduler@npm:0.19.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 73e185a59e2ff5aa3609f5b9cb97ddd376f89e1610579d29939d952411ca6eb7a24907a4ea4556569dacb931467a1a4a56d94fe809ef713aa76748642cd96a6c
   languageName: node
   linkType: hard
 
