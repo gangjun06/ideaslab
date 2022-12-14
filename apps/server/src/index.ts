@@ -5,6 +5,8 @@ import config from './config'
 
 import BotClient from './bot/client'
 import { exit } from 'process'
+import { createHTTPServer } from '@trpc/server/adapters/standalone'
+import { appRouter } from './router/_app'
 
 const logger = new Logger('main')
 
@@ -23,4 +25,13 @@ if (process.argv.includes('--register')) {
   process.stdin.resume()
 } else {
   client.start(config.botToken)
+
+  logger.info('Create HTTPS Server')
+
+  createHTTPServer({
+    router: appRouter,
+    createContext() {
+      return {}
+    },
+  }).listen(2022)
 }
