@@ -2,7 +2,7 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken'
 import config from '~/config'
 import { redis } from '~/lib/redis'
 
-const loginTokenExpire = 60 * 10 // 10 minutes
+const loginTokenExpire = 60 * 30 // 10 minutes
 const authTokenExpire = 60 * 60 * 24 * 30 // 30 days
 
 const redisLoginPinKey = (pin: string) => `${config.redisPrefix}loginPin:${pin}`

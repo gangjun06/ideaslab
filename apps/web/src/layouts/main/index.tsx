@@ -1,18 +1,15 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import Link from 'next/link'
 import classNames from 'classnames'
-import { Button, ButtonLink, UserMenu } from '~/components/common'
+import { Button, ButtonLink } from '~/components/common'
 import { useRouter } from 'next/router'
 import { Toaster } from 'react-hot-toast'
-import { useTheme } from '~/hooks/useTheme'
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 import { Navbar } from './navbar'
 import { Footer } from './footer'
-import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import { parseJWT } from '~/utils'
 import Image from 'next/image'
 import { useLoadUserData } from '~/hooks/useAuth'
+import Link from 'next/link'
 
 type props = {
   children: ReactNode
@@ -20,6 +17,7 @@ type props = {
   description?: string
   showTitle?: boolean
   tinyContainer?: boolean
+  guard?: 'default' | 'authOnly' | 'guestOnly' | 'unverifyOnly'
 }
 
 type JWTToken = {
@@ -34,15 +32,17 @@ export const MainLayout = ({
   showTitle = false,
   tinyContainer = false,
   description,
+  guard = 'default',
 }: props) => {
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
-  const { setToken } = useLoadUserData()
+  const { setToken, token: storageToken, profile } = useLoadUserData()
+  // const {} = trpc.auth.
 
   useEffect(() => {
     const { token } = router.query
-    if (typeof token === 'string' && token === null) {
+    if (typeof token === 'string' && storageToken === null) {
       const parsed = parseJWT<{ name: string; avatar: string; isAdmin: boolean }>(token)
       if (!parsed) return
 
@@ -52,7 +52,7 @@ export const MainLayout = ({
 
       setAuthConfirm({ ...parsed, token })
     }
-  }, [router.query])
+  }, [router.query, storageToken])
 
   const displayTitle = useMemo(() => {
     if (title === '') return '아이디어스랩'
@@ -62,11 +62,57 @@ export const MainLayout = ({
   const login = useCallback(async () => {
     if (authConfirm?.token) setToken(authConfirm?.token)
     if (router.pathname === '/login') router.push('/')
-    else location.reload()
-  }, [authConfirm?.token, setToken])
+    location.reload()
+  }, [authConfirm?.token, router, setToken])
+
+  useEffect(() => {
+    if (guard === 'guestOnly' && profile.data) router.push('/')
+  }, [guard, profile.data, router])
 
   const content = useMemo(() => {
     if (!authConfirm) {
+      if (guard === 'authOnly' && !profile.data) {
+        return (
+          <>
+            {showTitle && (
+              <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>
+                {title}
+              </h1>
+            )}
+            <div className="flex justify-center items-center flex-col card px-16 py-12">
+              <div className="font-bold text-lg mt-2">
+                현재 페이지는 로그인된 사용자만 이용할 수 있어요
+              </div>
+              <Link href="/login" passHref>
+                <ButtonLink variant="light" className="mt-4">
+                  로그인하기
+                </ButtonLink>
+              </Link>
+            </div>
+          </>
+        )
+      }
+      if (guard === 'authOnly' && !profile.data?.isVerified) {
+        return (
+          <>
+            {showTitle && (
+              <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>
+                {title}
+              </h1>
+            )}
+            <div className="flex justify-center items-center flex-col card px-16 py-12">
+              <div className="font-bold text-lg mt-2">
+                아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요
+              </div>
+              <Link href="/signup" passHref>
+                <ButtonLink variant="light" className="mt-4">
+                  회원가입하기
+                </ButtonLink>
+              </Link>
+            </div>
+          </>
+        )
+      }
       return (
         <>
           {showTitle && (
@@ -99,7 +145,7 @@ export const MainLayout = ({
         </div>
       </>
     )
-  }, [authConfirm, children, login, showTitle, title, tokenExpired])
+  }, [authConfirm, children, guard, login, profile.data, showTitle, title, tokenExpired])
 
   return (
     <>
@@ -107,12 +153,9 @@ export const MainLayout = ({
       <Toaster />
       <Navbar />
       <div
-        className={classNames(
-          'container mx-auto pt-4 py-4 h-full px-4',
-          tinyContainer && 'max-w-4xl',
-        )}
+        className={classNames('container mx-auto pt-4 py-4 px-4', tinyContainer && 'max-w-4xl')}
         style={{
-          height: 'calc(100% - 64px)',
+          minHeight: 'calc(100% - 64px)',
         }}
       >
         {content}

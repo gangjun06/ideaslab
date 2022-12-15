@@ -30,7 +30,7 @@ const LoginPage: NextPage = () => {
       }
       toast.success('성공적으로 로그인 되었어요.', { id: 'mutation' })
       setToken(token)
-      router.push('/')
+      location.reload()
     },
   })
 
@@ -42,7 +42,7 @@ const LoginPage: NextPage = () => {
   )
 
   return (
-    <MainLayout title="로그인" showTitle tinyContainer>
+    <MainLayout title="로그인" showTitle tinyContainer guard="guestOnly">
       <TabSelect
         list={[
           { label: '아이디어스랩 맴버', value: 0 },

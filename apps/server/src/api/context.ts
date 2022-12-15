@@ -15,6 +15,8 @@ export async function createContext({
 
       const user = verifyAuthToken(req.headers.authorization.split(' ')[1])
       if (!user) return 'invalid'
+      //@ts-ignore
+      if (user.avatar) return 'invalid'
       return { ...user }
     }
     return null
