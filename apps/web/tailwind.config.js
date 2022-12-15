@@ -11,6 +11,18 @@ module.exports = {
       },
       colors: {
         primary: colors.emerald,
+        // primary: {
+        //   50: '#eef7f0',
+        //   100: '#cbe7d1',
+        //   200: '#a8d6b2',
+        //   300: '#86c693',
+        //   400: '#63b674',
+        //   500: '#499c5a',
+        //   600: '#397946',
+        //   700: '#295732',
+        //   800: '#18341e',
+        //   900: '#08110a',
+        // },
       },
       // backgroundColor: {
       //   light: colors.zinc['50'],

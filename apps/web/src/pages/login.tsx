@@ -3,17 +3,18 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { trpc } from '~/lib/trpc'
 import { MainLayout } from '../layouts'
-import MainImage from '~/assets/main-image.svg'
-import Typed from 'react-typed'
 import { TabSelect } from '~/components/common/tab-select'
 import { useCallback, useState } from 'react'
 import { PinInput } from '~/components/common/pin-input'
-import { ButtonLink } from '~/components/common'
 import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
+import { tokenAtom } from '~/hooks/useAuth'
+import { useAtom } from 'jotai'
 
 const LoginPage: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0)
-  const [toastId, setToastId] = useState<string>('')
+  const [token, setToken] = useAtom(tokenAtom)
+  const router = useRouter()
 
   const loginWithPinMutation = trpc.auth.loginWithPin.useMutation({
     onMutate: () => {
@@ -27,7 +28,9 @@ const LoginPage: NextPage = () => {
         toast.error('잘못된 핀 번호에요', { id: 'mutation' })
         return
       }
-      toast.success('성공적으로 토큰이 발급되었어요', { id: 'mutation' })
+      toast.success('성공적으로 로그인 되었어요.', { id: 'mutation' })
+      setToken(token)
+      router.push('/')
     },
   })
 

@@ -6,9 +6,6 @@ const nextConfig = {
     domains: ['cdn.discordapp.com'],
   },
   // pageExtensions: ["page.tsx", "api.ts", "ts"],
-  experimental: {
-    swcPlugins: [['next-superjson-plugin', {}]],
-  },
 }
 
 module.exports = nextConfig

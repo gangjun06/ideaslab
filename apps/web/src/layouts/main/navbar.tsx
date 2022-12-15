@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useTheme } from '~/hooks/useTheme'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 import dynamic from 'next/dynamic'
+import { useUser } from '~/hooks/useAuth'
 
 const ThemeChanger = dynamic(import('./theme').then((d) => d.ThemeChanger))
 
@@ -19,6 +20,7 @@ const NavItem = ({ name, href, isActive }: { name: string; href: string; isActiv
 export const Navbar = () => {
   const { pathname } = useRouter()
   const session = {} as any
+  const profile = useUser()
 
   return (
     <nav className="h-16 shadow sticky bg-white dark:bg-gray-800 flex items-center">
@@ -32,7 +34,7 @@ export const Navbar = () => {
           <NavItem name="갤러리" href="/gallery" isActive={pathname.startsWith('/gallery')} />
         </div>
         <div className="flex gap-x-2 items-center">
-          {session.data ? (
+          {profile && typeof profile === 'object' ? (
             <UserMenu />
           ) : (
             <Link href="/login" passHref>

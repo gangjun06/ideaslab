@@ -72,5 +72,5 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .card {
-  @apply border shadow-sm rounded dark:bg-zinc-700/50 border-base-color dark:text-gray-300 bg-white;
+  @apply border shadow-sm rounded dark:bg-gray-700/50 border-base-color dark:text-gray-300 bg-white;
 }

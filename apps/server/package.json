@@ -27,6 +27,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@ideaslab/db": "*",
     "@ideaslab/eslint-config": "*",
     "@ideaslab/validator": "*",
     "@types/jsonwebtoken": "^8.5.9",

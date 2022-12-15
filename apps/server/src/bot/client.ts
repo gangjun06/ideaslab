@@ -18,6 +18,8 @@ import { SlashCommand } from './command'
 
 const logger = new Logger('bot')
 
+export let client: BotClient
+
 export default class BotClient extends Client {
   //   public readonly VERSION: string
   //   public readonly BUILD_NUMBER: string
@@ -58,4 +60,25 @@ export default class BotClient extends Client {
     //         status: 'online',
     //       })
   }
+}
+
+export const initClient = async () => {
+  client = new BotClient()
+}
+
+export const currentGuild = async () => {
+  const cached = client.guilds.cache.get(config.guildId)
+  if (!cached) {
+    return client.guilds.fetch(config.guildId)
+  }
+  return cached
+}
+
+export const currentGuildMember = async (memberId: string) => {
+  const guild = await currentGuild()
+  const cached = guild.members.cache.get(memberId)
+  if (!cached) {
+    return guild.members.fetch(memberId)
+  }
+  return cached
 }

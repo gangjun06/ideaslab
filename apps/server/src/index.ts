@@ -4,7 +4,7 @@ import { Logger } from '~/utils/logger'
 import config from './config'
 
 import http from 'http'
-import BotClient from './bot/client'
+import BotClient, { client, initClient } from './bot/client'
 import { exit } from 'process'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 import { createContext } from './api/context'
@@ -17,7 +17,7 @@ logger.log('Starting up...')
 process.on('uncaughtException', (e) => logger.error(e.stack as string))
 process.on('unhandledRejection', (e: Error) => logger.error(e.stack as string))
 
-const client = new BotClient()
+initClient()
 
 if (process.argv.includes('--register')) {
   logger.info('Registering slash commands...')

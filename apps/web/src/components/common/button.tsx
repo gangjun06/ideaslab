@@ -23,9 +23,9 @@ export const btnClassNames = (
       'px-4 py-1.5': !compact && !forIcon,
       'px-2 py-1': compact && !forIcon,
       'px-2 py-2': forIcon,
-      'bg-gray-100 text-gray-400 dark:bg-zinc-700 border-base-color': disabled,
+      'bg-gray-100 text-gray-400 dark:bg-gray-700 border-base-color': disabled,
       'shadow-sm': variant !== 'subtle',
-      'bg-white hover:bg-gray-100 border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white':
+      'bg-white hover:bg-gray-100 border-base-light dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-base-dark dark:text-white':
         !disabled && variant === 'default',
       'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white border-transparent':
         !disabled && variant === 'primary',

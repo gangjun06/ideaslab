@@ -9,4 +9,5 @@ export default {
   jwtSecret: (process.env.JWT_SECRET ?? '') as string,
   redisPrefix: (process.env.REDIS_PREFIX ?? '') as string,
   webURL: (process.env.WEB_URL ?? '') as string,
+  guildId: (process.env.GUILD_ID ?? '') as string,
 }

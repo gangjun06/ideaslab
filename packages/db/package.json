@@ -1,17 +1,15 @@
 {
   "name": "@ideaslab/db",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
   "files": [
     "dist/**"
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup ./src/index.ts --format esm,cjs",
     "lint": "TIMING=1 eslint \"src/**/*.ts\"",
-    "dev": "tsup --watch src/*",
+    "dev": "tsup ./src/index.ts --format esm,cjs --watch",
     "format": "prisma format",
     "studio": "prisma studio",
     "db:migrate:deploy": "prisma migrate deploy",
@@ -19,13 +17,13 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push"
   },
-  "dependencies": {
-    "@prisma/client": "^4.7.1"
-  },
   "devDependencies": {
     "@ideaslab/eslint-config": "*",
     "prisma": "^4.7.1",
     "tsup": "^6.5.0",
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.7.1"
   }
 }
