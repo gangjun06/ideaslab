@@ -41,6 +41,7 @@ export const useLoadUserData = () => {
       }
       setUserData(data)
     },
+    trpc: { ssr: false },
   })
 
   useEffect(() => {

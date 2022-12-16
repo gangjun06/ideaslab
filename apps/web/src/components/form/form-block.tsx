@@ -28,15 +28,15 @@ export const FormBlock = ({
       <div className="flex justify-between">
         <>
           {CustomLabel ? (
-            <CustomLabel htmlFor={name} className="text-subtitle-color">
+            <CustomLabel htmlFor={name} className="text-title-color">
               {label}
             </CustomLabel>
           ) : (
-            <label htmlFor={name} className="text-subtitle-color">
+            <label htmlFor={name} className="text-title-color">
               {label}
             </label>
           )}
-          {labelRight}
+          <div className="text-subtitle-color">{labelRight}</div>
         </>
       </div>
       {description && <div className="text-sm text-description-color">{description}</div>}
