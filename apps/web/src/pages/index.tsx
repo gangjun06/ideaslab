@@ -6,7 +6,7 @@ import Typed from 'react-typed'
 
 const Home: NextPage = () => {
   return (
-    <MainLayout title="">
+    <MainLayout title="" className="h-full">
       <div className="flex flex-col h-full w-full justify-center -mt-24">
         <section>
           <div className="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between gap-x-8">

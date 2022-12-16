@@ -3,12 +3,12 @@ import classNames from 'classnames'
 
 import { FormBlock, FormBlockProps, formBlockPropsRemover } from './form-block'
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements['input']>, FormBlockProps {
+interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>, FormBlockProps {
   type?: 'text' | 'password' | 'email' | 'number'
 }
 
-export const Input = forwardRef<HTMLInputElement, Props>(
-  ({ className, max, maxLength: _maxLength, ...props }, ref) => {
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
+  ({ className, maxLength: max, ...props }, ref) => {
     const [value, setValue] = useState('')
     const inputProps = formBlockPropsRemover(props)
 
@@ -28,7 +28,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 
     return (
       <FormBlock {...props} labelRight={labelRight}>
-        <input
+        <textarea
           ref={ref}
           {...inputProps}
           onChange={(e) => {
@@ -47,4 +47,4 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-Input.displayName = 'Input'
+Textarea.displayName = 'Textarea'

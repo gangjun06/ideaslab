@@ -18,6 +18,7 @@ type props = {
   showTitle?: boolean
   tinyContainer?: boolean
   guard?: 'default' | 'authOnly' | 'guestOnly' | 'unverifyOnly'
+  className?: string
 }
 
 type JWTToken = {
@@ -33,12 +34,12 @@ export const MainLayout = ({
   tinyContainer = false,
   description,
   guard = 'default',
+  className = '',
 }: props) => {
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
   const { setToken, token: storageToken, profile } = useLoadUserData()
-  // const {} = trpc.auth.
 
   useEffect(() => {
     const { token } = router.query
@@ -153,7 +154,11 @@ export const MainLayout = ({
       <Toaster />
       <Navbar />
       <div
-        className={classNames('container mx-auto pt-4 py-4 px-4', tinyContainer && 'max-w-4xl')}
+        className={classNames(
+          'container mx-auto pt-4 py-4 px-4',
+          tinyContainer && 'max-w-4xl',
+          className,
+        )}
         style={{
           minHeight: 'calc(100% - 64px)',
         }}
