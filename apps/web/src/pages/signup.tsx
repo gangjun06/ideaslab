@@ -16,6 +16,15 @@ import { useForm } from '~/hooks/useForm'
 import { authSignUpValidator, z } from '@ideaslab/validator'
 import { useUser } from '~/hooks/useAuth'
 import { TrashIcon } from '@heroicons/react/20/solid'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { useCurrentTheme, useTheme } from '~/hooks/useTheme'
+
+const btnNameMap: { [key: number]: string } = {
+  1: '시작하기',
+  2: '약관에 동의합니다',
+  3: '이용규칙에 동의합니다',
+  4: '가입하기',
+}
 
 const Signup: NextPage = () => {
   const { step, handleStep, stepAble } = useStep(4)
@@ -30,7 +39,6 @@ const Signup: NextPage = () => {
           '2. 약관동의',
           '3. 이용 규칙',
           '4. 자기소개 입력',
-          '5. 삐릭, 삐리릭?',
           '6. 가입완료',
         ]}
       />
@@ -45,7 +53,7 @@ const Signup: NextPage = () => {
             <div></div>
           )}
           <Button variant="primary" onClick={handleStep.next}>
-            {step === 1 ? '시작하기' : step === 2 ? '약관에 동의합니다' : '다음 단계'}
+            {btnNameMap[step]}
           </Button>
         </div>
       </div>
@@ -57,6 +65,7 @@ export default Signup
 
 const Content = ({ step }: { step: number }) => {
   const userData = useUser()
+  const theme = useCurrentTheme()
 
   const form = useForm(authSignUpValidator, {
     onSubmit: (data) => {
@@ -68,7 +77,13 @@ const Content = ({ step }: { step: number }) => {
       registerFrom: '디스보드',
     },
   })
-  const { registerForm, control } = form
+  const {
+    registerForm,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = form
 
   const innerContent = useMemo(() => {
     switch (step) {
@@ -186,24 +201,31 @@ const Content = ({ step }: { step: number }) => {
             />
             <FieldArray control={control} register={registerForm} />
 
-            <Button type="submit">전송</Button>
+            {Object.keys(errors).length === 0 && (
+              <FormBlock
+                label="캡챠"
+                description="자동 가입을 방지하기 위해 클릭해주세요."
+                error={watch('captcha') === '' ? '캡챠를 클릭해 주세요.' : ''}
+              >
+                {process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY && (
+                  <HCaptcha
+                    sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY}
+                    theme={theme}
+                    onVerify={(token) => {
+                      setValue('captcha', token)
+                    }}
+                  />
+                )}
+              </FormBlock>
+            )}
           </div>
         )
       case 5:
-        return (
-          <div className="mx-auto flex flex-col items-center px-4 py-16 text-center md:py-32 md:px-10 lg:px-32 xl:max-w-3xl">
-            <h1 className="text-4xl font-bold leading-none sm:text-5xl">마지막 단계!</h1>
-            <p className="px-8 mt-8 mb-12 text-lg">
-              자동 가입을 방지하기 위해, 캡차를 인증해주세요.
-            </p>
-          </div>
-        )
-      case 6:
         return <div>모든 가입 과정이 완료되었어요.</div>
       default:
         return <div>단계를 찾지 못하였어요</div>
     }
-  }, [control, registerForm, step])
+  }, [control, registerForm, setValue, step, watch])
 
   return (
     <Form form={form} className="h-full flex-1 flex">

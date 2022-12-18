@@ -23,7 +23,7 @@ export const authSignUpValidator = z.object({
     .max(20),
   introduce: z.string().max(30),
   registerFrom: z.string().min(0).max(30),
-  // capcha: z.string(),
+  captcha: z.string(),
   links: z.array(linkValidator).min(0).max(6),
 })
 

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@headlessui/react": "^1.7.2",
     "@heroicons/react": "^2.0.11",
     "@hookform/resolvers": "^2.9.8",

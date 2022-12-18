@@ -15,7 +15,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.9, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.9.2":
   version: 7.20.6
   resolution: "@babel/runtime@npm:7.20.6"
   dependencies:
@@ -130,6 +130,18 @@ __metadata:
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
   checksum: 4059f790e2d07bf3c3ff3e0fec0daa8144fe35c1f6e0111c9921bd32106adaa97a4ab096ad7dab1e28ee6a9060083c4d1a4ada42a7f5f3f7a96b8812e2b757c1
+  languageName: node
+  linkType: hard
+
+"@hcaptcha/react-hcaptcha@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "@hcaptcha/react-hcaptcha@npm:1.4.4"
+  dependencies:
+    "@babel/runtime": ^7.17.9
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: 16b046702957f4ca5041c37f2a5012e07415469667fee0396b4764baa7ce0fe5a8577cf652b977732f026d745c999f7e1522bca3b3ca6effea5cfff189ddff2f
   languageName: node
   linkType: hard
 
@@ -284,6 +296,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ideaslab/web@workspace:apps/web"
   dependencies:
+    "@hcaptcha/react-hcaptcha": ^1.4.4
     "@headlessui/react": ^1.7.2
     "@heroicons/react": ^2.0.11
     "@hookform/resolvers": ^2.9.8

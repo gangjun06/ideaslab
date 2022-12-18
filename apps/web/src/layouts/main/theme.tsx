@@ -1,18 +1,11 @@
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { Button } from '~/components/common'
-import { useTheme } from '~/hooks/useTheme'
+import { useCurrentTheme, useTheme } from '~/hooks/useTheme'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 
 export const ThemeChanger = () => {
   const [theme, setTheme] = useTheme()
-  const currentTheme = useMemo(() => {
-    if (theme === 'system') {
-      if (typeof globalThis.matchMedia !== 'function') return 'light'
-      if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
-      return 'light'
-    }
-    return theme
-  }, [theme])
+  const currentTheme = useCurrentTheme()
 
   const toggleTheme = useCallback(() => {
     if (theme !== 'system') {

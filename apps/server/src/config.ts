@@ -10,4 +10,6 @@ export default {
   redisPrefix: (process.env.REDIS_PREFIX ?? '') as string,
   webURL: (process.env.WEB_URL ?? '') as string,
   guildId: (process.env.GUILD_ID ?? '') as string,
+  HCAPTCHA_SECRET_KEY: (process.env.HCAPTCHA_SECRET_KEY ??
+    '0x0000000000000000000000000000000000000000') as string,
 }
