@@ -7,9 +7,9 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsup ./src/index.ts --format esm,cjs",
+    "build": "tsup --format esm,cjs",
     "lint": "TIMING=1 eslint \"src/**/*.ts\"",
-    "dev": "tsup ./src/index.ts --format esm,cjs --watch"
+    "dev": "tsup --format esm --watch"
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",
@@ -19,5 +19,13 @@
     "@ideaslab/eslint-config": "*",
     "tsup": "^6.5.0",
     "typescript": "^4.9.4"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
   }
 }

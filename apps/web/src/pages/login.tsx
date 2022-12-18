@@ -14,7 +14,6 @@ import { useAtom } from 'jotai'
 const LoginPage: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0)
   const [token, setToken] = useAtom(tokenAtom)
-  const router = useRouter()
 
   const loginWithPinMutation = trpc.auth.loginWithPin.useMutation({
     onMutate: () => {
@@ -30,7 +29,7 @@ const LoginPage: NextPage = () => {
       }
       toast.success('성공적으로 로그인 되었어요.', { id: 'mutation' })
       setToken(token)
-      location.reload()
+      location.href = '/'
     },
   })
 

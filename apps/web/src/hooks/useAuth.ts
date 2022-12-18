@@ -22,8 +22,8 @@ export const tokenDataAtom = atom((get) => {
   }
 })
 
-type userData = typeof appRouter.auth.profile['_def']['_output_out'] | null | 'error'
-export const userDataAtom = atom<userData>(null)
+type UserData = typeof appRouter.auth.profile['_def']['_output_out'] | null
+export const userDataAtom = atom<UserData>(null)
 
 export const useLoadUserData = () => {
   const [token, setToken] = useAtom(tokenAtom)

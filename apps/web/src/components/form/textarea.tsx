@@ -38,7 +38,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           className={classNames(
             'block px-4 py-2 rounded-lg border',
             'dark:bg-gray-800/60 dark:text-white',
-            props.error ? 'border-error-color error-ring' : 'border-base-color default-ring',
+            props.error ? 'border-error-color error-ring' : 'default-ring border-base-color',
             className,
           )}
         />

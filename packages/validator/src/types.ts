@@ -21,9 +21,9 @@ export const authSignUpValidator = z.object({
     .regex(/^[a-zA-Z0-9-]+$/)
     .min(3)
     .max(20),
-  introduce: z.string().min(0).max(30),
+  introduce: z.string().max(30),
   registerFrom: z.string().min(0).max(30),
-  capcha: z.string(),
+  // capcha: z.string(),
   links: z.array(linkValidator).min(0).max(6),
 })
 
