@@ -1,4 +1,6 @@
 import classNames from 'classnames'
+import { Atom, atom, Provider, useAtom } from 'jotai'
+import { createContext, useCallback, useState, Dispatch, SetStateAction, useContext } from 'react'
 
 interface Props {
   currentStep: number
@@ -25,3 +27,50 @@ export const Step = ({ currentStep, list, className }: Props) => {
     </div>
   )
 }
+
+const StepContext = createContext<{
+  step: number
+  setStep: Dispatch<SetStateAction<number>>
+  next: () => void
+  prev: () => void
+}>({
+  step: 1,
+  setStep: () => {},
+  next: () => {},
+  prev: () => {},
+})
+
+export const StepWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [step, setStep] = useState(1)
+  const next = useCallback(() => {
+    setStep((step) => step + 1)
+  }, [setStep])
+
+  const prev = useCallback(() => {
+    setStep((step) => step - 1)
+  }, [setStep])
+
+  return (
+    <StepContext.Provider value={{ step, setStep, next, prev }}>{children}</StepContext.Provider>
+  )
+}
+
+export type StepContentProps = {
+  next: () => void
+  prev: () => void
+  step: number
+}
+
+export const StepContent = ({
+  displayOn,
+  children: Children,
+}: {
+  displayOn?: number
+  children: ({ next, prev, step }: StepContentProps) => React.ReactElement
+}) => (
+  <StepContext.Consumer>
+    {(props) => (
+      <>{(props.step === displayOn || displayOn === undefined) && <Children {...props} />}</>
+    )}
+  </StepContext.Consumer>
+)

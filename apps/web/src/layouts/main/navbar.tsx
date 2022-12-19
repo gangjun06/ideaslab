@@ -7,7 +7,10 @@ import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 import dynamic from 'next/dynamic'
 import { useUser } from '~/hooks/useAuth'
 
-const ThemeChanger = dynamic(import('./theme').then((d) => d.ThemeChanger))
+const ThemeChanger = dynamic(
+  import('./theme').then((d) => d.ThemeChanger),
+  { ssr: false },
+)
 
 const NavItem = ({ name, href, isActive }: { name: string; href: string; isActive: boolean }) => {
   return (
@@ -19,7 +22,6 @@ const NavItem = ({ name, href, isActive }: { name: string; href: string; isActiv
 
 export const Navbar = () => {
   const { pathname } = useRouter()
-  const session = {} as any
   const profile = useUser()
 
   return (

@@ -3,6 +3,7 @@ import {
   Controller,
   FieldValues,
   FormProvider,
+  SubmitErrorHandler,
   SubmitHandler,
   useFormContext,
 } from 'react-hook-form'
@@ -14,15 +15,20 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   children,
   className,
   onSubmit = () => {},
+  onInvalid = () => {},
 }: {
   form: ReturnType<typeof useForm<TSchema>>
   children: ReactNode
   className?: string
   onSubmit?: SubmitHandler<z.TypeOf<TSchema>>
+  onInvalid?: SubmitErrorHandler<z.TypeOf<TSchema>>
 }) => {
   return (
     <FormProvider {...form}>
-      <form className={className} onSubmit={form.handleSubmit(form.onSubmit ?? onSubmit)}>
+      <form
+        className={className}
+        onSubmit={form.handleSubmit(form.onSubmit ?? onSubmit, form.onInvalid ?? onInvalid)}
+      >
         {children}
       </form>
     </FormProvider>

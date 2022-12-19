@@ -48,12 +48,9 @@ export const useLoadUserData = () => {
     if (profile.data && token === null) {
       setUserData(null)
     }
-  }, [profile.data, setUserData, token])
+  }, [profile, profile.data, setUserData, token])
 
   return { profile, token, setToken }
 }
 
-export const useUser = () => {
-  const userData = useAtomValue(userDataAtom)
-  return userData
-}
+export const useUser = () => useAtomValue(userDataAtom)

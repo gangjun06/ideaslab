@@ -35,6 +35,7 @@ export const useForm = <TSchema extends z.ZodType<any, any, any>>(
   schema: TSchema,
   props?: Parameters<typeof useLibForm<z.TypeOf<TSchema>>>[0] & {
     onSubmit?: SubmitHandler<z.TypeOf<TSchema>>
+    onInvalid?: SubmitErrorHandler<z.TypeOf<TSchema>>
   },
 ) => {
   const form = useLibForm<z.infer<TSchema>>({
@@ -46,6 +47,7 @@ export const useForm = <TSchema extends z.ZodType<any, any, any>>(
   const { errors } = form.formState
   const registerFormValue = useCallback(
     (name: string, options: UseFormRegisterOption<z.infer<TSchema>, any>) => {
+      console.log(errors)
       //@ts-ignore
       const error: FieldErrorsImpl<DeepRequired<z.TypeOf<TSchema>>>[string] = name
         .split('.')
@@ -97,5 +99,5 @@ export const useForm = <TSchema extends z.ZodType<any, any, any>>(
     }
   }
 
-  return { ...form, onSubmit: props?.onSubmit, registerForm }
+  return { ...form, onSubmit: props?.onSubmit, registerForm, onInvalid: props?.onInvalid }
 }

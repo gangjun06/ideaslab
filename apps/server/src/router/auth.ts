@@ -1,9 +1,11 @@
 import { router, publicProcedure } from '~/api/trpc'
-import { authLoginWithPinValidator } from '@ideaslab/validator'
+import { authLoginWithPinValidator, authSignUpValidator } from '@ideaslab/validator'
 import { loginWithPin } from '~/service/auth'
 import { loginedProcedure } from '~/api/auth-middleware'
 import { client, currentGuild, currentGuildMember } from '~/bot/client'
 import { prisma } from '@ideaslab/db'
+import axios from 'axios'
+import config from '~/config'
 
 export const authRouter = router({
   loginWithPin: publicProcedure
@@ -34,6 +36,15 @@ export const authRouter = router({
       username,
       discriminator,
       isVerified: user ? true : false,
+    }
+  }),
+  signup: loginedProcedure.input(authSignUpValidator).mutation(async ({ ctx, input }) => {
+    const form = new FormData()
+    form.append('secret', config.hCaptchaSecretKey)
+    form.append('response', input.captcha)
+
+    return {
+      success: true,
     }
   }),
 })

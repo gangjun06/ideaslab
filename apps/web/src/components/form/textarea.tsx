@@ -27,7 +27,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     }, [value, max])
 
     return (
-      <FormBlock {...props} labelRight={labelRight}>
+      <FormBlock {...props} right={labelRight}>
         <textarea
           ref={ref}
           {...inputProps}
