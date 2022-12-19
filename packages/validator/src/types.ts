@@ -35,4 +35,14 @@ export const authSignUpValidator = z.object({
   links: z.array(linkValidator).min(0).max(6),
 })
 
+export const adminGallerySettingValidator = z.object({
+  categories: z.array(
+    z.object({
+      name: z.string().min(1).max(20),
+      channel: z.string().min(1).max(20),
+      order: z.number(),
+    }),
+  ),
+})
+
 z.setErrorMap(customErrorMap)

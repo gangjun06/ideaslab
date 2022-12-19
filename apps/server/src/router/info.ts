@@ -1,9 +1,13 @@
 import { router, publicProcedure } from '~/api/trpc'
-import { authLoginWithPinValidator } from '@ideaslab/validator'
-import { loginWithPin } from '~/service/auth'
-import { loginedProcedure } from '~/api/auth-middleware'
-import { client, currentGuild, currentGuildMember } from '~/bot/client'
-import { prisma } from '@ideaslab/db'
+import { currentGuild } from '~/bot/client'
+import { ChannelType } from 'discord.js'
+
+type Channel = {
+  id: string
+  name: string
+  parentId: string | null
+  type: ChannelType
+}
 
 export const infoRouter = router({
   stat: publicProcedure.query(async ({ ctx }) => {
@@ -12,5 +16,30 @@ export const infoRouter = router({
     return {
       memberCount: members,
     }
+  }),
+  channels: publicProcedure.query(async ({ ctx }) => {
+    const guild = await currentGuild()
+
+    const channels = await guild.channels.fetch()
+    if (!channels) return []
+
+    const guildChannelList: Channel[] = []
+
+    channels.forEach((d) => {
+      if (
+        d?.type === ChannelType.GuildText ||
+        d?.type === ChannelType.GuildForum ||
+        d?.type === ChannelType.GuildCategory
+      ) {
+        guildChannelList.push({
+          id: d.id,
+          name: d.name,
+          parentId: d.parentId,
+          type: d.type,
+        })
+      }
+    })
+
+    return guildChannelList
   }),
 })

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { RectangleStackIcon, UserCircleIcon, CogIcon } from '@heroicons/react/24/outline'
 import { useUser } from '~/hooks/useAuth'
 import Link from 'next/link'
+import classNames from 'classnames'
 
 interface Props extends Omit<ComponentProps<typeof MainLayout>, 'showTitle' | 'tinyContainer'> {
   a?: string
@@ -77,12 +78,12 @@ export const SettingLayout = ({ a, children, ...mainLayoutProps }: Props) => {
           height={64}
         />
         <div className="ml-4 flex flex-col">
-          <div className="flex items-center gap-3 text-xl font-bold text-gray-700">
+          <div className="flex items-center gap-3 text-xl font-bold text-title-color">
             <div className="">{`${profile?.isAdmin ? ' [관리자]' : ''} ${profile?.name}`}</div>
             <div className="mb-1 font-normal text-gray-400">/</div>
             <div>{curPage?.name}</div>
           </div>
-          <div className="text-gray-500">{curPage?.description}</div>
+          <div className="text-description-color">{curPage?.description}</div>
         </div>
       </div>
       <div className="flex flex-col divide-y md:divide-y-0 md:grid grid-flow-col gap-x-12">
@@ -91,13 +92,17 @@ export const SettingLayout = ({ a, children, ...mainLayoutProps }: Props) => {
             .filter(({ adminOnly }) => !adminOnly || profile?.isAdmin)
             .map(({ title, fields }) => (
               <div key={title}>
-                <div className="text-lg font-bold text-gray-600">{title}</div>
+                <div className="text-lg font-bold text-subtitle-color">{title}</div>
                 {fields.map(({ icon: Icon, name, url }) => (
                   <Link href={url} passHref key={url}>
                     <a
-                      className={`${
-                        pathname === url ? 'bg-gray-200 font-bold' : 'hover:bg-gray-100'
-                      } flex items-center gap-x-3 rounded-lg px-2 py-2`}
+                      className={classNames(
+                        pathname === url
+                          ? 'bg-primary-300/50 dark:bg-primary-700/50 border-transparent'
+                          : '',
+                        'hover:bg-primary-300/50 text-primary-600 hover:dark:bg-primary-700/50 dark:text-primary-300 border-transparent',
+                        'transition text-black rounded flex-none text-center border flex gap-x-3 items-center justify-start px-2 py-2 w-full',
+                      )}
                     >
                       <div className="text-xl">
                         <Icon width={20} height={20} />
