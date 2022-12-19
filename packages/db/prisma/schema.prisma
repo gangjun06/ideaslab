@@ -8,13 +8,19 @@ generator client {
 }
 
 model User {
-        discordId   String  @id
-        displayName String?
-        posts       Post[]
+        discordId    String  @id
+        name         String
+        avatar       String
+        introduce    String
+        handle       String  @unique
+        links        Json[]
+        registerFrom String?
 
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
-        Like      Like[]
+
+        likes Like[]
+        posts Post[]
 }
 
 model Category {

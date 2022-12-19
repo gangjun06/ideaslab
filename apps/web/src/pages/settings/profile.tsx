@@ -1,20 +1,23 @@
 import type { NextPage } from 'next'
-import Image from 'next/image'
-import { MainLayout } from '~/layouts'
-import MainImage from '~/assets/main-image.svg'
-import Typed from 'react-typed'
-import { useEffect, useMemo } from 'react'
-import { useRouter } from 'next/router'
-import toast from 'react-hot-toast'
-import { Step } from '~/components/common/step'
-import { useStep } from '~/hooks/useStep'
-import { Button } from '~/components/common'
+import { SettingLayout } from '~/layouts'
+import { useUser } from '~/hooks/useAuth'
+import { Input } from '~/components/form'
 
 const ProfileSetting: NextPage = () => {
+  const profile = useUser()
+
   return (
-    <MainLayout title="프로필 설정" showTitle tinyContainer guard="authOnly">
-      <div></div>
-    </MainLayout>
+    <SettingLayout title="프로필 설정" guard="authOnly">
+      <div className="pt-4 md:pt-0 md:col-span-9 flex flex-col gap-y-4">
+        <Input
+          label="디스코드 유저 정보"
+          disabled={true}
+          value={`${profile?.username}#${profile?.discriminator}`}
+        />
+        <Input label="닉네임" value={profile?.name} />
+        <Input label="핸들" prefix="https://ideaslab.kr/@" value={profile?.userId} />
+      </div>
+    </SettingLayout>
   )
 }
 

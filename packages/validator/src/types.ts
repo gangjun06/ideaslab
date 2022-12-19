@@ -10,6 +10,14 @@ export const linkValidator = z.object({
   url: z.string().url(),
 })
 
+export const authCheckHandleValidator = z.object({
+  handle: z
+    .string()
+    .regex(/^[a-zA-Z0-9-]+$/)
+    .min(3)
+    .max(20),
+})
+
 export const authSignUpValidator = z.object({
   name: z
     .string()

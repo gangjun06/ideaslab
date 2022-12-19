@@ -25,7 +25,7 @@ const Signup: NextPage = () => {
   return (
     <MainLayout title="회원가입 하기" showTitle tinyContainer>
       <StepWrapper>
-        {/* <StepContent>{StepList}</StepContent> */}
+        <StepContent>{StepList}</StepContent>
         <div className="card px-4 py-4 mt-8 flex flex-col justify-between sm:min-h-[700px]">
           <StepContent displayOn={1}>{Intro}</StepContent>
           <StepContent displayOn={2}>{Policy}</StepContent>
@@ -60,9 +60,12 @@ const Intro = ({ next }: StepContentProps) => {
     <>
       <div className="mx-auto px-4 text-center md:px-10 lg:px-32 xl:max-w-3xl h-full flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-bold leading-none sm:text-5xl">
-            {userData?.username}님, <br />
-            <span className="dark:text-green-400">아이디어스랩</span>에<br /> 오신것을 환영합니다!
+          <h1 className="text-4xl font-bold sm:text-5xl">
+            <div>{userData?.username}님,</div>
+            <div className="my-1.5">
+              <span className="dark:text-green-400">아이디어스랩</span>에
+            </div>
+            오신것을 환영합니다!
           </h1>
           <p className="px-8 mt-8 mb-12 text-lg">
             오래 걸리지 않아요! 간단하게 질문에 대답해주세요.
@@ -171,9 +174,12 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     },
   })
 
+  const checkHandle = trpc.auth.checkHandle.useMutation()
+
   const form = useForm(authSignUpValidator, {
     onSubmit: async (data) => {
       await submit.mutateAsync(data)
+      next()
     },
     onInvalid: (errors) => {
       if (Object.keys(errors).length === 1 && errors.captcha) {
@@ -191,6 +197,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     registerForm,
     control,
     setValue,
+    setError,
     watch,
     formState: { errors },
   } = form
@@ -209,6 +216,15 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
           description="URL에서 사용될 id에요. 언제든 변경할 수 있어요. 알파벳, 숫자만 사용 가능합니다"
           prefix="https://ideaslab.kr/@"
           {...registerForm('handle')}
+          onBlurCapture={async (e) => {
+            if (!e.currentTarget.value) return
+            const parsed = authSignUpValidator.shape.handle.safeParse(e.currentTarget.value)
+            if (!parsed.success) return
+
+            const res = await checkHandle.mutateAsync({ handle: e.currentTarget.value })
+            if (res.valueOf()) return
+            setError('captcha', { type: 'manual', message: '이미 사용중인 주소에요.' })
+          }}
         />
         <FormFieldBuilder name="registerFrom">
           {({ field: { name, onChange }, error }) => (
@@ -252,6 +268,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
                 theme={theme}
                 languageOverride="ko"
                 onVerify={(token) => {
+                  console.log(token)
                   setValue('captcha', token)
                 }}
               />

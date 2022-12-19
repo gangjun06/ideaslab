@@ -17,7 +17,7 @@ type props = {
   description?: string
   showTitle?: boolean
   tinyContainer?: boolean
-  guard?: 'default' | 'authOnly' | 'guestOnly' | 'unverifyOnly'
+  guard?: 'default' | 'authOnly' | 'adminOnly' | 'guestOnly' | 'unverifyOnly'
   className?: string
 }
 
@@ -71,82 +71,107 @@ export const MainLayout = ({
   }, [guard, profile.data, router])
 
   const content = useMemo(() => {
-    if (!authConfirm) {
-      if (guard === 'authOnly' && !profile.data) {
-        return (
-          <>
-            {showTitle && (
-              <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>
-                {title}
-              </h1>
-            )}
+    if (authConfirm) {
+      return (
+        <>
+          <div className="w-full h-full flex items-center justify-center text-center">
             <div className="flex justify-center items-center flex-col card px-16 py-12">
-              <div className="font-bold text-lg mt-2">
-                현재 페이지는 로그인된 사용자만 이용할 수 있어요
+              <Image
+                width={128}
+                height={128}
+                src={authConfirm.avatar}
+                alt="avatar"
+                className="rounded-full"
+              />
+              <div className="font-bold text-xl mt-2">{authConfirm.name}</div>
+              <div className="text-sm">
+                다음 계정으로 로그인하기 {authConfirm.isAdmin && '(관리자)'}
               </div>
-              <Link href="/login" passHref>
-                <ButtonLink variant="light" className="mt-4">
-                  로그인하기
-                </ButtonLink>
-              </Link>
+              <Button onClick={login} variant="light" className="mt-4" disabled={tokenExpired}>
+                {tokenExpired ? '만료된 로그인 링크에요' : '로그인'}
+              </Button>
             </div>
-          </>
-        )
-      }
-      if (guard === 'authOnly' && !profile.data?.isVerified) {
-        return (
-          <>
-            {showTitle && (
-              <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>
-                {title}
-              </h1>
-            )}
-            <div className="flex justify-center items-center flex-col card px-16 py-12">
-              <div className="font-bold text-lg mt-2">
-                아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요
-              </div>
-              <Link href="/signup" passHref>
-                <ButtonLink variant="light" className="mt-4">
-                  회원가입하기
-                </ButtonLink>
-              </Link>
-            </div>
-          </>
-        )
-      }
+          </div>
+        </>
+      )
+    }
+
+    if (profile.isLoading) {
+      return <></>
+    }
+
+    if (guard === 'authOnly' && !profile.data) {
       return (
         <>
           {showTitle && (
             <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
           )}
-          {children}
+          <div className="flex justify-center items-center flex-col card px-16 py-12">
+            <div className="font-bold text-lg mt-2">
+              현재 페이지는 로그인된 사용자만 이용할 수 있어요
+            </div>
+            <Link href="/login" passHref>
+              <ButtonLink variant="light" className="mt-4">
+                로그인하기
+              </ButtonLink>
+            </Link>
+          </div>
+        </>
+      )
+    }
+
+    if (guard === 'adminOnly' && !profile.data?.isAdmin) {
+      return (
+        <>
+          {showTitle && (
+            <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
+          )}
+          <div className="flex justify-center items-center flex-col card px-16 py-12">
+            <div className="font-bold text-lg mt-2">관리자만 이용할 수 있는 페이지에요.</div>
+          </div>
+        </>
+      )
+    }
+
+    if (guard === 'authOnly' && !profile.data?.isVerified) {
+      return (
+        <>
+          {showTitle && (
+            <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
+          )}
+          <div className="flex justify-center items-center flex-col card px-16 py-12">
+            <div className="font-bold text-lg mt-2">
+              아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요
+            </div>
+            <Link href="/signup" passHref>
+              <ButtonLink variant="light" className="mt-4">
+                회원가입하기
+              </ButtonLink>
+            </Link>
+          </div>
         </>
       )
     }
 
     return (
       <>
-        <div className="w-full h-full flex items-center justify-center text-center">
-          <div className="flex justify-center items-center flex-col card px-16 py-12">
-            <Image
-              width={128}
-              height={128}
-              src={authConfirm.avatar}
-              alt="avatar"
-              className="rounded-full"
-            />
-            <div className="font-bold text-xl mt-2">{authConfirm.name}</div>
-            <div className="text-sm">
-              다음 계정으로 로그인하기 {authConfirm.isAdmin && '(관리자)'}
-            </div>
-            <Button onClick={login} variant="light" className="mt-4" disabled={tokenExpired}>
-              {tokenExpired ? '만료된 로그인 링크에요' : '로그인'}
-            </Button>
-          </div>
-        </div>
+        {showTitle && (
+          <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
+        )}
+        {children}
       </>
     )
-  }, [authConfirm, children, guard, login, profile.data, showTitle, title, tokenExpired])
+  }, [
+    authConfirm,
+    children,
+    guard,
+    login,
+    profile.data,
+    profile.isLoading,
+    showTitle,
+    title,
+    tokenExpired,
+  ])
 
   return (
     <>
