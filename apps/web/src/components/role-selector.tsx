@@ -14,24 +14,22 @@ export type ChannelSelectorProps = {
   onBlur?: React.PropsWithoutRef<JSX.IntrinsicElements['div']>['onBlur']
   label?: string
   ref?: any
-  filterType?: (ChannelType.GuildText | ChannelType.GuildCategory | ChannelType.GuildForum)[]
   error?: string
 }
 
-type Channel = Unarray<typeof appRouter.info.channels['_def']['_output_out']>
+type Role = Unarray<typeof appRouter.info.roles['_def']['_output_out']>
 
-export const ChannelSelector = ({
+export const RoleSelector = ({
   onBlur,
   value,
   onChange,
   bottom,
   label,
   error,
-  filterType = [ChannelType.GuildText, ChannelType.GuildForum],
 }: ChannelSelectorProps) => {
-  const { data } = trpc.info.channels.useQuery()
+  const { data } = trpc.info.roles.useQuery()
   const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState<Channel>()
+  const [selected, setSelected] = useState<Role>()
 
   useEffect(() => {
     if (!data?.length || !value) return
@@ -41,26 +39,19 @@ export const ChannelSelector = ({
   }, [data, value])
 
   const onSelect = useCallback(
-    (value: Channel) => {
+    (value: Role) => {
       setSelected(value)
       if (typeof onChange === 'function') onChange(value.id)
     },
     [onChange],
   )
 
-  const channelsObj = useMemo(
-    () => data?.reduce<{ [key: string]: Channel }>((a, b) => ({ ...a, [b.id]: b }), {}) ?? {},
-    [data],
-  )
-
-  const filteredChannels = useMemo(
+  const filteredRoles = useMemo(
     () =>
-      data?.filter(
-        (channel) =>
-          filterType.includes(channel.type as any) &&
-          channel.name.replace(/\s+/g, '').includes(query.replace(/\s+/g, '')),
-      ) ?? [],
-    [data, filterType, query],
+      data
+        ?.filter((channel) => channel.name.replace(/\s+/g, '').includes(query.replace(/\s+/g, '')))
+        .sort((a, b) => b.position - a.position) ?? [],
+    [data, query],
   )
 
   return (
@@ -77,9 +68,9 @@ export const ChannelSelector = ({
             <Combobox.Input
               className="w-full text-sm leading-5 focus:ring-0 focus:outline-none focus:border-0 border-0 p-0 bg-transparent"
               onBlur={onBlur}
-              displayValue={(d?: Channel) => d?.name ?? ''}
+              displayValue={(d?: Role) => d?.name ?? ''}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder={`채널을 선택하세요`}
+              placeholder={`역할을 선택하세요`}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronDownIcon
@@ -107,14 +98,14 @@ export const ChannelSelector = ({
             afterLeave={() => setQuery('')}
           >
             <Combobox.Options className="border border-base-color absolute z-[99] mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-base shadow-sm focus:outline-none sm:text-sm">
-              {filteredChannels?.length === 0 && query !== '' ? (
+              {filteredRoles?.length === 0 && query !== '' ? (
                 <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                  채널을 찾을 수 없습니다.
+                  역할을 찾을 수 없습니다.
                 </div>
               ) : (
-                filteredChannels?.map((channel) => (
+                filteredRoles?.map((role) => (
                   <Combobox.Option
-                    key={channel.id}
+                    key={role.id}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
                         active
@@ -122,7 +113,7 @@ export const ChannelSelector = ({
                           : 'text-subtitle-color dark:text-white'
                       }`
                     }
-                    value={channel}
+                    value={role}
                   >
                     {({ selected, active }) => (
                       <>
@@ -131,18 +122,11 @@ export const ChannelSelector = ({
                             'block truncate',
                             selected ? 'font-medium' : 'font-normal',
                           )}
+                          style={{
+                            color: role.color,
+                          }}
                         >
-                          <span># {channel.name}</span>
-                          {channel.parentId && (
-                            <span
-                              className={classNames(
-                                'ml-2 text-ellipsis',
-                                active ? 'text-gray-100' : 'text-description-color',
-                              )}
-                            >
-                              {channelsObj[channel.parentId]?.name}
-                            </span>
-                          )}
+                          <span>@{role.name}</span>
                         </span>
                         {selected ? (
                           <span

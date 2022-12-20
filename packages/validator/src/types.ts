@@ -38,9 +38,10 @@ export const authSignUpValidator = z.object({
 export const adminGallerySettingValidator = z.object({
   categories: z.array(
     z.object({
+      id: z.string().cuid().optional(),
       name: z.string().min(1).max(20),
-      channel: z.string().min(1).max(20),
-      order: z.number(),
+      discordChannel: z.string().min(1).max(20),
+      defaultOrder: z.number(),
     }),
   ),
 })

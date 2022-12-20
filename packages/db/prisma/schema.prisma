@@ -1,70 +1,81 @@
-datasource db {
-        url      = env("DATABASE_URL")
-        provider = "postgresql"
-}
-
 generator client {
         provider = "prisma-client-js"
 }
 
+datasource db {
+        provider = "postgresql"
+        url      = env("DATABASE_URL")
+}
+
 model User {
-        discordId    String  @id
+        discordId    String     @id
         name         String
         avatar       String
         introduce    String
-        handle       String  @unique
+        handle       String     @unique
         links        Json[]
         registerFrom String?
-
-        createdAt DateTime @default(now())
-        updatedAt DateTime @updatedAt
-
-        likes Like[]
-        posts Post[]
+        createdAt    DateTime   @default(now())
+        updatedAt    DateTime   @updatedAt
+        likes        Like[]
+        posts        Post[]
+        VoiceLog     VoiceLog[]
 }
 
 model Category {
-        id             Int    @id
+        id             String   @id @default(dbgenerated("id_generator()"))
         name           String
         discordChannel String
+        defaultOrder   Int      @default(0)
+        createdAt      DateTime @default(now())
+        updateAt       DateTime @updatedAt
         Posts          Post[]
-        defaultOrder   Int    @default(0)
-
-        createdAt DateTime @default(now())
-        updateAt  DateTime @updatedAt
 }
 
 model Tag {
-        id    Int    @id
-        name  String @unique
-        posts Post[]
-
+        id        String   @id @default(dbgenerated("id_generator()"))
+        name      String   @unique
         createdAt DateTime @default(now())
+        posts     Post[]   @relation("PostToTag")
 }
 
 model Post {
-        id          Int      @id @default(autoincrement())
+        id          String   @id @default(dbgenerated("id_generator()"))
         name        String
         attachments String[]
         title       String
         content     String
         color       String?
-        category    Category @relation(fields: [categoryId], references: [id])
-        categoryId  Int
+        categoryId  String
         channelId   String
-        author      User     @relation(fields: [authorId], references: [discordId])
         authorId    String
-        tags        Tag[]
-
-        createdAt DateTime @default(now())
-        updateAt  DateTime @updatedAt
-        Like      Like[]
+        createdAt   DateTime @default(now())
+        updateAt    DateTime @updatedAt
+        Like        Like[]
+        author      User     @relation(fields: [authorId], references: [discordId])
+        category    Category @relation(fields: [categoryId], references: [id])
+        tags        Tag[]    @relation("PostToTag")
 }
 
 model Like {
         id     Int    @id @default(autoincrement())
-        user   User   @relation(fields: [userId], references: [discordId])
         userId String
+        postId String
         post   Post   @relation(fields: [postId], references: [id])
-        postId Int
+        user   User   @relation(fields: [userId], references: [discordId])
+}
+
+model VoiceLog {
+        time          DateTime @default(now()) @db.Timestamptz(6)
+        value         Int
+        userDiscordId String
+        user          User     @relation(fields: [userDiscordId], references: [discordId])
+
+        @@unique([userDiscordId, time])
+        @@index([time(sort: Desc)])
+}
+
+model Setting {
+        key   String @id
+        value Json
 }

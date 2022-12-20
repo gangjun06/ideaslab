@@ -6,6 +6,12 @@ import { client, currentGuild, currentGuildMember } from '~/bot/client'
 import { prisma } from '@ideaslab/db'
 
 export const adminRouter = router({
+  loadGallerySetting: adminProcedure.query(async ({ ctx }) => {
+    const categories = await prisma.category.findMany()
+    return {
+      categories,
+    }
+  }),
   gallerySetting: adminProcedure.input(adminGallerySettingValidator).mutation(async ({ ctx }) => {
     const members = (await currentGuild()).memberCount
 

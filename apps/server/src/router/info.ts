@@ -9,6 +9,13 @@ type Channel = {
   type: ChannelType
 }
 
+type Role = {
+  id: string
+  name: string
+  color: string
+  position: number
+}
+
 export const infoRouter = router({
   stat: publicProcedure.query(async ({ ctx }) => {
     const members = (await currentGuild()).memberCount
@@ -17,7 +24,7 @@ export const infoRouter = router({
       memberCount: members,
     }
   }),
-  channels: publicProcedure.query(async ({ ctx }) => {
+  channels: publicProcedure.query(async () => {
     const guild = await currentGuild()
 
     const channels = await guild.channels.fetch()
@@ -41,5 +48,20 @@ export const infoRouter = router({
     })
 
     return guildChannelList
+  }),
+  roles: publicProcedure.query(async () => {
+    const guild = await currentGuild()
+
+    const roles = await guild.roles.fetch()
+    if (!roles) return []
+
+    const result: Role[] = roles.map(({ id, hexColor, name, position }) => ({
+      id,
+      color: hexColor,
+      name,
+      position,
+    }))
+
+    return result
   }),
 })

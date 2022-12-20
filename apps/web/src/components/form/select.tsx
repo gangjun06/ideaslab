@@ -20,8 +20,6 @@ const SelectContent = <T,>(
   { name, defaultValue, options, onChange, ...props }: SelectProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) => {
-  const otherProps = formBlockPropsRemover(props)
-
   const [selected, setSelected] = useState<T>(defaultValue ?? options[0].value)
 
   const onSelect = useCallback(

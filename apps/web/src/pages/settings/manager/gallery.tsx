@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { SettingLayout } from '~/layouts'
 import { useUser } from '~/hooks/useAuth'
-import { Form, Input } from '~/components/form'
+import { Form, FormFieldBuilder, Input } from '~/components/form'
 import { useForm } from '~/hooks/useForm'
 import { adminGallerySettingValidator, authSignUpValidator, z } from '@ideaslab/validator'
 import { trpc } from '~/lib/trpc'
@@ -12,18 +12,23 @@ import { Button, GripVerticalIcon } from '~/components/common'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { FormBlock } from '~/components/form/form-block'
 import { ChannelSelector } from '~/components/channel-selector'
+import { RoleSelector } from '~/components/role-selector'
+import { toast } from 'react-hot-toast'
 
 const GallerySetting: NextPage = () => {
   const profile = useUser()
   const gallerySetting = trpc.admin.gallerySetting.useMutation()
   const form = useForm(adminGallerySettingValidator, {
-    onSubmit: async (data) => {},
+    onSubmit: async (data) => {
+      toast.success('저장')
+    },
   })
 
   const {
     control,
     registerForm,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty, isSubmitting },
   } = form
 
   return (
@@ -34,6 +39,14 @@ const GallerySetting: NextPage = () => {
           register={registerForm}
           error={errors.categories?.message ?? ''}
         />
+        <div className="flex justify-end gap-x-2">
+          <Button disabled={!isDirty} onClick={() => reset()}>
+            취소
+          </Button>
+          <Button variant="primary" type="submit" disabled={!isDirty} loading={isSubmitting}>
+            저장
+          </Button>
+        </div>
       </Form>
     </SettingLayout>
   )
@@ -69,14 +82,29 @@ const FieldArray = ({
           >
             <GripVerticalIcon width={18} height={18} />
           </div>
-          <div className="flex w-full justify-between gap-x-2 pr-2">
-            <ChannelSelector />
+          <div className="flex flex-col w-full justify-between gap-y-2 pr-2">
             <Input
-              labelClassName="w-full"
               className="w-full"
               placeholder="카테고리 이름"
-              {...register(`categories.${index}.channel`)}
+              {...register(`categories.${index}.name`)}
             />
+            <div className="flex gap-x-2">
+              <FormFieldBuilder name={`categories.${index}.discordChannel`}>
+                {({ field: { onChange, onBlur, value }, error }) => (
+                  <ChannelSelector
+                    error={error}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                  />
+                )}
+              </FormFieldBuilder>
+              <FormFieldBuilder name={`categories.${index}.role`}>
+                {({ field: { onChange, onBlur, value }, error }) => (
+                  <RoleSelector error={error} onChange={onChange} onBlur={onBlur} value={value} />
+                )}
+              </FormFieldBuilder>
+            </div>
           </div>
           <Button variant="subtle" className="mr-2" forIcon onClick={() => remove(index)}>
             <TrashIcon width={18} height={18} />
@@ -91,7 +119,10 @@ const FieldArray = ({
       label="카테고리 설정"
       description="갤러리 카테고리를 설정하세요."
       right={
-        <Button variant="primary" onClick={() => append({ name: '', channel: '', order: 0 })}>
+        <Button
+          variant="primary"
+          onClick={() => append({ name: '', discordChannel: '', defaultOrder: 0 })}
+        >
           추가
         </Button>
       }

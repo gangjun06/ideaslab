@@ -18,7 +18,7 @@ export const btnClassNames = (
   otherClasses?: string,
 ) =>
   classNames(
-    'transition text-black rounded flex-none text-center border flex gap-x-3 items-center justify-center',
+    'transition rounded flex-none text-center border flex gap-x-3 items-center justify-center',
     {
       'px-4 py-1.5': !compact && !forIcon,
       'px-2 py-1': compact && !forIcon,
@@ -27,7 +27,7 @@ export const btnClassNames = (
       'shadow-sm': variant !== 'subtle',
       'bg-white hover:bg-gray-100 border-base-light dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-base-dark dark:text-white':
         !disabled && variant === 'default',
-      'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white border-transparent':
+      'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white border-transparent dark:text-black':
         !disabled && variant === 'primary',
       'bg-primary-300/50 text-primary-600 hover:bg-primary-400/50 dark:bg-primary-700/50 dark:text-primary-300 dark:hover:bg-primary-600/50 border-transparent':
         !disabled && variant === 'light',
