@@ -31,7 +31,7 @@ export const useLoadUserData = () => {
 
   const profile = trpc.auth.profile.useQuery(undefined, {
     enabled: !!token,
-    onError: () => {
+    onError: (res) => {
       toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
     },
     onSuccess: (data) => {

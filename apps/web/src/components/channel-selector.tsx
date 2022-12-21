@@ -14,7 +14,12 @@ export type ChannelSelectorProps = {
   onBlur?: React.PropsWithoutRef<JSX.IntrinsicElements['div']>['onBlur']
   label?: string
   ref?: any
-  filterType?: (ChannelType.GuildText | ChannelType.GuildCategory | ChannelType.GuildForum)[]
+  filterType?: (
+    | ChannelType.GuildText
+    | ChannelType.GuildCategory
+    | ChannelType.GuildForum
+    | ChannelType.GuildVoice
+  )[]
   error?: string
 }
 
@@ -27,7 +32,12 @@ export const ChannelSelector = ({
   bottom,
   label,
   error,
-  filterType = [ChannelType.GuildText, ChannelType.GuildForum],
+  filterType = [
+    ChannelType.GuildText,
+    ChannelType.GuildForum,
+    ChannelType.GuildVoice,
+    ChannelType.GuildForum,
+  ],
 }: ChannelSelectorProps) => {
   const { data } = trpc.info.channels.useQuery()
   const [query, setQuery] = useState('')

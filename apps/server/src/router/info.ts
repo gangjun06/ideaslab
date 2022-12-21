@@ -36,7 +36,8 @@ export const infoRouter = router({
       if (
         d?.type === ChannelType.GuildText ||
         d?.type === ChannelType.GuildForum ||
-        d?.type === ChannelType.GuildCategory
+        d?.type === ChannelType.GuildCategory ||
+        d?.type === ChannelType.GuildVoice
       ) {
         guildChannelList.push({
           id: d.id,

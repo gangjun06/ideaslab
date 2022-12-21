@@ -3,7 +3,7 @@ import { MainLayout } from '~/layouts'
 import { ComponentProps, useMemo } from 'react'
 import { useRouter } from 'next/router'
 
-import { RectangleStackIcon, UserCircleIcon, CogIcon } from '@heroicons/react/24/outline'
+import { RectangleStackIcon, UserCircleIcon, CogIcon, TagIcon } from '@heroicons/react/24/outline'
 import { useUser } from '~/hooks/useAuth'
 import Link from 'next/link'
 import classNames from 'classnames'
@@ -52,6 +52,12 @@ const navList: NavType[] = [
         url: '/settings/manager/gallery',
         name: '갤러리 카테고리',
         description: '갤러리의 카테고리 및 채널을 설정합니다.',
+        icon: TagIcon,
+      },
+      {
+        url: '/settings/manager/settings',
+        name: '관리자 설정',
+        description: '서비스 관련 각종 변수들을 설정합니다.',
         icon: RectangleStackIcon,
       },
     ],

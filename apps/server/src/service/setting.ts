@@ -3,11 +3,11 @@ import { redis } from '~/lib/redis'
 import { prisma } from '@ideaslab/db'
 
 enum SettingValueType {
-  String,
-  Channel,
-  Number,
-  Tag,
-  Boolean,
+  String = 'string',
+  Channel = 'channel',
+  Number = 'number',
+  Tag = 'tag',
+  Boolean = 'boolean',
 }
 
 const SettingList = {
@@ -32,11 +32,11 @@ type SettingValueTypeConvert<T extends SettingValueType> = T extends SettingValu
 const redisSettingKey = (key: SettingKeys) => `${config.redisPrefix}setting:${key}`
 const settingKeyExpire = 60 * 60 * 24 // 1 day
 
-export const settingDescription: {
+export const settingDescriptions: {
   [key in SettingKeys]: string
 } = {
-  afkChannel: '',
-  voiceRoomCreateChannel: '',
+  afkChannel: '잠수 채널을 설정합니다',
+  voiceRoomCreateChannel: '음성채널을 생성하는 채널을 설정합니다 ',
   achieveForumEatTag: '',
   achieveForumWorkTag: '',
 }
@@ -75,4 +75,33 @@ export const getSetting = async <T extends SettingKeys>(
   }
 
   return JSON.parse(value)
+}
+
+export const getAllSettings = async () => {
+  const values = await prisma.setting.findMany()
+
+  const result: {
+    key: SettingKeys
+    value: string | number | boolean | null
+    description: string
+    type: string
+  }[] = values.map(({ key, value }) => ({
+    key: key as SettingKeys,
+    value: JSON.parse(value),
+    type: SettingList[key as SettingKeys].toString(),
+    description: settingDescriptions[key as SettingKeys],
+  }))
+
+  result.push(
+    ...Object.entries(SettingList)
+      .filter(([item]) => !values.find((v) => v.key === item))
+      .map(([key, value]) => ({
+        key: key as SettingKeys,
+        type: value.toString(),
+        description: settingDescriptions[key as SettingKeys],
+        value: null,
+      })),
+  )
+
+  return result
 }

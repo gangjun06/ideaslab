@@ -46,4 +46,13 @@ export const adminGallerySettingValidator = z.object({
   ),
 })
 
+export const adminSaveSettingsValidator = z.object({
+  settings: z.array(
+    z.object({
+      key: z.string().min(1).max(20),
+      value: z.any().nullable(),
+    }),
+  ),
+})
+
 z.setErrorMap(customErrorMap)
