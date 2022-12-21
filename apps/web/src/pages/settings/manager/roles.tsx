@@ -1,8 +1,14 @@
 import type { NextPage } from 'next'
 import { SettingLayout } from '~/layouts'
+import { useUser } from '~/hooks/useAuth'
 import { Form, FormFieldBuilder, Input } from '~/components/form'
 import { useForm } from '~/hooks/useForm'
-import { adminGallerySettingValidator, z } from '@ideaslab/validator'
+import {
+  adminGallerySettingValidator,
+  adminRoleSettingValidator,
+  authSignUpValidator,
+  z,
+} from '@ideaslab/validator'
 import { trpc } from '~/lib/trpc'
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
@@ -11,56 +17,53 @@ import { Button, GripVerticalIcon } from '~/components/common'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { FormBlock } from '~/components/form/form-block'
 import { ChannelSelector } from '~/components/channel-selector'
+import { RoleSelector } from '~/components/role-selector'
 import { toast } from 'react-hot-toast'
+import { appRouter } from '~/../../server/src/router/_app'
 import { useEffect } from 'react'
 
-const GallerySetting: NextPage = () => {
-  const gallerySetting = trpc.admin.gallerySetting.useMutation({
+const RoleSetting: NextPage = () => {
+  const rolesSetting = trpc.admin.saveRoles.useMutation({
     onError: (error) => {
       toast.error(error.message)
     },
   })
-  const { data: settings } = trpc.admin.loadGallerySetting.useQuery()
+  const { data: roles } = trpc.admin.loadRoles.useQuery()
 
-  const form = useForm(adminGallerySettingValidator, {
+  const form = useForm(adminRoleSettingValidator, {
     onSubmit: async (data) => {
-      const list = data.categories.map((item, index) => ({ ...item, defaultOrder: index }))
+      const list = data.roles.map((item, index) => ({ ...item, defaultOrder: index }))
       list.filter((item) => {
         if (!item.id) return true
-        const target = settings?.categories.find((category) => category.id === item.id)
+        const target = roles?.find((role) => role.id === item.id)
         if (!target) return true
 
         if (
           item.defaultOrder === target.defaultOrder &&
           item.name === target.name &&
-          item.discordChannel === target.discordChannel
+          item.discordRole === target.discordRole
         )
           return false
         return true
       })
-      settings?.categories.filter((category) => {
-        if (!data.categories.find((item) => item.id === category.id)) {
-          list.push({ ...category, delete: true })
-        }
-      })
-      await gallerySetting.mutateAsync({ categories: list })
+      await rolesSetting.mutateAsync({ roles: list })
       toast.success('성공적으로 저장되었어요')
     },
   })
 
   useEffect(() => {
-    if (form.getValues().categories?.length > 0) return
-    if (!settings) return
+    if (form.getValues().roles?.length > 0) return
+    if (!roles) return
     form.setValue(
-      'categories',
-      settings?.categories.map(({ defaultOrder, discordChannel, name, id }) => ({
-        defaultOrder,
-        discordChannel,
-        name,
+      'roles',
+      roles?.map(({ defaultOrder, discordRole, name, id }) => ({
         id,
+        defaultOrder,
+        discordRole,
+        name,
       })),
     )
-  }, [form, settings])
+  }, [form, roles])
 
   const {
     control,
@@ -72,11 +75,7 @@ const GallerySetting: NextPage = () => {
   return (
     <SettingLayout title="갤러리 설정" guard="adminOnly">
       <Form form={form} className="pt-4 md:pt-0 md:col-span-9 flex flex-col gap-y-4">
-        <FieldArray
-          control={control}
-          register={registerForm}
-          error={errors.categories?.message ?? ''}
-        />
+        <FieldArray control={control} register={registerForm} error={errors.roles?.message ?? ''} />
         <div className="flex justify-end gap-x-2">
           <Button disabled={!isDirty} onClick={() => reset()}>
             취소
@@ -95,13 +94,13 @@ const FieldArray = ({
   register,
   error,
 }: {
-  control: Control<z.TypeOf<typeof adminGallerySettingValidator>>
-  register: UseFormRegister<z.TypeOf<typeof adminGallerySettingValidator>>
+  control: Control<z.TypeOf<typeof adminRoleSettingValidator>>
+  register: UseFormRegister<z.TypeOf<typeof adminRoleSettingValidator>>
   error: string
 }) => {
   const { fields, append, move, remove } = useFieldArray({
     control,
-    name: 'categories',
+    name: 'roles',
   })
 
   const items = fields.map((item, index) => (
@@ -123,12 +122,12 @@ const FieldArray = ({
           <div className="flex flex-col w-full justify-between gap-y-2 pr-2">
             <Input
               className="w-full"
-              placeholder="카테고리 이름"
-              {...register(`categories.${index}.name`)}
+              placeholder="역할 이름"
+              {...register(`roles.${index}.name`)}
             />
-            <FormFieldBuilder name={`categories.${index}.discordChannel`}>
+            <FormFieldBuilder name={`roles.${index}.discordRole`}>
               {({ field: { onChange, onBlur, value }, error }) => (
-                <ChannelSelector error={error} onChange={onChange} onBlur={onBlur} value={value} />
+                <RoleSelector error={error} onChange={onChange} onBlur={onBlur} value={value} />
               )}
             </FormFieldBuilder>
           </div>
@@ -142,12 +141,12 @@ const FieldArray = ({
 
   return (
     <FormBlock
-      label="카테고리 설정"
-      description="갤러리 카테고리를 설정하세요."
+      label="역할 설정"
+      description="사용자의 역할을 설정하세요."
       right={
         <Button
           variant="primary"
-          onClick={() => append({ name: '', discordChannel: '', defaultOrder: 0 })}
+          onClick={() => append({ name: '', discordRole: '', defaultOrder: 0 })}
         >
           추가
         </Button>
@@ -170,4 +169,4 @@ const FieldArray = ({
   )
 }
 
-export default GallerySetting
+export default RoleSetting

@@ -1,20 +1,11 @@
 import type { NextPage } from 'next'
 import { SettingLayout } from '~/layouts'
-import { useUser } from '~/hooks/useAuth'
 import { Form, FormFieldBuilder, Input } from '~/components/form'
 import { useForm } from '~/hooks/useForm'
-import {
-  adminGallerySettingValidator,
-  adminSaveSettingsValidator,
-  authSignUpValidator,
-  z,
-} from '@ideaslab/validator'
+import { adminSaveSettingsValidator, z } from '@ideaslab/validator'
 import { trpc } from '~/lib/trpc'
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import classNames from 'classnames'
-import { Button, GripVerticalIcon } from '~/components/common'
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { Button } from '~/components/common'
 import { FormBlock } from '~/components/form/form-block'
 import { ChannelSelector } from '~/components/channel-selector'
 import { RoleSelector } from '~/components/role-selector'
@@ -23,31 +14,40 @@ import { appRouter } from '~/../../server/src/router/_app'
 import { useEffect, useMemo } from 'react'
 
 const SettingsPage: NextPage = () => {
-  const profile = useUser()
   const { data: settings } = trpc.admin.loadSettings.useQuery(undefined, { trpc: { ssr: false } })
 
   const saveSettings = trpc.admin.saveSettings.useMutation()
   const form = useForm(adminSaveSettingsValidator, {
     onSubmit: async (data) => {
-      await saveSettings.mutateAsync(data)
+      const fetchData = data.settings.filter((item) => {
+        const target = settings?.find((category) => category.key === item.key)
+        if (!target) return true
+
+        if (item.value === target.value) return false
+
+        return true
+      })
+      await saveSettings.mutateAsync({ settings: fetchData })
       toast.success('저장')
     },
     onInvalid: (data) => {
       toast.error(JSON.stringify(data))
     },
-    defaultValues: {
-      settings:
-        settings
-          ?.filter((data) => data.value !== undefined && data.value !== null)
-          .map(({ key, value }) => ({ key, value })) ?? [],
-    },
   })
+
+  useEffect(() => {
+    if (form.getValues()?.settings?.length > 0) return
+    if (!settings) return
+    form.setValue(
+      'settings',
+      settings.map(({ key, value }) => ({ key, value })),
+    )
+  }, [form, settings])
 
   const {
     control,
     registerForm,
     reset,
-    setValue,
     formState: { errors, isDirty, isSubmitting },
   } = form
 
@@ -93,10 +93,6 @@ const FieldArray = ({
     control,
     name: 'settings',
   })
-
-  const set = (key: string) => {
-    append({ key, value: settingMap[key].value ?? '' })
-  }
 
   const settingMap = useMemo(
     () =>
@@ -154,38 +150,16 @@ const FieldArray = ({
   }
 
   return (
-    <div className="divide-y-2">
-      {fields.length > 0 && (
-        <div className="mb-2 space-y-2">
-          {fields.map((field, index) => (
-            <FormBlock
-              key={field.id}
-              label={settingMap[field.key].key}
-              description={settingMap[field.key].description}
-            >
-              <Item field={field} index={index} />
-            </FormBlock>
-          ))}
-        </div>
-      )}
-      <div className="pt-2">
-        {settings
-          .filter((item) => fields.findIndex((field) => field.key === item.key) < 0)
-          .map((item) => (
-            <FormBlock
-              label={item.key}
-              description={item.description}
-              key={item.key}
-              right={
-                <Button type="button" onClick={() => set(item.key)}>
-                  설정
-                </Button>
-              }
-            >
-              {item.value && <Item defaultValue={item.value} disable />}
-            </FormBlock>
-          ))}
-      </div>
+    <div className="mb-2 space-y-2">
+      {fields.map((field, index) => (
+        <FormBlock
+          key={field.id}
+          label={settingMap[field.key].key}
+          description={settingMap[field.key].description}
+        >
+          <Item field={field} index={index} />
+        </FormBlock>
+      ))}
     </div>
   )
 }

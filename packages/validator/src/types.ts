@@ -38,10 +38,23 @@ export const authSignUpValidator = z.object({
 export const adminGallerySettingValidator = z.object({
   categories: z.array(
     z.object({
-      id: z.string().cuid().optional(),
-      name: z.string().min(1).max(20),
-      discordChannel: z.string().min(1).max(20),
+      id: z.number().optional(),
+      name: z.string().min(1).max(30),
+      discordChannel: z.string().min(1).max(30),
       defaultOrder: z.number(),
+      delete: z.boolean().optional(),
+    }),
+  ),
+})
+
+export const adminRoleSettingValidator = z.object({
+  roles: z.array(
+    z.object({
+      id: z.number().optional(),
+      name: z.string().min(1).max(30),
+      discordRole: z.string().min(1).max(30),
+      defaultOrder: z.number(),
+      delete: z.boolean().optional(),
     }),
   ),
 })
@@ -49,7 +62,7 @@ export const adminGallerySettingValidator = z.object({
 export const adminSaveSettingsValidator = z.object({
   settings: z.array(
     z.object({
-      key: z.string().min(1).max(20),
+      key: z.string().min(1).max(50),
       value: z.any().nullable(),
     }),
   ),
