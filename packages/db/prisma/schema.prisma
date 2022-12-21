@@ -77,5 +77,5 @@ model VoiceLog {
 
 model Setting {
         key   String @id
-        value Json
+        value String
 }
