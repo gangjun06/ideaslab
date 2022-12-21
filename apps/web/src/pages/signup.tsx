@@ -199,7 +199,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     setValue,
     setError,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = form
 
   return (
@@ -256,7 +256,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
           error={errors?.links?.message ?? ''}
         />
 
-        {Object.keys(errors).filter((key) => key !== 'captcha').length === 0 && (
+        {isDirty && Object.keys(errors).filter((key) => key !== 'captcha').length === 0 && (
           <FormBlock
             label="캡챠"
             description="자동 가입을 방지하기 위해 클릭해주세요."
