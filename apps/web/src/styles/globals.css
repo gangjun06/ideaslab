@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .card {
+    @apply border shadow-sm rounded dark:bg-gray-700/50 border-base-color dark:text-gray-300 bg-white;
+  }
+}
+
 @layer base {
   .text-title-color {
     @apply text-titles-light dark:text-titles-dark;
@@ -79,10 +85,6 @@ input[type='number'].no-spinner::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-
-.card {
-  @apply border shadow-sm rounded dark:bg-gray-700/50 border-base-color dark:text-gray-300 bg-white;
 }
 
 .tag {

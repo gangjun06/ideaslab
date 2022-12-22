@@ -1,5 +1,6 @@
 const rtf = new Intl.RelativeTimeFormat('ko', { style: 'short', numeric: 'auto' })
 const dtf = new Intl.DateTimeFormat('ko', { dateStyle: 'full', timeStyle: 'short' })
+const dtfDateShort = new Intl.DateTimeFormat('ko', { dateStyle: 'short' })
 
 export const relativeTimeFormat = (date: Date) => {
   const now = new Date()
@@ -35,4 +36,8 @@ export const relativeTimeFormat = (date: Date) => {
 
 export const fullTimeFormat = (date: Date) => {
   return dtf.format(date)
+}
+
+export const dateShortFormat = (date: Date) => {
+  return dtfDateShort.format(date)
 }

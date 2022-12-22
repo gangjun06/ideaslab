@@ -72,6 +72,11 @@ export const galleryPostsValidator = z.object({
   cursor: z.number().optional(),
   limit: z.number().min(10).max(50).default(50),
   categoryIds: z.array(z.number()).max(100).optional(),
+  authorHandle: z.string().optional(),
+})
+
+export const detailStringValidator = z.object({
+  id: z.string(),
 })
 
 export const detailValidator = z.object({

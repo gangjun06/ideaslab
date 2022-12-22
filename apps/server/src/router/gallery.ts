@@ -1,4 +1,4 @@
-import { detailValidator, galleryPostsValidator } from '@ideaslab/validator'
+import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
 import { publicProcedure, router } from '~/api/trpc'
 import { dbClient, Prisma } from '@ideaslab/db'
 
@@ -110,5 +110,25 @@ export const galleryRouter = router({
   }),
   categories: publicProcedure.query(async () => {
     return await dbClient.category.findMany({ select: { name: true, id: true } })
+  }),
+  profile: publicProcedure.input(detailStringValidator).query(async ({ input }) => {
+    const user = await dbClient.user.findUnique({
+      where: { handle: input.id },
+      select: {
+        avatar: true,
+        createdAt: true,
+        handle: true,
+        links: true,
+        introduce: true,
+        name: true,
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+    })
+
+    return user
   }),
 })
