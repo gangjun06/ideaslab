@@ -90,7 +90,7 @@ const GalleryPage = () => {
                     const sizes = ['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'][
                       Math.floor(Math.random() * 6)
                     ]
-                    return <div key={index} className={`${sizes} bg-gray-800 rounded w-full`}></div>
+                    return <div key={index} className={`${sizes} bg-pulse rounded w-full`}></div>
                   })
                 : posts?.pages.map((page) =>
                     page.map((post) => (

@@ -20,6 +20,7 @@ model User {
         likes        Like[]
         posts        Post[]
         VoiceLog     VoiceLog[]
+        Comment      Comment[]
 }
 
 model Category {
@@ -29,7 +30,24 @@ model Category {
         defaultOrder   Int      @default(0)
         createdAt      DateTime @default(now())
         updateAt       DateTime @updatedAt
-        Posts          Post[]
+        posts          Post[]
+}
+
+model Comment {
+        discordId String    @id
+        authorId  String
+        content   String
+        parentId  String?
+        parent    Comment?  @relation("CommentParent", fields: [parentId], references: [discordId])
+        comments  Comment[] @relation("CommentParent")
+
+        author User @relation(fields: [authorId], references: [discordId])
+
+        post   Post @relation(fields: [postId], references: [id])
+        postId Int
+
+        createAt DateTime @default(now())
+        updateAt DateTime @updatedAt
 }
 
 model Role {
@@ -47,19 +65,20 @@ model Tag {
 }
 
 model Post {
-        id          Int      @id @default(autoincrement())
+        id          Int       @id @default(autoincrement())
+        discordId   String    @unique
         attachments Json[]
         title       String
         content     String
         categoryId  Int
-        channelId   String
         authorId    String
-        createdAt   DateTime @default(now())
-        updateAt    DateTime @updatedAt
-        Like        Like[]
-        author      User     @relation(fields: [authorId], references: [discordId])
-        category    Category @relation(fields: [categoryId], references: [id])
-        tags        Tag[]    @relation("PostToTag")
+        createdAt   DateTime  @default(now())
+        updateAt    DateTime  @updatedAt
+        likes       Like[]
+        author      User      @relation(fields: [authorId], references: [discordId])
+        category    Category  @relation(fields: [categoryId], references: [id])
+        tags        Tag[]     @relation("PostToTag")
+        comments    Comment[]
 }
 
 model Like {

@@ -43,7 +43,7 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
   try {
     await dbClient.post.create({
       data: {
-        channelId: threadChannel.id,
+        discordId: threadChannel.id,
         categoryId: category.id,
         authorId: threadChannel.ownerId,
         content: message.content ?? '',

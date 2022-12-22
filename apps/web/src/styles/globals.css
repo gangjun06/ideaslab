@@ -99,3 +99,15 @@ input[type='number']::-webkit-outer-spin-button {
 .tag.primary {
   @apply border-primary-color bg-primary-50 dark:bg-primary-900;
 }
+
+.dark div::-webkit-scrollbar {
+  background-color: rgb(39 39 42 / 0.5) !important;
+}
+
+.dark .custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(82 82 91 / 0.8);
+}
+
+.bg-pulse {
+  @apply bg-gray-200 dark:bg-gray-800;
+}

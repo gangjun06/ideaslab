@@ -1,15 +1,22 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { ArchiveBoxIcon, TagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  ArchiveBoxIcon,
+  ChatBubbleLeftRightIcon,
+  LinkIcon,
+  TagIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import Image from 'next/image'
 import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { appRouter } from '~/../../server/src/router/_app'
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
 import { fullTimeFormat, relativeTimeFormat } from '~/utils/time'
-import { Button, TransitionChild } from './common'
+import { Button, ButtonLink, TransitionChild } from './common'
 
 export const PostDetailModalWrapper = ({
   baseUrl = '',
@@ -86,7 +93,9 @@ export const PostView = ({
         </div>
       </div>
       <div className="text-title-color">{post.title}</div>
-      <div className="text-description-color text-sm mb-2">{post.content}</div>
+      <div className="text-description-color text-sm mb-2">
+        {post.content.length > 300 ? post.content.slice(0, 300) + ' ...' : post.content}
+      </div>
 
       <div className="flex">
         <div className="tag">
@@ -125,20 +134,20 @@ export const GalleryDetailModal = ({
                 <Suspense
                   fallback={
                     <>
-                      <div className="animate-pulse flex flex-col px-8 mt-8">
-                        <div className="h-12 bg-gray-800 rounded w-24"></div>
-                        <div className="h-96 bg-gray-800 rounded w-full mt-8"></div>
-                        <div className="flex gap-x-4 mt-2">
-                          <div className="h-24 bg-gray-800 rounded w-full"></div>
-                          <div className="h-24 bg-gray-800 rounded w-full"></div>
-                          <div className="h-24 bg-gray-800 rounded w-full"></div>
-                          <div className="h-24 bg-gray-800 rounded w-full"></div>
+                      <div className="animate-pulse flex flex-col px-8 mt-8 gap-y-4">
+                        <div className="flex justify-between items-center">
+                          <div className="h-12 bg-gray-800 rounded w-48"></div>
+                          <Button variant="subtle" onClick={onClose} forIcon>
+                            <XMarkIcon width={24} height={24} />
+                          </Button>
                         </div>
-                        <div className="ml-0 mt-8 h-12 bg-gray-800 rounded-full w-full"></div>
-                        <div className="ml-0 mt-6 h-12 bg-gray-800 rounded-full w-full"></div>
-                        <div className="ml-0 mt-6 h-12 bg-gray-800 rounded-full w-full"></div>
-                        <div className="ml-0 mt-6 h-12 bg-gray-800 rounded-full w-full"></div>
-                        <div className="ml-0 mt-6 h-12 bg-gray-800 rounded-full w-full"></div>
+                        <div className="h-12 bg-pulse rounded mt-4 w-80"></div>
+                        <div className="h-96 bg-pulse rounded w-full"></div>
+                        <div className="mt-8 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
                       </div>
                     </>
                   }
@@ -157,7 +166,7 @@ export const GalleryDetailModal = ({
 export const DetailContent = ({ id, onClose }: { id?: number | null; onClose: () => void }) => {
   const { data } = trpc.gallery.postDetail.useQuery(
     { id: id ?? 0 },
-    { enabled: typeof id === 'number' },
+    { enabled: typeof id === 'number', suspense: true },
   )
 
   return <PostDetail forDialog onClose={onClose} post={data} />
@@ -178,7 +187,7 @@ export const PostDetail = ({
       {forDialog && (
         <Dialog.Title
           as="h3"
-          className="w-full px-6 pt-5 text-2xl font-medium leading-6 text-title-color flex justify-between items-center"
+          className="w-full px-6 py-5 text-2xl font-medium leading-6 text-title-color flex justify-between items-center"
         >
           <div>{post.title ?? '이미지 상세보기'}</div>
           {onClose && (
@@ -190,11 +199,10 @@ export const PostDetail = ({
       )}
       <div
         className={classNames(
-          forDialog && 'px-6 py-5',
+          forDialog && 'px-6 py-2 pb-5',
           'text-base-color overflow-y-auto custom-scroll flex-1',
         )}
       >
-        <div className="relative"></div>
         <div className="flex gap-x-2 items-center">
           <Image
             src={post.author.avatar}
@@ -226,27 +234,68 @@ export const PostDetail = ({
         <ReactMarkdown className="prose max-w-none prose-strong:text-gray-800 dark:prose-strong:text-gray-200 text-base-color">
           {post.content.replace(/\n/g, '\n\n')}
         </ReactMarkdown>
+        <div className="mt-4 flex flex-col items-center justify-center gap-3">
+          {post.attachments.map((image) => {
+            if ((image as any)?.contentType?.startsWith('image/')) {
+              return (
+                <Image
+                  // @ts-ignore
+                  src={image?.url ?? ''}
+                  // @ts-ignore
+                  width={image?.width ?? 0}
+                  // @ts-ignore
+                  height={image?.height ?? 0}
+                />
+              )
+            }
+          })}
+        </div>
+        <div className="flex gap-x-2 mt-4 w-full items-center justify-center">
+          <Button
+            variant="subtle"
+            onClick={() => {
+              navigator.clipboard.writeText(location.href)
+              toast.success('링크가 복사되었어요.')
+            }}
+          >
+            <>
+              <LinkIcon width={24} height={24} />
+              링크 복사
+            </>
+          </Button>
+          <ButtonLink
+            variant="subtle"
+            href={`https://discord.com/channels/${process.env.NEXT_PUBLIC_GUILD_ID}/${post.discordId}`}
+          >
+            <>
+              <ChatBubbleLeftRightIcon width={24} height={24} />
+              디스코드에서 보기
+            </>
+          </ButtonLink>
+        </div>
         <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
           <div className="max-w-2xl mx-auto px-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-                댓글 (20)
+                디스코드 댓글
               </h2>
             </div>
-            <Comment
-              avatar="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-              username="Michael Gough"
-              time="Feb. 8, 2022"
-              content="Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy."
-              depth={1}
-            />
-            <Comment
-              avatar="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-              username="Michael Gough"
-              time="Feb. 8, 2022"
-              content="Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy."
-              depth={2}
-            />
+            {post.comments.map(({ parent, ...comment }) => (
+              <Comment
+                key={comment.discordId}
+                avatar={comment.author.avatar}
+                username={comment.author.name}
+                content={comment.content}
+                time={relativeTimeFormat(comment.createAt)}
+                parent={
+                  parent && {
+                    avatar: parent.author.avatar,
+                    content: parent.content,
+                    username: parent.author.name,
+                  }
+                }
+              />
+            ))}
           </div>
         </section>
       </div>
@@ -255,23 +304,37 @@ export const PostDetail = ({
 }
 
 const Comment = ({
-  depth,
   avatar,
   username,
   time,
   content,
+  parent,
 }: {
-  depth: number
   avatar: string
   time: string
   content: string
   username: string
+  parent?: {
+    avatar: string
+    username: string
+    content: string
+  } | null
 }) => {
   return (
-    <article
-      className={classNames('p-4 mb-6 text-base card')}
-      style={{ marginLeft: (depth - 1) * 24 }}
-    >
+    <article className={classNames('p-4 mb-6 text-base card')}>
+      {parent && (
+        <div className="flex mb-3 card px-2 py-2 items-center">
+          <Image
+            width={24}
+            height={24}
+            className="rounded-full"
+            src={parent.avatar}
+            alt="reply from"
+          />
+          <div className="ml-1 text-sm">{parent.username}</div>
+          <div className="ml-2 text-description-color text-ellipsis text-sm">{parent.content}</div>
+        </div>
+      )}
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">

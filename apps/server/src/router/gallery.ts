@@ -1,6 +1,6 @@
 import { detailValidator, galleryPostsValidator } from '@ideaslab/validator'
 import { publicProcedure, router } from '~/api/trpc'
-import { dbClient } from '@ideaslab/db'
+import { dbClient, Prisma } from '@ideaslab/db'
 
 export const galleryRouter = router({
   posts: publicProcedure.input(galleryPostsValidator).query(async ({ input }) => {
@@ -48,11 +48,13 @@ export const galleryRouter = router({
     return result
   }),
   postDetail: publicProcedure.input(detailValidator).query(async ({ input: { id } }) => {
-    return await dbClient.post.findUnique({
+    const res = await dbClient.post.findUnique({
       where: {
         id,
       },
       select: {
+        id: true,
+        discordId: true,
         title: true,
         createdAt: true,
         updateAt: true,
@@ -76,8 +78,34 @@ export const galleryRouter = router({
             discordId: true,
           },
         },
+        comments: {
+          select: {
+            discordId: true,
+            content: true,
+            createAt: true,
+            author: {
+              select: {
+                avatar: true,
+                name: true,
+              },
+            },
+            parent: {
+              select: {
+                discordId: true,
+                content: true,
+                author: {
+                  select: {
+                    avatar: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     })
+    return res
   }),
   categories: publicProcedure.query(async () => {
     return await dbClient.category.findMany({ select: { name: true, id: true } })
