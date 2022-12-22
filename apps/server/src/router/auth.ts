@@ -7,7 +7,7 @@ import {
 import { loginWithPin } from '~/service/auth'
 import { loginedProcedure } from '~/api/auth-middleware'
 import { client, currentGuild, currentGuildMember } from '~/bot/client'
-import { prisma } from '@ideaslab/db'
+import { dbClient } from '@ideaslab/db'
 import axios from 'axios'
 import config from '~/config'
 import { TRPCError } from '@trpc/server'
@@ -22,7 +22,7 @@ export const authRouter = router({
       }
     }),
   profile: loginedProcedure.query(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
+    const user = await dbClient.user.findUnique({
       where: { discordId: ctx.user.id },
       select: { discordId: true },
     })
@@ -44,7 +44,7 @@ export const authRouter = router({
     }
   }),
   checkHandle: publicProcedure.input(authCheckHandleValidator).mutation(async ({ input }) => {
-    const user = await prisma.user.findUnique({
+    const user = await dbClient.user.findUnique({
       where: { handle: input.handle },
     })
     if (user) return false
@@ -65,7 +65,7 @@ export const authRouter = router({
       throw new TRPCError({ code: 'BAD_REQUEST', message: '캡챠 인증에 실패하였습니다.' })
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await dbClient.user.findUnique({
       where: { discordId: ctx.user.id },
     })
     if (user) {
@@ -74,7 +74,7 @@ export const authRouter = router({
 
     const member = await currentGuildMember(ctx.user.id)
 
-    await prisma.user.create({
+    await dbClient.user.create({
       data: {
         discordId: ctx.user.id,
         avatar: member.displayAvatarURL(),

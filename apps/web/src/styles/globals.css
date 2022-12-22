@@ -28,7 +28,7 @@
     @apply border-primary-500 dark:border-primary-500;
   }
   .bg-base {
-    @apply bg-light dark:bg-dark;
+    @apply bg-white dark:bg-gray-900;
   }
   .default-ring {
     @apply focus:outline-none focus:border-primary-600 dark:focus:border-primary-300 focus:ring-0;
@@ -83,4 +83,19 @@ input[type='number']::-webkit-outer-spin-button {
 
 .card {
   @apply border shadow-sm rounded dark:bg-gray-700/50 border-base-color dark:text-gray-300 bg-white;
+}
+
+.tag {
+  @apply rounded-full px-2 py-1 border flex gap-x-1 transition select-none items-center text-subtitle-color;
+}
+
+.tag:not(.primary) {
+  @apply border-base-color bg-gray-100 dark:bg-gray-800;
+}
+.tag.hover:not(.primary) {
+  @apply hover:bg-primary-50 hover:border-primary-400 hover:dark:border-primary-600 dark:hover:bg-primary-900;
+}
+
+.tag.primary {
+  @apply border-primary-color bg-primary-50 dark:bg-primary-900;
 }

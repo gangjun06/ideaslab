@@ -1,6 +1,6 @@
 import config from '~/config'
 import { redis } from '~/lib/redis'
-import { prisma } from '@ideaslab/db'
+import { dbClient } from '@ideaslab/db'
 
 enum SettingValueType {
   String = 'string',
@@ -49,7 +49,7 @@ export const setSetting = async <T extends SettingKeys>(
 
   await redis.set(redisSettingKey(key), stringified, 'EX', settingKeyExpire)
 
-  await prisma.setting.upsert({
+  await dbClient.setting.upsert({
     where: { key },
     create: {
       key,
@@ -67,7 +67,7 @@ export const getSetting = async <T extends SettingKeys>(
   const value = await redis.get(redisSettingKey(key))
 
   if (value === null) {
-    const data = await prisma.setting.findUnique({ where: { key } })
+    const data = await dbClient.setting.findUnique({ where: { key } })
     if (!data) return null
     await redis.set(redisSettingKey(key), data.value, 'EX', settingKeyExpire)
 
@@ -78,7 +78,7 @@ export const getSetting = async <T extends SettingKeys>(
 }
 
 export const getAllSettings = async () => {
-  const values = await prisma.setting.findMany()
+  const values = await dbClient.setting.findMany()
 
   const result: {
     key: SettingKeys

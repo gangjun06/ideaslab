@@ -1,6 +1,6 @@
 import config from '~/config'
 import { redis } from '~/lib/redis'
-import { prisma } from '@ideaslab/db'
+import { dbClient } from '@ideaslab/db'
 
 const redisVoiceKey = (userId: string) => `${config.redisPrefix}voice:${userId}`
 const voiceKeyExpire = 60 * 60 * 24 // 1 day
@@ -27,7 +27,7 @@ export const eventMemberLeave = async (userId: string) => {
     const todayDate = new Date()
     todayDate.setHours(0, 0, 0, 0)
     const todayDuration = Math.floor((todayDate.getTime() - dateInt) / 1000)
-    await prisma.voiceLog.createMany({
+    await dbClient.voiceLog.createMany({
       data: [
         { time, userDiscordId: userId, value: duration - todayDuration },
         {
@@ -40,7 +40,7 @@ export const eventMemberLeave = async (userId: string) => {
     return
   }
 
-  await prisma.voiceLog.create({
+  await dbClient.voiceLog.create({
     data: { time, userDiscordId: userId, value: duration },
   })
 }
@@ -61,7 +61,7 @@ export const getCurrentVoiceLog = async (userId: string) => {
   const tomorrowDate = new Date(todayDate)
   tomorrowDate.setDate(tomorrowDate.getDate() + 1)
 
-  const todaySum = await prisma.voiceLog.groupBy({
+  const todaySum = await dbClient.voiceLog.groupBy({
     by: ['userDiscordId'],
     _sum: {
       value: true,

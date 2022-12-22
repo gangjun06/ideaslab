@@ -25,7 +25,7 @@ model User {
 model Category {
         id             Int      @id @default(autoincrement())
         name           String
-        discordChannel String
+        discordChannel String   @unique
         defaultOrder   Int      @default(0)
         createdAt      DateTime @default(now())
         updateAt       DateTime @updatedAt
@@ -48,8 +48,7 @@ model Tag {
 
 model Post {
         id          Int      @id @default(autoincrement())
-        name        String
-        attachments String[]
+        attachments Json[]
         title       String
         content     String
         categoryId  Int

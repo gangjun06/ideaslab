@@ -1,9 +1,47 @@
 import { Event } from '~/bot/event'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, TextChannel } from 'discord.js'
 import { Embed } from '~/utils/embed'
+import { dbClient, Prisma } from '@ideaslab/db'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return
+  if (!threadChannel.parentId || !threadChannel.ownerId) return
+
+  const messages = await threadChannel.messages.fetch({ limit: 1, cache: false })
+  const message = messages.first()
+  if (!message) return
+
+  const category = await dbClient.category.findUnique({
+    where: { discordChannel: threadChannel.parentId },
+  })
+  if (!category) return
+
+  const attachments = message.attachments.map((attachment) => {
+    return {
+      url: attachment.url,
+      name: attachment.name,
+      contentType: attachment.contentType,
+      size: attachment.size,
+      width: attachment.width,
+      height: attachment.height,
+      spoiler: attachment.spoiler,
+    }
+  })
+
+  try {
+    await dbClient.post.create({
+      data: {
+        channelId: threadChannel.id,
+        categoryId: category.id,
+        authorId: threadChannel.ownerId,
+        content: message.content ?? '',
+        title: threadChannel.name,
+        attachments: attachments as unknown as Prisma.JsonArray,
+      },
+    })
+  } catch (e) {
+    console.error(e)
+  }
 
   // const embed = new Embed(client, 'success').
   const button = new ButtonBuilder()

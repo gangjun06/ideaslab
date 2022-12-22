@@ -7,12 +7,12 @@ import {
 import { loginWithPin } from '~/service/auth'
 import { adminProcedure, loginedProcedure } from '~/api/auth-middleware'
 import { client, currentGuild, currentGuildMember } from '~/bot/client'
-import { prisma } from '@ideaslab/db'
+import { dbClient } from '@ideaslab/db'
 import { getAllSettings, setSetting } from '~/service/setting'
 
 export const adminRouter = router({
   loadGallerySetting: adminProcedure.query(async ({ ctx }) => {
-    const categories = await prisma.category.findMany()
+    const categories = await dbClient.category.findMany()
     return {
       categories,
     }
@@ -22,11 +22,11 @@ export const adminRouter = router({
     .mutation(async ({ ctx, input }) => {
       for (const category of input.categories) {
         if (category.delete) {
-          await prisma.category.delete({ where: { id: category.id } })
+          await dbClient.category.delete({ where: { id: category.id } })
         }
 
         if (!category.id) {
-          await prisma.category.create({
+          await dbClient.category.create({
             data: {
               name: category.name,
               discordChannel: category.discordChannel,
@@ -36,7 +36,7 @@ export const adminRouter = router({
           continue
         }
 
-        await prisma.category.update({
+        await dbClient.category.update({
           where: { id: category.id },
           data: {
             name: category.name,
@@ -47,18 +47,18 @@ export const adminRouter = router({
       }
     }),
   loadRoles: adminProcedure.query(async ({ ctx }) => {
-    return await prisma.role.findMany()
+    return await dbClient.role.findMany()
   }),
   saveRoles: adminProcedure.input(adminRoleSettingValidator).mutation(async ({ input }) => {
     for (const role of input.roles) {
       if (role.delete) {
-        await prisma.role.delete({ where: { id: role.id } })
+        await dbClient.role.delete({ where: { id: role.id } })
       }
 
       const { name, discordRole, defaultOrder } = role
 
       if (!role.id) {
-        await prisma.role.create({
+        await dbClient.role.create({
           data: {
             name,
             discordRole,
@@ -68,7 +68,7 @@ export const adminRouter = router({
         continue
       }
 
-      await prisma.role.update({
+      await dbClient.role.update({
         where: { id: role.id },
         data: {
           name,

@@ -68,4 +68,14 @@ export const adminSaveSettingsValidator = z.object({
   ),
 })
 
+export const galleryPostsValidator = z.object({
+  cursor: z.number().optional(),
+  limit: z.number().min(10).max(50).default(50),
+  categoryIds: z.array(z.number()).max(100).optional(),
+})
+
+export const detailValidator = z.object({
+  id: z.number(),
+})
+
 z.setErrorMap(customErrorMap)
