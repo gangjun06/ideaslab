@@ -2,10 +2,15 @@ import { Event } from '~/bot/event'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, TextChannel } from 'discord.js'
 import { Embed } from '~/utils/embed'
 import { dbClient, Prisma } from '@ideaslab/db'
+import { currentGuild } from '~/bot/client'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return
   if (!threadChannel.parentId || !threadChannel.ownerId) return
+
+  if (!threadChannel.parent || threadChannel.parent.type !== ChannelType.GuildForum) return
+
+  const tags = threadChannel.parent.availableTags
 
   const messages = await threadChannel.messages.fetch({ limit: 1, cache: false })
   const message = messages.first()
@@ -28,6 +33,13 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
     }
   })
 
+  const postTags: string[] = []
+  threadChannel.appliedTags.forEach((tagId) => {
+    const target = tags.find(({ id }) => id === tagId)
+    if (!target) return
+    postTags.push(target.name.replace(/ /g, '_'))
+  })
+
   try {
     await dbClient.post.create({
       data: {
@@ -37,6 +49,14 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
         content: message.content ?? '',
         title: threadChannel.name,
         attachments: attachments as unknown as Prisma.JsonArray,
+        tags: {
+          connectOrCreate: postTags.map((tag) => ({
+            where: { name: tag },
+            create: {
+              name: tag,
+            },
+          })),
+        },
       },
     })
   } catch (e) {

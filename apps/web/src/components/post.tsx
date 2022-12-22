@@ -3,6 +3,7 @@ import { ArchiveBoxIcon, TagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import Image from 'next/image'
 import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { appRouter } from '~/../../server/src/router/_app'
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
@@ -61,7 +62,7 @@ export const PostView = ({
       onClick={onClick}
     >
       {image && (
-        <div className="mb-2">
+        <div className="mb-2 w-full flex items-center justify-center">
           <Image
             src={image.url}
             width={image.width}
@@ -118,7 +119,7 @@ export const GalleryDetailModal = ({
             <TransitionChild type="modal">
               <Dialog.Panel
                 className={classNames(
-                  'bg-base h-full text-base-color w-full max-w-full xl:max-w-5xl transform sm:rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all flex flex-col',
+                  'bg-base h-full text-base-color w-full max-w-full lg:max-w-4xl transform sm:rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all flex flex-col',
                 )}
               >
                 <Suspense
@@ -207,14 +208,84 @@ export const PostDetail = ({
             <div className="text-description-color text-sm">{fullTimeFormat(post.createdAt)}</div>
           </div>
         </div>
-        <div className="my-3 flex">
+        <div className="mt-5 mb-5 flex gap-2 items-center flex-wrap">
           <div className="tag">
             <ArchiveBoxIcon width={24} height={24} />
             {post.category.name}
           </div>
+          {post.tags.length > 0 && (
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-600 dark:bg-gray-300"></div>
+          )}
+          {post.tags.map(({ name }) => (
+            <div className="tag">
+              <TagIcon width={24} height={24} />
+              {name}
+            </div>
+          ))}
         </div>
-        {post.content}
+        <ReactMarkdown className="prose max-w-none prose-strong:text-gray-800 dark:prose-strong:text-gray-200 text-base-color">
+          {post.content.replace(/\n/g, '\n\n')}
+        </ReactMarkdown>
+        <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
+          <div className="max-w-2xl mx-auto px-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+                댓글 (20)
+              </h2>
+            </div>
+            <Comment
+              avatar="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+              username="Michael Gough"
+              time="Feb. 8, 2022"
+              content="Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy."
+              depth={1}
+            />
+            <Comment
+              avatar="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+              username="Michael Gough"
+              time="Feb. 8, 2022"
+              content="Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy."
+              depth={2}
+            />
+          </div>
+        </section>
       </div>
     </>
+  )
+}
+
+const Comment = ({
+  depth,
+  avatar,
+  username,
+  time,
+  content,
+}: {
+  depth: number
+  avatar: string
+  time: string
+  content: string
+  username: string
+}) => {
+  return (
+    <article
+      className={classNames('p-4 mb-6 text-base card')}
+      style={{ marginLeft: (depth - 1) * 24 }}
+    >
+      <footer className="flex justify-between items-center mb-2">
+        <div className="flex items-center">
+          <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+            <img className="mr-2 w-6 h-6 rounded-full" src={avatar} alt="Bonnie Green" />
+            {username}
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            <time dateTime="2022-03-12" title="March 12th, 2022">
+              {time}
+            </time>
+          </p>
+        </div>
+      </footer>
+      <p className="text-gray-500 dark:text-gray-400">{content}</p>
+    </article>
   )
 }

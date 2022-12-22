@@ -14,10 +14,10 @@ import { relativeTimeFormat } from '~/utils/time'
 const LIMIT = 50
 
 const breakpointColumns = {
-  default: 6,
-  1500: 5,
-  1300: 4,
-  1100: 3,
+  default: 5,
+  1500: 4,
+  1300: 3,
+  1100: 2,
   700: 2,
   500: 1,
 }

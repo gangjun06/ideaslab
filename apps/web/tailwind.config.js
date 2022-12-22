@@ -35,15 +35,15 @@ module.exports = {
         },
         subtitles: {
           light: colors.gray['700'],
-          dark: colors.gray['100'],
+          dark: colors.gray['200'],
         },
         descriptions: {
           light: colors.gray['500'],
           dark: colors.gray['400'],
         },
         bases: {
-          light: colors.gray['600'],
-          dark: colors.gray['400'],
+          light: colors.gray['700'],
+          dark: colors.gray['300'],
         },
       },
       borderColor: {
@@ -54,5 +54,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }

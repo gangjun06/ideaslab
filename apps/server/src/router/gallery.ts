@@ -56,7 +56,11 @@ export const galleryRouter = router({
         title: true,
         createdAt: true,
         updateAt: true,
-        tags: true,
+        tags: {
+          select: {
+            name: true,
+          },
+        },
         content: true,
         attachments: true,
         category: {
