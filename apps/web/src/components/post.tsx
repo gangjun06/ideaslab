@@ -286,13 +286,17 @@ export const PostDetail = ({
                 avatar={comment.author.avatar}
                 username={comment.author.name}
                 content={comment.content}
-                time={relativeTimeFormat(comment.createAt)}
+                time={relativeTimeFormat(comment.createdAt)}
                 parent={
-                  parent && {
-                    avatar: parent.author.avatar,
-                    content: parent.content,
-                    username: parent.author.name,
-                  }
+                  parent
+                    ? {
+                        avatar: parent.author.avatar,
+                        content: parent.content,
+                        username: parent.author.name,
+                      }
+                    : comment.hasParent
+                    ? { content: '원본 메시지가 삭제되었어요.' }
+                    : null
                 }
               />
             ))}
@@ -315,8 +319,8 @@ const Comment = ({
   content: string
   username: string
   parent?: {
-    avatar: string
-    username: string
+    avatar?: string
+    username?: string
     content: string
   } | null
 }) => {
@@ -324,14 +328,16 @@ const Comment = ({
     <article className={classNames('p-4 mb-6 text-base card')}>
       {parent && (
         <div className="flex mb-3 card px-2 py-2 items-center">
-          <Image
-            width={24}
-            height={24}
-            className="rounded-full"
-            src={parent.avatar}
-            alt="reply from"
-          />
-          <div className="ml-1 text-sm">{parent.username}</div>
+          {parent.avatar && (
+            <Image
+              width={24}
+              height={24}
+              className="rounded-full"
+              src={parent.avatar}
+              alt="reply from"
+            />
+          )}
+          {parent.username && <div className="ml-1 text-sm">{parent.username}</div>}
           <div className="ml-2 text-description-color text-ellipsis text-sm">{parent.content}</div>
         </div>
       )}

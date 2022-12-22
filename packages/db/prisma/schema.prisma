@@ -38,6 +38,7 @@ model Comment {
         authorId  String
         content   String
         parentId  String?
+        hasParent Boolean   @default(false) // Make it true when connect parent comment. Can use this value to display "original message deleted"
         parent    Comment?  @relation("CommentParent", fields: [parentId], references: [discordId])
         comments  Comment[] @relation("CommentParent")
 
@@ -46,8 +47,10 @@ model Comment {
         post   Post @relation(fields: [postId], references: [id])
         postId Int
 
-        createAt DateTime @default(now())
-        updateAt DateTime @updatedAt
+        createdAt DateTime @default(now()) @db.Timestamptz()
+        updateAt  DateTime @updatedAt @db.Timestamptz()
+
+        @@index([createdAt(sort: Desc)])
 }
 
 model Role {
@@ -60,7 +63,7 @@ model Role {
 model Tag {
         id        Int      @id @default(autoincrement())
         name      String   @unique
-        createdAt DateTime @default(now())
+        createdAt DateTime @default(now()) @db.Timestamptz()
         posts     Post[]   @relation("PostToTag")
 }
 
@@ -72,13 +75,15 @@ model Post {
         content     String
         categoryId  Int
         authorId    String
-        createdAt   DateTime  @default(now())
-        updateAt    DateTime  @updatedAt
+        createdAt   DateTime  @default(now()) @db.Timestamptz()
+        updateAt    DateTime  @updatedAt @db.Timestamptz()
         likes       Like[]
         author      User      @relation(fields: [authorId], references: [discordId])
         category    Category  @relation(fields: [categoryId], references: [id])
         tags        Tag[]     @relation("PostToTag")
         comments    Comment[]
+
+        @@index([createdAt(sort: Desc)])
 }
 
 model Like {
@@ -90,7 +95,7 @@ model Like {
 }
 
 model VoiceLog {
-        time          DateTime @default(now()) @db.Timestamptz(6)
+        time          DateTime @default(now()) @db.Timestamptz()
         value         Int
         userDiscordId String
         user          User     @relation(fields: [userDiscordId], references: [discordId])

@@ -82,7 +82,8 @@ export const galleryRouter = router({
           select: {
             discordId: true,
             content: true,
-            createAt: true,
+            createdAt: true,
+            hasParent: true,
             author: {
               select: {
                 avatar: true,
