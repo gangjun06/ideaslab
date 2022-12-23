@@ -4,6 +4,7 @@ import { dbClient } from '@ideaslab/db'
 
 enum SettingValueType {
   String = 'string',
+  LongText = 'longText',
   Channel = 'channel',
   Number = 'number',
   Tag = 'tag',
@@ -15,6 +16,9 @@ const SettingList = {
   voiceRoomCreateChannel: SettingValueType.Channel,
   achieveForumEatTag: SettingValueType.Tag,
   achieveForumWorkTag: SettingValueType.Tag,
+  privacyPolicy: SettingValueType.LongText,
+  serverRule: SettingValueType.LongText,
+  serviceInfo: SettingValueType.LongText,
 } as const
 
 type SettingKeys = keyof typeof SettingList
@@ -22,6 +26,8 @@ type SettingKeys = keyof typeof SettingList
 type SettingValueTypeConvert<T extends SettingValueType> = T extends SettingValueType.String
   ? string
   : T extends SettingValueType.Channel
+  ? string
+  : T extends SettingValueType.LongText
   ? string
   : T extends SettingValueType.Number
   ? number
@@ -32,13 +38,40 @@ type SettingValueTypeConvert<T extends SettingValueType> = T extends SettingValu
 const redisSettingKey = (key: SettingKeys) => `${config.redisPrefix}setting:${key}`
 const settingKeyExpire = 60 * 60 * 24 // 1 day
 
-export const settingDescriptions: {
-  [key in SettingKeys]: string
+export const settingDetails: {
+  [key in SettingKeys]: {
+    description: string
+    cache: boolean
+  }
 } = {
-  afkChannel: '잠수 채널을 설정합니다',
-  voiceRoomCreateChannel: '음성채널을 생성하는 채널을 설정합니다 ',
-  achieveForumEatTag: '',
-  achieveForumWorkTag: '',
+  afkChannel: {
+    description: '잠수 채널을 설정합니다',
+    cache: true,
+  },
+  voiceRoomCreateChannel: {
+    description: '음성채널을 생성하는 채널을 설정합니다 ',
+    cache: true,
+  },
+  privacyPolicy: {
+    description: '개인정보 처리방침. 마크다운 문법 사용.',
+    cache: false,
+  },
+  serverRule: {
+    description: '디스코드 서버 규칙. **초록색 강조** **!빨간색 강조**',
+    cache: false,
+  },
+  serviceInfo: {
+    description: '웹사이트 정보. 마크다운 문법 사용',
+    cache: false,
+  },
+  achieveForumEatTag: {
+    description: '',
+    cache: true,
+  },
+  achieveForumWorkTag: {
+    description: '',
+    cache: true,
+  },
 }
 
 export const setSetting = async <T extends SettingKeys>(
@@ -47,7 +80,8 @@ export const setSetting = async <T extends SettingKeys>(
 ) => {
   const stringified = JSON.stringify(value)
 
-  await redis.set(redisSettingKey(key), stringified, 'EX', settingKeyExpire)
+  if (settingDetails[key].cache)
+    await redis.set(redisSettingKey(key), stringified, 'EX', settingKeyExpire)
 
   await dbClient.setting.upsert({
     where: { key },
@@ -64,12 +98,15 @@ export const setSetting = async <T extends SettingKeys>(
 export const getSetting = async <T extends SettingKeys>(
   key: SettingKeys,
 ): Promise<SettingValueTypeConvert<typeof SettingList[T]> | null> => {
-  const value = await redis.get(redisSettingKey(key))
+  let value: any = null
+  if (settingDetails[key].cache) value = await redis.get(redisSettingKey(key))
 
   if (value === null) {
     const data = await dbClient.setting.findUnique({ where: { key } })
     if (!data) return null
-    await redis.set(redisSettingKey(key), data.value, 'EX', settingKeyExpire)
+
+    if (settingDetails[key].cache)
+      await redis.set(redisSettingKey(key), data.value, 'EX', settingKeyExpire)
 
     return JSON.parse(data.value)
   }
@@ -89,7 +126,7 @@ export const getAllSettings = async () => {
     key: key as SettingKeys,
     value: JSON.parse(value),
     type: SettingList[key as SettingKeys].toString(),
-    description: settingDescriptions[key as SettingKeys],
+    description: settingDetails[key as SettingKeys].description,
   }))
 
   result.push(
@@ -98,7 +135,7 @@ export const getAllSettings = async () => {
       .map(([key, value]) => ({
         key: key as SettingKeys,
         type: value.toString(),
-        description: settingDescriptions[key as SettingKeys],
+        description: settingDetails[key as SettingKeys].description,
         value: null,
       })),
   )

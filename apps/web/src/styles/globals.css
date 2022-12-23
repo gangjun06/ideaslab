@@ -21,6 +21,9 @@
   .text-base-color {
     @apply text-bases-light dark:text-bases-dark;
   }
+  .text-primary-color {
+    @apply text-primary-600 dark:text-primary-400;
+  }
   .text-error-color {
     @apply text-red-500 dark:text-red-400;
   }
@@ -112,4 +115,10 @@ input[type='number']::-webkit-outer-spin-button {
 
 .bg-pulse {
   @apply bg-gray-200 dark:bg-gray-800;
+}
+
+.markdown {
+  @apply prose text-base-color prose-strong:text-gray-800 dark:prose-strong:text-gray-200 prose-blockquote:text-gray-800 dark:prose-blockquote:text-gray-200;
+  @apply prose-headings:text-gray-800 dark:prose-headings:text-gray-200;
+  @apply prose-a:text-primary-color max-w-none;
 }

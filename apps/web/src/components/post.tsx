@@ -231,7 +231,7 @@ export const PostDetail = ({
             </div>
           ))}
         </div>
-        <ReactMarkdown className="prose max-w-none prose-strong:text-gray-800 dark:prose-strong:text-gray-200 text-base-color">
+        <ReactMarkdown className="max-w-none markdown">
           {post.content.replace(/\n/g, '\n\n')}
         </ReactMarkdown>
         <div className="mt-4 flex flex-col items-center justify-center gap-3">

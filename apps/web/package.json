@@ -23,6 +23,7 @@
     "jotai": "^1.11.2",
     "next": "12.3.4",
     "next-seo": "^5.15.0",
+    "pwa-asset-generator": "^6.2.0",
     "react": "18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-code-input": "^3.10.1",

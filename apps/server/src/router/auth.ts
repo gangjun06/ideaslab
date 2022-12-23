@@ -24,7 +24,7 @@ export const authRouter = router({
   profile: loginedProcedure.query(async ({ ctx }) => {
     const user = await dbClient.user.findUnique({
       where: { discordId: ctx.user.id },
-      select: { discordId: true },
+      select: { discordId: true, avatar: true },
     })
 
     const member = await currentGuildMember(ctx.user.id)
@@ -32,6 +32,15 @@ export const authRouter = router({
     const avatar = member.displayAvatarURL()
     const username = member.user.username
     const discriminator = member.user.discriminator
+
+    if (user?.avatar !== avatar) {
+      await dbClient.user.update({
+        where: { discordId: ctx.user.id },
+        data: {
+          avatar,
+        },
+      })
+    }
 
     return {
       userId: ctx.user.id,

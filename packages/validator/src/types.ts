@@ -35,6 +35,21 @@ export const authSignUpValidator = z.object({
   links: z.array(linkValidator).min(0).max(6),
 })
 
+export const authUpdateProfileValidator = z.object({
+  name: z
+    .string()
+    .min(3)
+    .max(20)
+    .regex(/^[a-zA-Z0-9가-힣`~!@#$%^&*()-_=+]+$/),
+  handle: z
+    .string()
+    .regex(/^[a-zA-Z0-9-]+$/)
+    .min(3)
+    .max(20),
+  introduce: z.string().min(1).max(300),
+  links: z.array(linkValidator).min(0).max(6),
+})
+
 export const adminGallerySettingValidator = z.object({
   categories: z.array(
     z.object({

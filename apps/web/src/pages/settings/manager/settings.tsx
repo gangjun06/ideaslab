@@ -12,6 +12,7 @@ import { RoleSelector } from '~/components/role-selector'
 import { toast } from 'react-hot-toast'
 import { appRouter } from '~/../../server/src/router/_app'
 import { useEffect, useMemo } from 'react'
+import { Textarea } from '~/components/form/textarea'
 
 const SettingsPage: NextPage = () => {
   const { data: settings } = trpc.admin.loadSettings.useQuery(undefined, { trpc: { ssr: false } })
@@ -144,6 +145,8 @@ const FieldArray = ({
         return <Input {...register(`settings.${index}.value`)} className="w-full" />
       case 'string':
         return <Input {...register(`settings.${index}.value`)} className="w-full" />
+      case 'longText':
+        return <Textarea {...register(`settings.${index}.value`)} className="w-full" />
       default:
         return <></>
     }

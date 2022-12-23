@@ -1,6 +1,7 @@
 import { router, publicProcedure } from '~/api/trpc'
 import { currentGuild } from '~/bot/client'
 import { ChannelType } from 'discord.js'
+import { getSetting } from '~/service/setting'
 
 type Channel = {
   id: string
@@ -64,5 +65,14 @@ export const infoRouter = router({
     }))
 
     return result
+  }),
+  privacyPolicy: publicProcedure.query(async () => {
+    return await getSetting('privacyPolicy')
+  }),
+  serverRule: publicProcedure.query(async () => {
+    return await getSetting('serverRule')
+  }),
+  serviceInfo: publicProcedure.query(async () => {
+    return await getSetting('serviceInfo')
   }),
 })
