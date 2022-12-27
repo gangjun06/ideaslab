@@ -32,7 +32,7 @@ export const Navbar = () => {
         </Link>
         <div className="flex gap-x-4 items-center">
           <NavItem name="홈" href="/" isActive={pathname === '/'} />
-          <NavItem name="프로필" href="/profile" isActive={pathname.startsWith('/profile')} />
+          <NavItem name="프로필" href="/profiles" isActive={pathname.startsWith('/profiles')} />
           <NavItem name="갤러리" href="/gallery" isActive={pathname.startsWith('/gallery')} />
         </div>
         <div className="flex gap-x-2 items-center">

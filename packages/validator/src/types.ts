@@ -21,7 +21,7 @@ export const authCheckHandleValidator = z.object({
 export const authSignUpValidator = z.object({
   name: z
     .string()
-    .min(3)
+    .min(2)
     .max(20)
     .regex(/^[a-zA-Z0-9가-힣`~!@#$%^&*()-_=+]+$/),
   handle: z
@@ -33,12 +33,13 @@ export const authSignUpValidator = z.object({
   registerFrom: z.string().min(0).max(30),
   captcha: z.string(),
   links: z.array(linkValidator).min(0).max(6),
+  roles: z.array(z.number()).min(0).max(20),
 })
 
 export const authUpdateProfileValidator = z.object({
   name: z
     .string()
-    .min(3)
+    .min(2)
     .max(20)
     .regex(/^[a-zA-Z0-9가-힣`~!@#$%^&*()-_=+]+$/),
   handle: z
@@ -88,6 +89,16 @@ export const galleryPostsValidator = z.object({
   limit: z.number().min(10).max(50).default(50),
   categoryIds: z.array(z.number()).max(100).optional(),
   authorHandle: z.string().optional(),
+})
+
+export const InfoProfilesOrderBy = z.enum(['recentActive', 'recentJoin'])
+export type InfoProfilesOrderBy = z.infer<typeof InfoProfilesOrderBy>
+
+export const infoProfilesValidator = z.object({
+  cursor: z.string().optional(),
+  limit: z.number().min(10).max(50).default(50),
+  orderBy: InfoProfilesOrderBy.default('recentActive'),
+  roles: z.array(z.number()).optional(),
 })
 
 export const detailStringValidator = z.object({

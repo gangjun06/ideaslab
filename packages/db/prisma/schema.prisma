@@ -8,19 +8,31 @@ datasource db {
 }
 
 model User {
-        discordId    String     @id
+        discordId    String    @id
         name         String
         avatar       String
         introduce    String
-        handle       String     @unique
+        handle       String    @unique
         links        Json[]
         registerFrom String?
-        createdAt    DateTime   @default(now())
-        updatedAt    DateTime   @updatedAt
-        likes        Like[]
-        posts        Post[]
-        VoiceLog     VoiceLog[]
-        Comment      Comment[]
+        createdAt    DateTime  @default(now())
+        updatedAt    DateTime  @updatedAt
+        leavedAt     DateTime?
+        roles        Role[]
+
+        likes       Like[]
+        posts       Post[]
+        VoiceLog    VoiceLog[]
+        Comment     Comment[]
+        Achievement Achievement[]
+}
+
+model Achievement {
+        id           Int    @id @default(autoincrement())
+        name         String
+        currentValue Int?
+        userId       String
+        User         User   @relation(fields: [userId], references: [discordId])
 }
 
 model Category {
@@ -58,6 +70,7 @@ model Role {
         defaultOrder Int    @default(0)
         name         String
         discordRole  String @unique
+        Users        User[]
 }
 
 model Tag {

@@ -9,11 +9,12 @@ export default new SlashCommand(
     .setName('로그인')
     .setDescription('아이디어스랩 웹사이트에 로그인합니다.'),
   async (client, interaction) => {
+    const isAdmin = interaction.memberPermissions?.has('Administrator') ?? false
     const { token, pin } = await getLoginToken(
       interaction.user.id,
       `${interaction.user.username}#${interaction.user.discriminator}`,
       interaction.user.displayAvatarURL(),
-      interaction.memberPermissions?.has('Administrator') ?? false,
+      isAdmin,
     )
 
     const embed = new Embed(client, 'success')
@@ -24,11 +25,15 @@ export default new SlashCommand(
         name: 'PIN 코드로 로그인',
         value: `아래의 PIN 코드를 입력해주세요. [웹사이트 -> 로그인](${config.webURL}) 에서 입력하실 수 있어요.\n**||${pin}||**`,
       })
-      .addFields({
+
+      .setFooter({ text: '로그인 링크 및 PIN 코드는 10분 후 만료됩니다.' })
+
+    if (isAdmin) {
+      embed.addFields({
         name: '기타',
         value: `관리자이시군요! 관리자 권한이 함께 설정되었어요.`,
       })
-      .setFooter({ text: '로그인 링크 및 PIN 코드는 10분 후 만료됩니다.' })
+    }
 
     interaction.reply({ embeds: [embed], ephemeral: true })
   },

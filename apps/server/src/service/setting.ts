@@ -19,6 +19,8 @@ const SettingList = {
   privacyPolicy: SettingValueType.LongText,
   serverRule: SettingValueType.LongText,
   serviceInfo: SettingValueType.LongText,
+  welcomeChannel: SettingValueType.Channel,
+  welcomeMessage: SettingValueType.LongText,
 } as const
 
 type SettingKeys = keyof typeof SettingList
@@ -47,6 +49,15 @@ export const settingDetails: {
   afkChannel: {
     description: '잠수 채널을 설정합니다',
     cache: true,
+  },
+  welcomeChannel: {
+    description: '새로운 유저가 입장했을때, 반겨줄 채널을 설정해요.',
+    cache: true,
+  },
+  welcomeMessage: {
+    description:
+      '새로운 유저가 입장했을때, 반겨줄 메시지를 설정해요. <name>, <mention> 을 사용할 수 있어요.',
+    cache: false,
   },
   voiceRoomCreateChannel: {
     description: '음성채널을 생성하는 채널을 설정합니다 ',

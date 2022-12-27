@@ -11,7 +11,6 @@ import { FormBlock } from '~/components/form/form-block'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
 import React from 'react'
-import { serverRule } from '~/assets/rule'
 import { useForm } from '~/hooks/useForm'
 import { authSignUpValidator, z } from '@ideaslab/validator'
 import { useUser } from '~/hooks/useAuth'
@@ -20,6 +19,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useCurrentTheme } from '~/hooks/useTheme'
 import { trpc } from '~/lib/trpc'
 import { toast } from 'react-hot-toast'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
 const Signup: NextPage = () => {
   return (
@@ -63,7 +63,7 @@ const Intro = ({ next }: StepContentProps) => {
           <h1 className="text-4xl font-bold sm:text-5xl">
             <div>{userData?.username}님,</div>
             <div className="my-1.5">
-              <span className="dark:text-green-400">아이디어스랩</span>에
+              <span className="title-highlight">아이디어스랩</span>에
             </div>
             오신것을 환영합니다!
           </h1>
@@ -82,88 +82,96 @@ const Intro = ({ next }: StepContentProps) => {
   )
 }
 
-const Policy = ({ prev, next }: StepContentProps) => (
-  <>
-    <div className="w-full">
-      <div>아이디어스랩 서버를 이용하기 위해서는 약관 동의가 필요해요</div>
-      <div className="flex justify-between mt-2 items-center">
-        <div className="text-3xl font-bold mt-4 mb-2">이용약관</div>
-        <ButtonLink href="#">전문 보기</ButtonLink>
-      </div>
-      <div className="w-full px-1.5 py-1 bg-gray-100 dark:bg-gray-800 border-base-color border-2 rounded-lg mx-1">
-        1. Lorem ipsum... <br />
-        2. Lorem ipsum... <br />
-        3. Lorem ipsum... <br />
-        4. Lorem ipsum... <br />
-      </div>
-      <div className="flex justify-between mt-2 items-center">
-        <div className="text-3xl font-bold mt-4 mb-2">개인정보 처리방침</div>
-        <ButtonLink href="#">전문 보기</ButtonLink>
-      </div>
-      <div className="w-full px-1.5 py-1 bg-gray-100 dark:bg-gray-800 border-base-color border-2 rounded-lg mx-1">
-        1. Lorem ipsum... <br />
-        2. Lorem ipsum... <br />
-        3. Lorem ipsum... <br />
-        4. Lorem ipsum... <br />
-      </div>
-    </div>
-    <div className="flex justify-between w-full mt-4">
-      <Button variant="default" onClick={prev}>
-        뒤로가기
-      </Button>
-      <Button variant="primary" onClick={next}>
-        동의하고 계속하기
-      </Button>
-    </div>
-  </>
-)
+const Policy = ({ prev, next }: StepContentProps) => {
+  const { data: privacyPolicy } = trpc.info.privacyPolicy.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  })
 
-const Rule = ({ prev, next }: StepContentProps) => (
-  <>
-    <div className="w-full">
-      <div>디스코드 서버를 이용하면서, 아래 내용은 반드시 지켜주세요!</div>
-      <div className="flex justify-between mt-2 items-center">
-        <div className="text-3xl font-bold mt-4 mb-2">서버 규칙</div>
+  return (
+    <>
+      <div className="w-full">
+        <div>아이디어스랩 서버를 이용하기 위해서는 약관 동의가 필요해요</div>
+        <div className="flex justify-between mt-2 items-center">
+          <div className="text-3xl font-bold mt-4 mb-2">개인정보 처리방침</div>
+        </div>
+        <ReactMarkdown className="markdown w-full px-1.5 py-1 bg-gray-100 dark:bg-gray-800 border-base-color border-2 rounded-lg mx-1">
+          {privacyPolicy ?? '불러오는 중...'}
+        </ReactMarkdown>
       </div>
-      <div className="w-full px-1.5 py-1 bg-gray-100 dark:bg-gray-800 border-base-color border-2 rounded-lg mx-1">
-        {serverRule.split('\n').map((line, i) => (
-          <span key={i} className={classNames(line.match(/^[0-9]+/) && 'font-bold')}>
-            {line.split('**').map((text, i) => {
-              if (i % 2 === 0) return <Fragment key={i}>{text}</Fragment>
-              if (text.startsWith('!')) {
+      <div className="flex justify-between w-full mt-4">
+        <Button variant="default" onClick={prev}>
+          뒤로가기
+        </Button>
+        <Button variant="primary" onClick={next}>
+          동의하고 계속하기
+        </Button>
+      </div>
+    </>
+  )
+}
+
+const Rule = ({ prev, next }: StepContentProps) => {
+  const { data: serverRule } = trpc.info.serverRule.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  })
+
+  return (
+    <>
+      <div className="w-full">
+        <div>디스코드 서버를 이용하면서, 아래 내용은 반드시 지켜주세요!</div>
+        <div className="flex justify-between mt-2 items-center">
+          <div className="text-3xl font-bold mt-4 mb-2">서버 규칙</div>
+        </div>
+        <div className="w-full px-1.5 py-1 bg-gray-100 dark:bg-gray-800 border-base-color border-2 rounded-lg mx-1">
+          {serverRule?.split('\n').map((line, i) => (
+            <span key={i} className={classNames(line.match(/^[0-9]+/) && 'font-bold')}>
+              {line.split('**').map((text, i) => {
+                if (i % 2 === 0) return <Fragment key={i}>{text}</Fragment>
+                if (text.startsWith('!')) {
+                  return (
+                    <span className="font-bold title-highlight-red" key={i}>
+                      {text.substring(1)}
+                    </span>
+                  )
+                }
                 return (
-                  <span className="font-bold title-highlight-red" key={i}>
-                    {text.substring(1)}
+                  <span className="font-bold title-highlight" key={i}>
+                    {text}
                   </span>
                 )
-              }
-              return (
-                <span className="font-bold title-highlight" key={i}>
-                  {text}
-                </span>
-              )
-            })}
-            <br />
-          </span>
-        ))}
+              })}
+              <br />
+            </span>
+          ))}
+        </div>
       </div>
-    </div>
-    <div className="flex justify-between w-full mt-4">
-      <Button variant="default" onClick={prev}>
-        뒤로가기
-      </Button>
-      <Button variant="primary" onClick={next}>
-        동의하고 계속하기
-      </Button>
-    </div>
-  </>
-)
+      <div className="flex justify-between w-full mt-4">
+        <Button variant="default" onClick={prev}>
+          뒤로가기
+        </Button>
+        <Button variant="primary" onClick={next}>
+          동의하고 계속하기
+        </Button>
+      </div>
+    </>
+  )
+}
 
 const Complete = ({ next }: StepContentProps) => <div>가입 끝</div>
 
 const SignupForm = ({ prev, next }: StepContentProps) => {
   const userData = useUser()
   const theme = useCurrentTheme()
+
+  const { data: artistRoles } = trpc.info.artistRoles.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  })
 
   const submit = trpc.auth.signup.useMutation({
     onSuccess: () => {
@@ -243,6 +251,35 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
             />
           )}
         </FormFieldBuilder>
+        <FormBlock
+          label="역할"
+          description="본인이 창작하는 분야를 선택해주세요. 여러개 선택할 수 있으며 선택하지 않아도 괜찮아요. (선택한 모든 분야의 창작활동을 하지 않는 한, 모든 역할을 선택하지 마세요. 장난이라 판단될 경우 경고 및 차단조치가 이루어질 수 있어요)"
+        >
+          <FormFieldBuilder name="roles">
+            {({ field: { value, onChange } }) => (
+              <div className="flex gap-3 flex-wrap">
+                {artistRoles?.map((role) => (
+                  <div
+                    key={role.id}
+                    className={classNames(
+                      'tag hover',
+                      (value ?? []).includes(role.id) && 'primary',
+                    )}
+                    onClick={() =>
+                      onChange(
+                        (value ?? []).includes(role.id)
+                          ? value.filter((item: number) => item !== role.id)
+                          : [...((value as unknown as number[]) ?? []), role.id],
+                      )
+                    }
+                  >
+                    {role.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </FormFieldBuilder>
+        </FormBlock>
 
         <Textarea
           label="자기소개"

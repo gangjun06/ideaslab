@@ -41,6 +41,9 @@ export const useLoadUserData = () => {
       }
       setUserData(data)
     },
+    retry: (failureCount, error) => {
+      return false
+    },
     trpc: { ssr: false },
   })
 

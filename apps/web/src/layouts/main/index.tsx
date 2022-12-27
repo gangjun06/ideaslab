@@ -96,7 +96,7 @@ export const MainLayout = ({
       )
     }
 
-    if (profile.isLoading) {
+    if (profile.isLoading && guard !== 'default') {
       return <></>
     }
 

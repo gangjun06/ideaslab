@@ -11,6 +11,9 @@ import { dbClient } from '@ideaslab/db'
 import axios from 'axios'
 import config from '~/config'
 import { TRPCError } from '@trpc/server'
+import { getSetting } from '~/service/setting'
+import { ChannelType } from 'discord.js'
+import { Embed } from '~/utils/embed'
 
 export const authRouter = router({
   loginWithPin: publicProcedure
@@ -33,13 +36,15 @@ export const authRouter = router({
     const username = member.user.username
     const discriminator = member.user.discriminator
 
-    if (user?.avatar !== avatar) {
-      await dbClient.user.update({
-        where: { discordId: ctx.user.id },
-        data: {
-          avatar,
-        },
-      })
+    if (user && user.avatar !== avatar) {
+      try {
+        await dbClient.user.update({
+          where: { discordId: ctx.user.id },
+          data: {
+            avatar,
+          },
+        })
+      } catch {}
     }
 
     return {
@@ -83,6 +88,10 @@ export const authRouter = router({
 
     const member = await currentGuildMember(ctx.user.id)
 
+    if (member.displayName !== input.name) {
+      member.setNickname(input.name)
+    }
+
     await dbClient.user.create({
       data: {
         discordId: ctx.user.id,
@@ -93,6 +102,28 @@ export const authRouter = router({
         registerFrom: input.registerFrom,
       },
     })
+
+    const welcomeChannelId = await getSetting('welcomeChannel')
+    const welcomeChannel = welcomeChannelId ? client.channels.cache.get(welcomeChannelId) : null
+    const welcomeMessage = await getSetting('welcomeMessage')
+
+    if (welcomeChannel && welcomeChannel.type === ChannelType.GuildText) {
+      const embed = new Embed(client, 'info')
+        .setTitle('새로운 유저가 서버에 참여했어요!')
+        .setDescription(welcomeMessage ?? '')
+        .addFields({
+          name: '자기소개',
+          value: `${input.introduce}${input.links.length > 0 ? '\n\n' : ''}${input.links.map(
+            ({ name, url }) => `[${name}](${url})`,
+          )}`,
+        })
+        .setAuthor({
+          name: input.name,
+          iconURL: member.displayAvatarURL(),
+          url: `https://ideaslab.kr/@${input.handle}`,
+        })
+      await welcomeChannel.send({ embeds: [embed] })
+    }
 
     return {
       success: true,

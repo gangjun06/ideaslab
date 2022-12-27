@@ -8,7 +8,17 @@ import {
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import Image from 'next/image'
-import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import Link from 'next/link'
+import {
+  ComponentProps,
+  Fragment,
+  MouseEventHandler,
+  ReactNode,
+  Suspense,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { appRouter } from '~/../../server/src/router/_app'
@@ -66,7 +76,15 @@ export const PostView = ({
     <div
       className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
       key={post.id}
-      onClick={onClick}
+      onClick={(e) => {
+        console.log(e.target)
+        if (
+          (e.target as HTMLElement).classList.contains('no-click') ||
+          (e.target as HTMLElement).parentElement?.classList.contains('no-click')
+        )
+          return
+        if (typeof onClick === 'function') onClick()
+      }}
     >
       {image && (
         <div className="mb-2 w-full flex items-center justify-center">
@@ -79,19 +97,23 @@ export const PostView = ({
           />
         </div>
       )}
-      <div className="flex gap-x-2 items-center mb-2">
-        <Image
-          src={post.author.avatar}
-          width={48}
-          height={48}
-          className="rounded-full"
-          alt="avatar image"
-        />
-        <div className="flex flex-col justify-center">
-          <div className="text-title-color">{post.author.name}</div>
-          <div className="text-description-color text-sm">{relativeTimeFormat(post.createdAt)}</div>
-        </div>
-      </div>
+      <Link href={`/@${post.author.handle}`} passHref>
+        <a className="flex gap-x-2 items-center mb-2 no-click" onClick={() => {}}>
+          <Image
+            src={post.author.avatar}
+            width={48}
+            height={48}
+            className="rounded-full no-click"
+            alt="avatar image"
+          />
+          <div className="flex flex-col justify-center no-click">
+            <div className="text-title-color">{post.author.name}</div>
+            <div className="text-description-color text-sm">
+              {relativeTimeFormat(post.createdAt)}
+            </div>
+          </div>
+        </a>
+      </Link>
       <div className="text-title-color">{post.title}</div>
       <div className="text-description-color text-sm mb-2">
         {post.content.length > 300 ? post.content.slice(0, 300) + ' ...' : post.content}
@@ -203,19 +225,21 @@ export const PostDetail = ({
           'text-base-color overflow-y-auto custom-scroll flex-1',
         )}
       >
-        <div className="flex gap-x-2 items-center">
-          <Image
-            src={post.author.avatar}
-            width={48}
-            height={48}
-            className="rounded-full"
-            alt="avatar image"
-          />
-          <div className="flex flex-col justify-center">
-            <div className="text-title-color">{post.author.name}</div>
-            <div className="text-description-color text-sm">{fullTimeFormat(post.createdAt)}</div>
-          </div>
-        </div>
+        <Link href={`/@${post.author.handle}`} passHref>
+          <a className="flex gap-x-2 items-center">
+            <Image
+              src={post.author.avatar}
+              width={48}
+              height={48}
+              className="rounded-full"
+              alt="avatar image"
+            />
+            <div className="flex flex-col justify-center">
+              <div className="text-title-color">{post.author.name}</div>
+              <div className="text-description-color text-sm">{fullTimeFormat(post.createdAt)}</div>
+            </div>
+          </a>
+        </Link>
         <div className="mt-5 mb-5 flex gap-2 items-center flex-wrap">
           <div className="tag">
             <ArchiveBoxIcon width={24} height={24} />

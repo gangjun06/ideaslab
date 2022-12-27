@@ -1,4 +1,9 @@
-import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
+import {
+  detailStringValidator,
+  detailValidator,
+  galleryPostsValidator,
+  infoProfilesValidator,
+} from '@ideaslab/validator'
 import { publicProcedure, router } from '~/api/trpc'
 import { dbClient, Prisma } from '@ideaslab/db'
 
@@ -28,6 +33,7 @@ export const galleryRouter = router({
             avatar: true,
             name: true,
             discordId: true,
+            handle: true,
           },
         },
         createdAt: true,
@@ -76,6 +82,7 @@ export const galleryRouter = router({
             avatar: true,
             name: true,
             discordId: true,
+            handle: true,
           },
         },
         comments: {

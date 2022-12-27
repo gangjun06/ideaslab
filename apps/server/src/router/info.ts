@@ -2,6 +2,8 @@ import { router, publicProcedure } from '~/api/trpc'
 import { currentGuild } from '~/bot/client'
 import { ChannelType } from 'discord.js'
 import { getSetting } from '~/service/setting'
+import { dbClient } from '@ideaslab/db'
+import { infoProfilesValidator } from '@ideaslab/validator'
 
 type Channel = {
   id: string
@@ -74,5 +76,123 @@ export const infoRouter = router({
   }),
   serviceInfo: publicProcedure.query(async () => {
     return await getSetting('serviceInfo')
+  }),
+  artistRoles: publicProcedure.query(async () => {
+    return await dbClient.role.findMany({
+      select: { id: true, name: true, defaultOrder: true },
+      orderBy: { defaultOrder: 'asc' },
+    })
+  }),
+  profiles: publicProcedure.input(infoProfilesValidator).query(async ({ input }) => {
+    const { cursor, limit, orderBy, roles } = input
+    if (orderBy === 'recentActive') {
+      const result = await dbClient.post.findMany({
+        distinct: ['authorId'],
+        orderBy: {
+          createdAt: 'desc',
+        },
+        ...(cursor
+          ? {
+              cursor: {
+                discordId: cursor,
+              },
+              skip: 1,
+            }
+          : {}),
+        take: limit,
+        ...(roles &&
+          roles.length > 0 && {
+            where: {
+              author: {
+                roles: {
+                  some: {
+                    id: {
+                      in: roles,
+                    },
+                  },
+                },
+              },
+            },
+          }),
+        select: {
+          author: {
+            select: {
+              discordId: true,
+              handle: true,
+              name: true,
+              avatar: true,
+              createdAt: true,
+              introduce: true,
+              links: true,
+              roles: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+                orderBy: {
+                  defaultOrder: 'asc',
+                },
+              },
+              _count: {
+                select: {
+                  posts: true,
+                },
+              },
+            },
+          },
+        },
+      })
+      return result.map(({ author }) => author)
+    }
+    const result = await dbClient.user.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      ...(cursor
+        ? {
+            cursor: {
+              discordId: cursor,
+            },
+            skip: 1,
+          }
+        : {}),
+      take: limit,
+      ...(roles &&
+        roles.length > 0 && {
+          where: {
+            roles: {
+              some: {
+                id: {
+                  in: roles,
+                },
+              },
+            },
+          },
+        }),
+      select: {
+        discordId: true,
+        handle: true,
+        name: true,
+        avatar: true,
+        createdAt: true,
+        introduce: true,
+        links: true,
+        roles: {
+          select: {
+            id: true,
+            name: true,
+          },
+          orderBy: {
+            defaultOrder: 'asc',
+          },
+        },
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+    })
+    return result
   }),
 })
