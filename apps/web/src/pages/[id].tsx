@@ -68,10 +68,24 @@ const MemberDetailPage: NextPage = () => {
                 {data.name}
               </div>
               <div className="text-subtitle-color">{`@${data.handle}`}</div>
+              <div className="flex gap-x-2 mt-2">
+                {data.roles?.map((item, index) => (
+                  <div key={index} className="tag">
+                    {item.name}
+                  </div>
+                ))}
+              </div>
               <div className="text-description-color mt-2 text-sm">{data.introduce}</div>
-              {data.links.map((link, index) => (
-                <div key={index}>{JSON.stringify(link)}</div>
-              ))}
+
+              {data.links.length > 0 && (
+                <div className="mt-2">
+                  {data.links.map((link: any, index) => (
+                    <a key={index} href={link?.url ?? ''} className="title-highlight">
+                      {link?.name}
+                    </a>
+                  ))}
+                </div>
+              )}
               <div className="flex justify-around w-full mt-4">
                 <div className="flex-col text-center">
                   <div className="text-lg font-bold text-title-color">작성글</div>

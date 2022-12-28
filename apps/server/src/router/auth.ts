@@ -3,6 +3,7 @@ import {
   authCheckHandleValidator,
   authLoginWithPinValidator,
   authSignUpValidator,
+  authUpdateProfileValidator,
 } from '@ideaslab/validator'
 import { loginWithPin } from '~/service/auth'
 import { loginedProcedure } from '~/api/auth-middleware'
@@ -27,7 +28,7 @@ export const authRouter = router({
   profile: loginedProcedure.query(async ({ ctx }) => {
     const user = await dbClient.user.findUnique({
       where: { discordId: ctx.user.id },
-      select: { discordId: true, avatar: true },
+      select: { discordId: true, avatar: true, roles: true, introduce: true, links: true },
     })
 
     const member = await currentGuildMember(ctx.user.id)
@@ -54,7 +55,10 @@ export const authRouter = router({
       avatar,
       username,
       discriminator,
+      roles: user?.roles,
+      introduce: user?.introduce,
       isVerified: user ? true : false,
+      links: user?.links,
     }
   }),
   checkHandle: publicProcedure.input(authCheckHandleValidator).mutation(async ({ input }) => {
@@ -100,6 +104,7 @@ export const authRouter = router({
         handle: input.handle,
         introduce: input.introduce,
         registerFrom: input.registerFrom,
+        roles: { connect: input.roles.map((id) => ({ id })) },
       },
     })
 
@@ -129,4 +134,42 @@ export const authRouter = router({
       success: true,
     }
   }),
+  updateProfile: loginedProcedure
+    .input(authUpdateProfileValidator)
+    .mutation(async ({ ctx, input }) => {
+      const user = await dbClient.user.findUnique({
+        where: { discordId: ctx.user.id },
+      })
+      if (!user) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: '가입되어있지 않은 유저의 요청입니다.',
+        })
+      }
+
+      const member = await currentGuildMember(ctx.user.id)
+
+      if (member.displayName !== input.name) {
+        member.setNickname(input.name)
+      }
+
+      await dbClient.user.update({
+        where: {
+          discordId: ctx.user.id,
+        },
+        data: {
+          discordId: ctx.user.id,
+          avatar: member.displayAvatarURL(),
+          name: input.name,
+          handle: input.handle,
+          introduce: input.introduce,
+          links: input.links,
+          roles: { connect: input.roles.map((id) => ({ id })) },
+        },
+      })
+
+      return {
+        success: true,
+      }
+    }),
 })

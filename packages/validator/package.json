@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsup --format esm,cjs",
     "lint": "TIMING=1 eslint \"src/**/*.ts\"",
-    "dev": "tsup --format esm --watch"
+    "dev": "tsup --format esm --watch --dts"
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",

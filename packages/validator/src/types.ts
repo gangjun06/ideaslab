@@ -49,6 +49,7 @@ export const authUpdateProfileValidator = z.object({
     .max(20),
   introduce: z.string().min(1).max(300),
   links: z.array(linkValidator).min(0).max(6),
+  roles: z.array(z.number()).min(0).max(20),
 })
 
 export const adminGallerySettingValidator = z.object({
@@ -92,7 +93,6 @@ export const galleryPostsValidator = z.object({
 })
 
 export const InfoProfilesOrderBy = z.enum(['recentActive', 'recentJoin'])
-export type InfoProfilesOrderBy = z.infer<typeof InfoProfilesOrderBy>
 
 export const infoProfilesValidator = z.object({
   cursor: z.string().optional(),

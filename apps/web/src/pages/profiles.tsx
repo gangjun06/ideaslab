@@ -11,7 +11,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { InfoProfilesOrderBy } from '@ideaslab/validator/src'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
@@ -21,14 +20,14 @@ const LIMIT = 50
 
 const ProfilesPage = () => {
   const [selectedRoles, setSelectedRoles] = useState<number[]>([])
-  const [order, setOrder] = useState<InfoProfilesOrderBy>('recentActive')
+  const [order, setOrder] = useState<string>('recentActive')
   const {
     data: profiles,
     isLoading,
     fetchNextPage,
     hasNextPage,
   } = trpc.info.profiles.useInfiniteQuery(
-    { limit: LIMIT, orderBy: order, roles: selectedRoles },
+    { limit: LIMIT, orderBy: order as any, roles: selectedRoles },
     {
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined
@@ -101,32 +100,44 @@ const ProfilesPage = () => {
               page.map((profile) => (
                 <div className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4">
                   <Link href={`/@${profile.handle}`} passHref>
-                    <a className="flex flex-col mb-2 no-click" onClick={() => {}}>
-                      <div className="flex gap-x-2 items-center">
-                        <Image
-                          src={profile.avatar}
-                          width={48}
-                          height={48}
-                          className="rounded-full"
-                        />
-                        <div className="flex flex-col">
-                          <div className="text-title-color">{profile.name}</div>
-                          <div className="text-description-color text-sm">
-                            {`@${profile.handle}`}
+                    <a className="flex flex-col mb-2 no-click h-full" onClick={() => {}}>
+                      <div className="flex flex-col h-full flex-grow">
+                        <div className="flex gap-x-2 items-center">
+                          <Image
+                            src={profile.avatar}
+                            width={48}
+                            height={48}
+                            className="rounded-full"
+                          />
+                          <div className="flex flex-col">
+                            <div className="text-title-color">{profile.name}</div>
+                            <div className="text-description-color text-sm">
+                              {`@${profile.handle}`}
+                            </div>
                           </div>
                         </div>
+                        <div className="flex gap-x-2 mt-2">
+                          {profile.roles?.map((item, index) => (
+                            <div key={index} className="tag">
+                              {item.name}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-description-color mt-2 text-sm">
+                          {profile.introduce}
+                        </div>
+                        {profile.links.length > 0 && (
+                          <div className="mt-2">
+                            {profile.links.map((link: any, index) => (
+                              <a key={index} href={link?.url ?? ''} className="title-highlight">
+                                {link?.name}
+                              </a>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
-                      <div className="text-description-color mt-2 text-sm">{profile.introduce}</div>
-                      <div>
-                        {profile.roles.map((item) => (
-                          <div key={item.id}>{item.name}</div>
-                        ))}
-                      </div>
-                      {profile.links.map((link: any, index: number) => (
-                        <div key={index}>{JSON.stringify(link)}</div>
-                      ))}
-                      <div className="flex justify-around w-full mt-2">
+                      <div className="flex justify-around w-full mt-2.5 flex-grow-0">
                         <div className="flex-col text-center">
                           <div className="text-md text-title-color">작성글</div>
                           <div className="text-subtitle-color text-sm">{profile._count.posts}</div>

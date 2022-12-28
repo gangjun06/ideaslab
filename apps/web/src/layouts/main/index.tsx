@@ -8,7 +8,7 @@ import { Footer } from './footer'
 import { NextSeo } from 'next-seo'
 import { parseJWT } from '~/utils'
 import Image from 'next/image'
-import { useLoadUserData } from '~/hooks/useAuth'
+import { useLoadUserData, useUser } from '~/hooks/useAuth'
 import Link from 'next/link'
 
 type props = {
@@ -40,6 +40,7 @@ export const MainLayout = ({
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
   const { setToken, token: storageToken, profile } = useLoadUserData()
+  const profileData = useUser()
 
   useEffect(() => {
     const { token } = router.query

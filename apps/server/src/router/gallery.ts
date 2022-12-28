@@ -9,7 +9,7 @@ import { dbClient, Prisma } from '@ideaslab/db'
 
 export const galleryRouter = router({
   posts: publicProcedure.input(galleryPostsValidator).query(async ({ input }) => {
-    const { limit, cursor, categoryIds } = input
+    const { limit, cursor, categoryIds, authorHandle } = input
 
     const result = await dbClient.post.findMany({
       ...(cursor
@@ -48,6 +48,9 @@ export const galleryRouter = router({
       where: {
         categoryId: {
           in: (categoryIds ?? [])?.length > 0 ? categoryIds : undefined,
+        },
+        author: {
+          handle: authorHandle,
         },
       },
     })
@@ -128,6 +131,12 @@ export const galleryRouter = router({
         links: true,
         introduce: true,
         name: true,
+        roles: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         _count: {
           select: {
             posts: true,
