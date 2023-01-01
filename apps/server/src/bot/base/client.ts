@@ -1,20 +1,17 @@
-import { PrismaClient } from '@prisma/client'
-import { Client, ClientOptions, ClientEvents, Collection } from 'discord.js'
-import { config as dotenvConfig } from 'dotenv'
-
+import config from '~/config'
 import { Logger } from '~/utils/logger'
 
-import { BaseInteraction } from './interaction'
-import { Event } from './event'
-
-import config from '~/config'
-
+import { SlashCommand } from './command'
 import CommandManager from './command-manager'
-import EventManager from './event-manager'
 import ErrorManager from './error-manager'
+import { Event } from './event'
+import EventManager from './event-manager'
+import { BaseInteraction } from './interaction'
 // import DatabaseManager from './database-manager'
 import InteractionManager from './interaction-manager'
-import { SlashCommand } from './command'
+
+import { Client, ClientEvents, ClientOptions, Collection } from 'discord.js'
+import { config as dotenvConfig } from 'dotenv'
 
 const logger = new Logger('bot')
 

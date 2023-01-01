@@ -1,9 +1,11 @@
-import { router, publicProcedure } from '~/api/trpc'
-import { currentGuild } from '~/bot/base/client'
-import { ChannelType } from 'discord.js'
-import { getSetting } from '~/service/setting'
 import { dbClient } from '@ideaslab/db'
 import { infoProfilesValidator } from '@ideaslab/validator'
+
+import { publicProcedure, router } from '~/api/base/trpc'
+import { currentGuild } from '~/bot/base/client'
+import { getSetting } from '~/service/setting'
+
+import { ChannelType } from 'discord.js'
 
 type Channel = {
   id: string

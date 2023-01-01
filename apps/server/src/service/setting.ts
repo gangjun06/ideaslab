@@ -1,6 +1,7 @@
+import { dbClient } from '@ideaslab/db'
+
 import config from '~/config'
 import { redis } from '~/lib/redis'
-import { dbClient } from '@ideaslab/db'
 
 enum SettingValueType {
   String = 'string',

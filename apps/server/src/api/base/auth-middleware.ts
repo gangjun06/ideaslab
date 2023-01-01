@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+
 import { middleware, publicProcedure } from './trpc'
 
 const checkAuth = middleware(async ({ next, ctx }) => {

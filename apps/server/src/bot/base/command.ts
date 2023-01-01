@@ -1,5 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js'
 import { InteractionData, SlashCommandFunction } from '~/bot/types'
+
+import { SlashCommandBuilder } from 'discord.js'
 
 /**
  * @example

@@ -1,9 +1,11 @@
-import { lstatSync, readdirSync } from 'fs'
-import { join } from 'path'
+import { Logger } from '~/utils/logger'
+
+import BaseManager from './base-manager'
 import BotClient from './client'
 import { BaseInteraction } from './interaction'
-import { Logger } from '~/utils/logger'
-import BaseManager from './base-manager'
+
+import { lstatSync, readdirSync } from 'fs'
+import { join } from 'path'
 
 export default class InteractionManager extends BaseManager {
   private logger = new Logger('InteractionManager')

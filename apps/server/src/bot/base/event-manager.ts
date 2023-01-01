@@ -1,10 +1,12 @@
-import type { ClientEvents } from 'discord.js'
+import { Logger } from '~/utils/logger'
+
+import BaseManager from './base-manager'
 import type BotClient from './client'
+import { Event } from './event'
+
+import type { ClientEvents } from 'discord.js'
 import { readdirSync } from 'fs'
 import { join } from 'path'
-import { Event } from './event'
-import { Logger } from '~/utils/logger'
-import BaseManager from './base-manager'
 
 /**
  * @extends {BaseManager}

@@ -1,13 +1,12 @@
-import { router, publicProcedure } from '~/api/trpc'
+import { dbClient } from '@ideaslab/db'
 import {
   adminGallerySettingValidator,
   adminRoleSettingValidator,
   adminSaveSettingsValidator,
 } from '@ideaslab/validator'
-import { loginWithPin } from '~/service/auth'
-import { adminProcedure, loginedProcedure } from '~/api/base/auth-middleware'
-import { client, currentGuild, currentGuildMember } from '~/bot/base/client'
-import { dbClient } from '@ideaslab/db'
+
+import { adminProcedure } from '~/api/base/auth-middleware'
+import { router } from '~/api/base/trpc'
 import { getAllSettings, setSetting } from '~/service/setting'
 
 export const adminRouter = router({

@@ -1,11 +1,7 @@
-import {
-  detailStringValidator,
-  detailValidator,
-  galleryPostsValidator,
-  infoProfilesValidator,
-} from '@ideaslab/validator'
-import { publicProcedure, router } from '~/api/trpc'
-import { dbClient, Prisma } from '@ideaslab/db'
+import { dbClient } from '@ideaslab/db'
+import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
+
+import { publicProcedure, router } from '~/api/base/trpc'
 
 export const galleryRouter = router({
   posts: publicProcedure.input(galleryPostsValidator).query(async ({ input }) => {

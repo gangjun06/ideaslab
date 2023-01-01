@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "files": [
-    "eslint-preset.js"
+    "preset.js"
   ],
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.46.1",

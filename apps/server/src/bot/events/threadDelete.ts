@@ -1,8 +1,8 @@
+import { dbClient } from '@ideaslab/db'
+
 import { Event } from '~/bot/base/event'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, TextChannel } from 'discord.js'
-import { Embed } from '~/utils/embed'
-import { dbClient, prisma, Prisma } from '@ideaslab/db'
-import { currentGuild } from '~/bot/base/client'
+
+import { ChannelType } from 'discord.js'
 
 export default new Event('threadDelete', async (client, threadChannel) => {
   if (threadChannel.parent?.type !== ChannelType.GuildForum) return

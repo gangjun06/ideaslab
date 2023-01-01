@@ -1,9 +1,10 @@
-import { InteractionType as DInteractionType } from 'discord.js'
 import CommandManager from '~/bot/base/command-manager'
 import ErrorManager from '~/bot/base/error-manager'
-import InteractionManager from '~/bot/base/interaction-manager'
 import { Event } from '~/bot/base/event'
+import InteractionManager from '~/bot/base/interaction-manager'
 import { InteractionType } from '~/bot/types'
+
+import { InteractionType as DInteractionType } from 'discord.js'
 
 export default new Event('interactionCreate', async (client, interaction) => {
   const commandManager = new CommandManager(client)

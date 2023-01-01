@@ -1,11 +1,12 @@
+import BotClient from '~/bot/base/client'
+
 import type {
-  Message,
-  ClientEvents,
   ChatInputCommandInteraction,
+  ClientEvents,
   Interaction,
+  Message,
   RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js'
-import BotClient from '~/bot/base/client'
 
 export interface MessageCommandOptions {
   name: string

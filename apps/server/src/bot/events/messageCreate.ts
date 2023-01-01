@@ -1,6 +1,8 @@
-import { dbClient, prisma } from '@ideaslab/db'
-import { ChannelType } from 'discord.js'
+import { dbClient } from '@ideaslab/db'
+
 import { Event } from '~/bot/base/event'
+
+import { ChannelType } from 'discord.js'
 
 export default new Event('messageCreate', async (client, message) => {
   if (message.channel.type !== ChannelType.PublicThread) return

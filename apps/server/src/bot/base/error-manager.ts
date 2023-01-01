@@ -1,12 +1,13 @@
-import { Guild, WebhookClient } from 'discord.js'
-import BaseManager from './base-manager'
+import { ErrorReportOptions } from '~/bot/types'
+import config from '~/config'
 import { Embed } from '~/utils/embed'
 import { Logger } from '~/utils/logger'
-import { v4 } from 'uuid'
+
+import BaseManager from './base-manager'
 import BotClient from './client'
 
-import config from '~/config'
-import { ErrorReportOptions, ReportType } from '~/bot/types'
+import { WebhookClient } from 'discord.js'
+import { v4 } from 'uuid'
 
 /**
  * @extends BaseManager

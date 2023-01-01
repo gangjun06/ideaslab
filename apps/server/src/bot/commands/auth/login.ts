@@ -1,8 +1,9 @@
-import { SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '~/bot/base/command'
 import config from '~/config'
 import { getLoginToken } from '~/service/auth'
 import { Embed } from '~/utils/embed'
+
+import { SlashCommandBuilder } from 'discord.js'
 
 export default new SlashCommand(
   new SlashCommandBuilder()

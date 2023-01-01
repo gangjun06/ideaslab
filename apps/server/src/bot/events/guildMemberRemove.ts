@@ -1,11 +1,6 @@
-import { InteractionType as DInteractionType } from 'discord.js'
-import CommandManager from '~/bot/base/command-manager'
-import ErrorManager from '~/bot/base/error-manager'
-import InteractionManager from '~/bot/base/interaction-manager'
-import { Event } from '~/bot/base/event'
-import { Embed } from '~/utils/embed'
-import { InteractionType } from '~/bot/types'
 import { dbClient } from '@ideaslab/db'
+
+import { Event } from '~/bot/base/event'
 
 export default new Event('guildMemberRemove', async (client, member) => {
   await dbClient.user.update({

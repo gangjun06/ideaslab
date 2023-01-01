@@ -1,8 +1,8 @@
-import { Event } from '~/bot/base/event'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, TextChannel } from 'discord.js'
-import { Embed } from '~/utils/embed'
 import { dbClient, Prisma } from '@ideaslab/db'
-import { currentGuild } from '~/bot/base/client'
+
+import { Event } from '~/bot/base/event'
+
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return

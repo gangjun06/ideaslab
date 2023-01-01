@@ -1,7 +1,8 @@
 import { Event } from '~/bot/base/event'
-import { GuildMember, TextBasedChannel } from 'discord.js'
 import { eventMemberJoin, eventMemberLeave } from '~/service/voice-log'
 import { Embed } from '~/utils/embed'
+
+import { GuildMember, TextBasedChannel } from 'discord.js'
 
 const sendAlert = async (
   channel: TextBasedChannel,

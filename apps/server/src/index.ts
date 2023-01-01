@@ -1,14 +1,16 @@
-import 'dotenv/config'
-import 'module-alias/register'
+import { createHTTPHandler } from '@trpc/server/adapters/standalone'
+
+import { createContext } from '~/api/base/context'
+import { client, initClient } from '~/bot/base/client'
 import { Logger } from '~/utils/logger'
+
+import { appRouter } from './api/router/_app'
 import config from './config'
 
+import 'dotenv/config'
+import 'module-alias/register'
 import http from 'http'
-import BotClient, { client, initClient } from '~/bot/base/client'
 import { exit } from 'process'
-import { createHTTPHandler } from '@trpc/server/adapters/standalone'
-import { createContext } from '~/api/base/context'
-import { appRouter } from './api/router/_app'
 
 const logger = new Logger('main')
 

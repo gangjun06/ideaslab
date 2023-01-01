@@ -1,20 +1,23 @@
-import { router, publicProcedure } from '~/api/base/trpc'
+import { TRPCError } from '@trpc/server'
+
+import { dbClient } from '@ideaslab/db'
 import {
   authCheckHandleValidator,
   authLoginWithPinValidator,
   authSignUpValidator,
   authUpdateProfileValidator,
 } from '@ideaslab/validator'
-import { loginWithPin } from '~/service/auth'
+
 import { loginedProcedure } from '~/api/base/auth-middleware'
-import { client, currentGuild, currentGuildMember } from '~/bot/base/client'
-import { dbClient } from '@ideaslab/db'
-import axios from 'axios'
+import { publicProcedure, router } from '~/api/base/trpc'
+import { client, currentGuildMember } from '~/bot/base/client'
 import config from '~/config'
-import { TRPCError } from '@trpc/server'
+import { loginWithPin } from '~/service/auth'
 import { getSetting } from '~/service/setting'
-import { ChannelType } from 'discord.js'
 import { Embed } from '~/utils/embed'
+
+import axios from 'axios'
+import { ChannelType } from 'discord.js'
 
 export const authRouter = router({
   loginWithPin: publicProcedure

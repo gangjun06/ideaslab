@@ -1,4 +1,5 @@
-import { publicProcedure, router } from '~/api/trpc'
+import { router } from '~/api/base/trpc'
+
 import { adminRouter } from './admin'
 import { authRouter } from './auth'
 import { galleryRouter } from './gallery'

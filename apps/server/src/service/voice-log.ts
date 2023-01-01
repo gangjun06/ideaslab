@@ -1,6 +1,7 @@
+import { dbClient } from '@ideaslab/db'
+
 import config from '~/config'
 import { redis } from '~/lib/redis'
-import { dbClient } from '@ideaslab/db'
 
 const redisVoiceKey = (userId: string) => `${config.redisPrefix}voice:${userId}`
 const voiceKeyExpire = 60 * 60 * 24 // 1 day

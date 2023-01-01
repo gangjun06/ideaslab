@@ -13,7 +13,7 @@
     "register": "nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
     "generate": "prisma generate",
     "build": "tsc && tsc-alias",
-    "lint": "TIMING=1 eslint \"src/**/*.ts\""
+    "lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
     "@trpc/server": "^10.5.0",
