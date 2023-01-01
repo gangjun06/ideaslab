@@ -4,11 +4,11 @@ import { Logger } from '~/utils/logger'
 import config from './config'
 
 import http from 'http'
-import BotClient, { client, initClient } from './bot/client'
+import BotClient, { client, initClient } from '~/bot/base/client'
 import { exit } from 'process'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
-import { createContext } from './api/context'
-import { appRouter } from './router/_app'
+import { createContext } from '~/api/base/context'
+import { appRouter } from './api/router/_app'
 
 const logger = new Logger('main')
 

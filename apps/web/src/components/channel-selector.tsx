@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { ChannelType } from 'discord-api-types/v10'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { trpc } from '~/lib/trpc'
-import { appRouter } from '~/../../server/src/router/_app'
+import { appRouter } from '~/../../server/src/api/router/_app'
 import { Unarray } from '~/types/utils'
 
 export type ChannelSelectorProps = {

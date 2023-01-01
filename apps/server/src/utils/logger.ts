@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import stripColor from 'strip-ansi'
 import winston, { createLogger, format, transports, addColors } from 'winston'
 import config from 'config'
-import { LogLevel } from '~/types'
+import { LogLevel } from '~/bot/types'
 
 const { printf, splat, colorize, timestamp, ms, combine } = format
 

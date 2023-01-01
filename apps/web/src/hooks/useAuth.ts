@@ -2,7 +2,7 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { appRouter } from '~/../../server/src/router/_app'
+import { appRouter } from '~/../../server/src/api/router/_app'
 import { trpc } from '~/lib/trpc'
 
 export const tokenAtom = atomWithStorage<null | string>('auth-token', null)

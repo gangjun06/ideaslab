@@ -1,4 +1,4 @@
-import { LogLevel } from 'types'
+import { LogLevel } from '~/bot/types'
 
 export default {
   logLevel: (process.env.LOG_LEVEL ?? 'debug') as LogLevel,

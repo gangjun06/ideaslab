@@ -10,7 +10,7 @@ import { FormBlock } from '~/components/form/form-block'
 import { ChannelSelector } from '~/components/channel-selector'
 import { RoleSelector } from '~/components/role-selector'
 import { toast } from 'react-hot-toast'
-import { appRouter } from '~/../../server/src/router/_app'
+import { appRouter } from '~/../../server/src/api/router/_app'
 import { useEffect, useMemo } from 'react'
 import { Textarea } from '~/components/form/textarea'
 

@@ -21,7 +21,7 @@ import {
 } from 'react'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
-import { appRouter } from '~/../../server/src/router/_app'
+import { appRouter } from '~/../../server/src/api/router/_app'
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
