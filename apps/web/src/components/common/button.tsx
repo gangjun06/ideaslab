@@ -55,6 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    props.disabled
     return (
       <button
         ref={ref}

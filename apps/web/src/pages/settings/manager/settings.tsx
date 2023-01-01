@@ -3,9 +3,9 @@ import type { NextPage } from 'next'
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
+import { appRouter } from '@ideaslab/server/app'
 import { adminSaveSettingsValidator, z } from '@ideaslab/validator'
 
-import { appRouter } from '~/../../server/src/api/router/_app'
 import { ChannelSelector } from '~/components/channel-selector'
 import { Button } from '~/components/common'
 import { Form, FormFieldBuilder, Input } from '~/components/form'

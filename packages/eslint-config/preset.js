@@ -14,6 +14,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier', 'unused-imports', 'simple-import-sort'],
   rules: {
+    'react/prop-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

@@ -1,4 +1,7 @@
 export * from './button'
 export * from './icons'
+export * from './pin-input'
+export * from './step'
+export * from './tab-select'
 export * from './transition'
 export * from './user-menu'
