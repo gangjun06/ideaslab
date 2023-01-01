@@ -1,8 +1,9 @@
 import Image from 'next/image'
+import { CheckIcon } from '@heroicons/react/24/outline'
+import Typed from 'react-typed'
+
 import MainImage from '~/assets/main-image.svg'
 import { trpc } from '~/lib/trpc'
-import Typed from 'react-typed'
-import { CheckIcon } from '@heroicons/react/24/outline'
 
 const HeaderSection = () => (
   <div className="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between gap-x-8 mt-12">

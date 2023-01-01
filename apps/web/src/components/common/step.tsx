@@ -1,6 +1,5 @@
+import { createContext, Dispatch, SetStateAction, useCallback, useState } from 'react'
 import classNames from 'classnames'
-import { Atom, atom, Provider, useAtom } from 'jotai'
-import { createContext, useCallback, useState, Dispatch, SetStateAction, useContext } from 'react'
 
 interface Props {
   currentStep: number

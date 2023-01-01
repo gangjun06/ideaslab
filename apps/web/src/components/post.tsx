@@ -1,3 +1,6 @@
+import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   ArchiveBoxIcon,
@@ -7,25 +10,15 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import Image from 'next/image'
-import Link from 'next/link'
-import {
-  ComponentProps,
-  Fragment,
-  MouseEventHandler,
-  ReactNode,
-  Suspense,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+
 import { appRouter } from '~/../../server/src/api/router/_app'
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
 import { fullTimeFormat, relativeTimeFormat } from '~/utils/time'
+
 import { Button, ButtonLink, TransitionChild } from './common'
 
 export const PostDetailModalWrapper = ({

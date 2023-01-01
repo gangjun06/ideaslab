@@ -1,19 +1,21 @@
+import { useEffect } from 'react'
 import type { NextPage } from 'next'
-import { SettingLayout } from '~/layouts'
-import { useUser } from '~/hooks/useAuth'
-import { Form, FormFieldBuilder, Input } from '~/components/form'
-import { authUpdateProfileValidator, z } from '@ideaslab/validator'
-import { useForm, UseFormRegister } from '~/hooks/useForm'
-import { Control, useFieldArray } from 'react-hook-form'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import classNames from 'classnames'
-import { Button, GripVerticalIcon } from '~/components/common'
 import { TrashIcon } from '@heroicons/react/24/outline'
+import classNames from 'classnames'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { Control, useFieldArray } from 'react-hook-form'
+import toast from 'react-hot-toast'
+
+import { authUpdateProfileValidator, z } from '@ideaslab/validator'
+
+import { Button, GripVerticalIcon } from '~/components/common'
+import { Form, FormFieldBuilder, Input } from '~/components/form'
 import { FormBlock } from '~/components/form/form-block'
 import { Textarea } from '~/components/form/textarea'
+import { useUser } from '~/hooks/useAuth'
+import { useForm, UseFormRegister } from '~/hooks/useForm'
+import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
-import toast from 'react-hot-toast'
-import { useEffect } from 'react'
 
 const ProfileSetting: NextPage = () => {
   const profile = useUser()

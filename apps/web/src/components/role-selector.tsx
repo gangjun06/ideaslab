@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
-import classNames from 'classnames'
-import { ChannelType } from 'discord-api-types/v10'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
-import { trpc } from '~/lib/trpc'
+import classNames from 'classnames'
+
 import { appRouter } from '~/../../server/src/api/router/_app'
+import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
 
 export type ChannelSelectorProps = {

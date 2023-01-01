@@ -1,8 +1,8 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 
 import { FormBlock, FormBlockProps, formBlockPropsRemover } from './form-block'
-import React from 'react'
 
 interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements['input']>, FormBlockProps {
   type?: 'text' | 'password' | 'email' | 'number'

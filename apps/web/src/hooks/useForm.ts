@@ -1,17 +1,16 @@
-import { DeepRequired, FieldErrorsImpl, useForm as useLibForm } from 'react-hook-form'
 import { useCallback } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DeepRequired, FieldErrorsImpl, useForm as useLibForm } from 'react-hook-form'
 import {
-  DeepPartial,
   FieldPath,
   FieldValues,
   RegisterOptions,
   SubmitErrorHandler,
   SubmitHandler,
   UseFormRegisterReturn,
-  UseFormReturn,
 } from 'react-hook-form'
+
 import { z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString } from '@ideaslab/validator'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 type UseFormRegisterOption<
   TFieldValues extends FieldValues,

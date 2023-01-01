@@ -1,19 +1,18 @@
-import Image from 'next/image'
-import { MainLayout } from '~/layouts'
 import { ComponentProps, useMemo } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-
 import {
-  RectangleStackIcon,
-  UserCircleIcon,
   CogIcon,
+  RectangleStackIcon,
   TagIcon,
+  UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
-import { useUser } from '~/hooks/useAuth'
-import Link from 'next/link'
 import classNames from 'classnames'
-import { Button } from '~/components/common'
+
+import { useUser } from '~/hooks/useAuth'
+import { MainLayout } from '~/layouts'
 
 interface Props extends Omit<ComponentProps<typeof MainLayout>, 'showTitle' | 'tinyContainer'> {
   a?: string

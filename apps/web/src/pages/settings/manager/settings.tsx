@@ -1,18 +1,20 @@
-import type { NextPage } from 'next'
-import { SettingLayout } from '~/layouts'
-import { Form, FormFieldBuilder, Input } from '~/components/form'
-import { useForm } from '~/hooks/useForm'
-import { adminSaveSettingsValidator, z } from '@ideaslab/validator'
-import { trpc } from '~/lib/trpc'
-import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
-import { Button } from '~/components/common'
-import { FormBlock } from '~/components/form/form-block'
-import { ChannelSelector } from '~/components/channel-selector'
-import { RoleSelector } from '~/components/role-selector'
-import { toast } from 'react-hot-toast'
-import { appRouter } from '~/../../server/src/api/router/_app'
 import { useEffect, useMemo } from 'react'
+import type { NextPage } from 'next'
+import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+
+import { adminSaveSettingsValidator, z } from '@ideaslab/validator'
+
+import { appRouter } from '~/../../server/src/api/router/_app'
+import { ChannelSelector } from '~/components/channel-selector'
+import { Button } from '~/components/common'
+import { Form, FormFieldBuilder, Input } from '~/components/form'
+import { FormBlock } from '~/components/form/form-block'
 import { Textarea } from '~/components/form/textarea'
+import { RoleSelector } from '~/components/role-selector'
+import { useForm } from '~/hooks/useForm'
+import { SettingLayout } from '~/layouts'
+import { trpc } from '~/lib/trpc'
 
 const SettingsPage: NextPage = () => {
   const { data: settings } = trpc.admin.loadSettings.useQuery(undefined, { trpc: { ssr: false } })

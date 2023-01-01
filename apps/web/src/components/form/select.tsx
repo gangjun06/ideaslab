@@ -2,7 +2,8 @@ import { forwardRef, Fragment, useCallback, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import { FormBlock, FormBlockProps, formBlockPropsRemover } from './form-block'
+
+import { FormBlock, FormBlockProps } from './form-block'
 
 type OptionType<T> = { label: string; value: T }
 

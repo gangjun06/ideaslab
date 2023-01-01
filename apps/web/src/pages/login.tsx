@@ -1,15 +1,14 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import { trpc } from '~/lib/trpc'
-import { MainLayout } from '../layouts'
-import { TabSelect } from '~/components/common/tab-select'
 import { useCallback, useState } from 'react'
-import { PinInput } from '~/components/common/pin-input'
-import { toast } from 'react-hot-toast'
-import { useRouter } from 'next/router'
-import { tokenAtom } from '~/hooks/useAuth'
+import type { NextPage } from 'next'
 import { useAtom } from 'jotai'
+import { toast } from 'react-hot-toast'
+
+import { PinInput } from '~/components/common/pin-input'
+import { TabSelect } from '~/components/common/tab-select'
+import { tokenAtom } from '~/hooks/useAuth'
+import { trpc } from '~/lib/trpc'
+
+import { MainLayout } from '../layouts'
 
 const LoginPage: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0)

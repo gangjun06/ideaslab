@@ -1,15 +1,17 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import classNames from 'classnames'
-import { Button, ButtonLink } from '~/components/common'
-import { useRouter } from 'next/router'
-import { Toaster } from 'react-hot-toast'
-import { Navbar } from './navbar'
-import { Footer } from './footer'
-import { NextSeo } from 'next-seo'
-import { parseJWT } from '~/utils'
 import Image from 'next/image'
-import { useLoadUserData } from '~/hooks/useAuth'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import classNames from 'classnames'
+import { NextSeo } from 'next-seo'
+import { Toaster } from 'react-hot-toast'
+
+import { Button, ButtonLink } from '~/components/common'
+import { useLoadUserData } from '~/hooks/useAuth'
+import { parseJWT } from '~/utils'
+
+import { Footer } from './footer'
+import { Navbar } from './navbar'
 
 type props = {
   children: ReactNode

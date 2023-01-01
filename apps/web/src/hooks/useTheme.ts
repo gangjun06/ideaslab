@@ -1,6 +1,6 @@
+import { useMemo } from 'react'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { useMemo } from 'react'
 
 export type Theme = 'light' | 'dark' | 'system'
 

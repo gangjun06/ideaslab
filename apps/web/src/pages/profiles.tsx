@@ -1,17 +1,14 @@
+import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import {
   BarsArrowDownIcon,
   DocumentDuplicateIcon,
-  DocumentIcon,
   Square2StackIcon,
-  TagIcon,
-  ViewColumnsIcon,
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Fragment, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { PostDetailModalWrapper, PostView } from '~/components/post'
+
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
 import { relativeTimeFormat } from '~/utils/time'

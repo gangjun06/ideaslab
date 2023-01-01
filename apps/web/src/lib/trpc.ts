@@ -1,7 +1,8 @@
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
-import type { AppRouter } from '../../../server/src/api/router/_app'
 import superjson from 'superjson'
+
+import type { AppRouter } from '../../../server/src/api/router/_app'
 
 function getBaseUrl() {
   return `${process.env.NEXT_PUBLIC_BACKEND_URL}`

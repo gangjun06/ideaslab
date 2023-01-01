@@ -1,10 +1,9 @@
-import React, { ReactNode, useCallback, useMemo } from 'react'
-import Link from 'next/link'
-import { Button, ButtonLink, UserMenu } from '~/components/common'
-import { useRouter } from 'next/router'
-import { useTheme } from '~/hooks/useTheme'
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
+import React from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
+import { ButtonLink, UserMenu } from '~/components/common'
 import { useUser } from '~/hooks/useAuth'
 
 const ThemeChanger = dynamic(

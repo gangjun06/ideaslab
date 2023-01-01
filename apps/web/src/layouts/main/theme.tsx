@@ -1,7 +1,8 @@
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
+import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
+
 import { Button } from '~/components/common'
 import { useCurrentTheme, useTheme } from '~/hooks/useTheme'
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 
 export const ThemeChanger = () => {
   const [theme, setTheme] = useTheme()

@@ -1,15 +1,12 @@
-import { Square2StackIcon, TagIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { Square2StackIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import Image from 'next/image'
-import { Fragment, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
-import { appRouter } from '~/../../server/src/api/router/_app'
+
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
-import { Unarray } from '~/types/utils'
-import { relativeTimeFormat } from '~/utils/time'
 
 const LIMIT = 50
 

@@ -1,10 +1,12 @@
-import { Menu } from '@headlessui/react'
-import classNames from 'classnames'
-import { Transition } from './transition'
 import Image from 'next/image'
 import Link from 'next/link'
-import { tokenAtom, useUser } from '~/hooks/useAuth'
+import { Menu } from '@headlessui/react'
+import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
+
+import { tokenAtom, useUser } from '~/hooks/useAuth'
+
+import { Transition } from './transition'
 
 export const UserMenu = () => {
   const profile = useUser()

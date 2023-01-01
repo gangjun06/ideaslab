@@ -1,26 +1,20 @@
-import type { NextPage } from 'next'
-import { SettingLayout } from '~/layouts'
-import { useUser } from '~/hooks/useAuth'
-import { Form, FormFieldBuilder, Input } from '~/components/form'
-import { useForm } from '~/hooks/useForm'
-import {
-  adminGallerySettingValidator,
-  adminRoleSettingValidator,
-  authSignUpValidator,
-  z,
-} from '@ideaslab/validator'
-import { trpc } from '~/lib/trpc'
-import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import classNames from 'classnames'
-import { Button, GripVerticalIcon } from '~/components/common'
-import { TrashIcon } from '@heroicons/react/24/outline'
-import { FormBlock } from '~/components/form/form-block'
-import { ChannelSelector } from '~/components/channel-selector'
-import { RoleSelector } from '~/components/role-selector'
-import { toast } from 'react-hot-toast'
-import { appRouter } from '~/../../server/src/api/router/_app'
 import { useEffect } from 'react'
+import type { NextPage } from 'next'
+import { TrashIcon } from '@heroicons/react/24/outline'
+import classNames from 'classnames'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+
+import { adminRoleSettingValidator, z } from '@ideaslab/validator'
+
+import { Button, GripVerticalIcon } from '~/components/common'
+import { Form, FormFieldBuilder, Input } from '~/components/form'
+import { FormBlock } from '~/components/form/form-block'
+import { RoleSelector } from '~/components/role-selector'
+import { useForm } from '~/hooks/useForm'
+import { SettingLayout } from '~/layouts'
+import { trpc } from '~/lib/trpc'
 
 const RoleSetting: NextPage = () => {
   const rolesSetting = trpc.admin.saveRoles.useMutation({

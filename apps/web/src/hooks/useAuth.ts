@@ -1,7 +1,8 @@
+import { useEffect } from 'react'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
+
 import { appRouter } from '~/../../server/src/api/router/_app'
 import { trpc } from '~/lib/trpc'
 
@@ -11,7 +12,7 @@ export const tokenDataAtom = atom((get) => {
   const token = get(tokenAtom)
   if (!token) return null
 
-  var splited = token.split('.')
+  const splited = token.split('.')
   if (splited.length < 3) return null
 
   try {

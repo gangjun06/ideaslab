@@ -1,5 +1,6 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
+
 import { PostDetail } from '~/components/post'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
