@@ -12,4 +12,5 @@ export default {
   guildId: (process.env.GUILD_ID ?? '') as string,
   hCaptchaSecretKey: (process.env.HCAPTCHA_SECRET_KEY ??
     '0x0000000000000000000000000000000000000000') as string,
+  ironSessionPassword: process.env.IRON_SESSION_PASSWORD,
 }

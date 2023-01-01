@@ -1,7 +1,17 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/node-http'
 import { IncomingMessage, ServerResponse } from 'http'
+import { getIronSession, IronSessionOptions } from 'iron-session'
+import config from '~/config'
 import { verifyAuthToken } from '~/service/auth'
+
+export const sessionOptions: IronSessionOptions = {
+  password: config.ironSessionPassword ?? '',
+  cookieName: 'ideas-lab/session',
+  cookieOptions: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+}
 
 export async function createContext({
   req,
@@ -22,6 +32,8 @@ export async function createContext({
     return null
   }
   const user = await getUserFromHeader()
+  const session = await getIronSession(req, res, sessionOptions)
+
   return {
     user,
   }

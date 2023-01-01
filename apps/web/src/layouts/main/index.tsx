@@ -8,7 +8,7 @@ import { Footer } from './footer'
 import { NextSeo } from 'next-seo'
 import { parseJWT } from '~/utils'
 import Image from 'next/image'
-import { useLoadUserData, useUser } from '~/hooks/useAuth'
+import { useLoadUserData } from '~/hooks/useAuth'
 import Link from 'next/link'
 
 type props = {
@@ -27,6 +27,12 @@ type JWTToken = {
   isAdmin: boolean
 }
 
+const CenterCard = ({ children }: { children: ReactNode }) => {
+  return (
+    <div className="flex justify-center items-center flex-col card px-16 py-12">{children}</div>
+  )
+}
+
 export const MainLayout = ({
   children,
   title,
@@ -39,8 +45,7 @@ export const MainLayout = ({
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
-  const { setToken, token: storageToken, profile } = useLoadUserData()
-  const profileData = useUser()
+  const { setToken, token: storageToken, profile, isLoading } = useLoadUserData()
 
   useEffect(() => {
     const { token } = router.query
@@ -74,30 +79,26 @@ export const MainLayout = ({
   const content = useMemo(() => {
     if (authConfirm) {
       return (
-        <>
-          <div className="w-full h-full flex items-center justify-center text-center">
-            <div className="flex justify-center items-center flex-col card px-16 py-12">
-              <Image
-                width={128}
-                height={128}
-                src={authConfirm.avatar}
-                alt="avatar"
-                className="rounded-full"
-              />
-              <div className="font-bold text-xl mt-2">{authConfirm.name}</div>
-              <div className="text-sm">
-                다음 계정으로 로그인하기 {authConfirm.isAdmin && '(관리자)'}
-              </div>
-              <Button onClick={login} variant="light" className="mt-4" disabled={tokenExpired}>
-                {tokenExpired ? '만료된 로그인 링크에요' : '로그인'}
-              </Button>
-            </div>
+        <CenterCard>
+          <Image
+            width={128}
+            height={128}
+            src={authConfirm.avatar}
+            alt="avatar"
+            className="rounded-full"
+          />
+          <div className="font-bold text-xl mt-2">{authConfirm.name}</div>
+          <div className="text-sm">
+            다음 계정으로 로그인하기 {authConfirm.isAdmin && '(관리자)'}
           </div>
-        </>
+          <Button onClick={login} variant="light" className="mt-4" disabled={tokenExpired}>
+            {tokenExpired ? '만료된 로그인 링크에요' : '로그인'}
+          </Button>
+        </CenterCard>
       )
     }
 
-    if (profile.isLoading && guard !== 'default') {
+    if (isLoading) {
       return <></>
     }
 
@@ -107,7 +108,7 @@ export const MainLayout = ({
           {showTitle && (
             <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
           )}
-          <div className="flex justify-center items-center flex-col card px-16 py-12">
+          <CenterCard>
             <div className="font-bold text-lg mt-2">
               현재 페이지는 로그인된 사용자만 이용할 수 있어요
             </div>
@@ -116,7 +117,7 @@ export const MainLayout = ({
                 로그인하기
               </ButtonLink>
             </Link>
-          </div>
+          </CenterCard>
         </>
       )
     }
@@ -127,9 +128,9 @@ export const MainLayout = ({
           {showTitle && (
             <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
           )}
-          <div className="flex justify-center items-center flex-col card px-16 py-12">
+          <CenterCard>
             <div className="font-bold text-lg mt-2">관리자만 이용할 수 있는 페이지에요.</div>
-          </div>
+          </CenterCard>
         </>
       )
     }
@@ -140,7 +141,7 @@ export const MainLayout = ({
           {showTitle && (
             <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
           )}
-          <div className="flex justify-center items-center flex-col card px-16 py-12">
+          <CenterCard>
             <div className="font-bold text-lg mt-2">
               아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요
             </div>
@@ -149,7 +150,7 @@ export const MainLayout = ({
                 회원가입하기
               </ButtonLink>
             </Link>
-          </div>
+          </CenterCard>
         </>
       )
     }
@@ -162,17 +163,7 @@ export const MainLayout = ({
         {children}
       </>
     )
-  }, [
-    authConfirm,
-    children,
-    guard,
-    login,
-    profile.data,
-    profile.isLoading,
-    showTitle,
-    title,
-    tokenExpired,
-  ])
+  }, [authConfirm, children, guard, login, profile.data, showTitle, title, tokenExpired, isLoading])
 
   return (
     <>

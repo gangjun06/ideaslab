@@ -29,8 +29,10 @@ export const useLoadUserData = () => {
   const [token, setToken] = useAtom(tokenAtom)
   const setUserData = useSetAtom(userDataAtom)
 
+  const enabled = !!token
+
   const profile = trpc.auth.profile.useQuery(undefined, {
-    enabled: !!token,
+    enabled,
     onError: (res) => {
       toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
     },
@@ -53,7 +55,7 @@ export const useLoadUserData = () => {
     }
   }, [profile, profile.data, setUserData, token])
 
-  return { profile, token, setToken }
+  return { profile, token, setToken, isLoading: enabled ? profile.isLoading : false }
 }
 
 export const useUser = () => useAtomValue(userDataAtom)
