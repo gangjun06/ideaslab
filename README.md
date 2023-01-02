@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/gangjun06/ideaslab">
-    <img width="80" src="assets/icon.png" alt="Ideaslab">
+    <img width="100" src="assets/icon.png" alt="Ideaslab">
   </a>
   <h3>아이디어스 랩</h3>
 </div>
@@ -10,6 +10,18 @@
   <a href="https://www.craft.do/s/k1Hc9FX9indB84">문서</a> |
   <a href="https://ideaslab.kr">웹사이트</a>
 </h4>
+
+<details>
+  <summary>목차</summary>
+  <ol>
+    <li>
+      <a href="#📖 프로젝트 소개">📖 프로젝트 소개</a>
+      <ul>
+        <li><a href="#전체기능">전체 기능</a></li>
+      </ul>
+    </li>
+  </ol>
+</details>
 
 ## 📖 프로젝트 소개
 
@@ -38,6 +50,19 @@
 ## 🚀 시작하기
 
 [아이디어스 랩 디스코드](https://discord.gg/XepQjgpbum)에 가입하셔서 바로 사용하실 수 있습니다.
+
+### 개발서버
+
+```bash
+# Start dev server
+docker-compose -f -d docker-compose.dev.yml up --build --force-recreate
+
+# Show Logs
+docker-compose -f docker-compose.dev.yml logs -f <main | nginx>
+
+# Stop dev server
+docker-compose -f docker-compose.dev.yml down
+```
 
 ## 📦 프로젝트 구성
 

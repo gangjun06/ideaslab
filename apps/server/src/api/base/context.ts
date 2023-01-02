@@ -27,7 +27,6 @@ export async function createContext({
   res,
 }: NodeHTTPCreateContextFnOptions<IncomingMessage, ServerResponse<IncomingMessage>>) {
   const session = await getIronSession(req, res, sessionOptions)
-  console.log(process.env.NODE_ENV)
 
   return {
     session,

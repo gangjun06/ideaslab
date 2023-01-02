@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^db:generate", "^build"],
+      "dependsOn": ["@ideaslab/db#db:generate", "^build"],
       "outputs": [".next/**", "dist/**"],
       "env": ["PORT", "DATABASE_URL", "SHADOW_DATABASE_URL", "JWT_SECRET"]
     },
@@ -10,7 +10,7 @@
       "outputs": []
     },
     "dev": {
-      "dependsOn": ["^db:generate"],
+      "dependsOn": ["@ideaslab/db#db:generate"],
       "cache": false
     },
     "db:generate": {
