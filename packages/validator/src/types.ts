@@ -5,6 +5,10 @@ export const authLoginWithPinValidator = z.object({
   pin: z.string().min(6).max(6),
 })
 
+export const authLoginWithTokenValidator = z.object({
+  token: z.string(),
+})
+
 export const linkValidator = z.object({
   name: z.string().min(1).max(20),
   url: z.string().url(),

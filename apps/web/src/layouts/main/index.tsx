@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import { NextSeo } from 'next-seo'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 
 import { Button, ButtonLink } from '~/components/common'
 import { useLoadUserData } from '~/hooks/useAuth'
+import { trpc } from '~/lib/trpc'
 import { parseJWT } from '~/utils'
 
 import { Footer } from './footer'
@@ -31,7 +32,9 @@ type JWTToken = {
 
 const CenterCard = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="flex justify-center items-center flex-col card px-16 py-12">{children}</div>
+    <div className="w-full flex items-center justify-center text-center center-card-wrapper">
+      <div className="flex justify-center items-center flex-col card px-16 py-12">{children}</div>
+    </div>
   )
 }
 
@@ -47,11 +50,14 @@ export const MainLayout = ({
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
-  const { setToken, token: storageToken, profile, isLoading } = useLoadUserData()
+  const { token: storageToken, profile, isLoading } = useLoadUserData()
+
+  const loginWithToken = trpc.auth.loginWithToken.useMutation()
 
   useEffect(() => {
+    console.log(router.query)
     const { token } = router.query
-    if (typeof token === 'string' && storageToken === null) {
+    if (typeof token === 'string') {
       const parsed = parseJWT<{ name: string; avatar: string; isAdmin: boolean }>(token)
       if (!parsed) return
 
@@ -61,7 +67,7 @@ export const MainLayout = ({
 
       setAuthConfirm({ ...parsed, token })
     }
-  }, [router.query, storageToken])
+  }, [router.query])
 
   const displayTitle = useMemo(() => {
     if (title === '') return '아이디어스랩'
@@ -69,10 +75,17 @@ export const MainLayout = ({
   }, [title])
 
   const login = useCallback(async () => {
-    if (authConfirm?.token) setToken(authConfirm?.token)
+    console.log('로그인')
+    if (authConfirm?.token) {
+      const result = await loginWithToken.mutateAsync({ token: authConfirm.token })
+      if (!result.success) {
+        toast.error('만료된 로그인 링크에요')
+        return
+      }
+    }
     if (router.pathname === '/login') router.push('/')
-    location.reload()
-  }, [authConfirm?.token, router, setToken])
+    // location.reload()
+  }, [authConfirm?.token, loginWithToken, router])
 
   useEffect(() => {
     if (guard === 'guestOnly' && profile.data) router.push('/')
@@ -93,7 +106,13 @@ export const MainLayout = ({
           <div className="text-sm">
             다음 계정으로 로그인하기 {authConfirm.isAdmin && '(관리자)'}
           </div>
-          <Button onClick={login} variant="light" className="mt-4" disabled={tokenExpired}>
+          <Button
+            onClick={login}
+            variant="light"
+            className="mt-4"
+            disabled={tokenExpired}
+            type="button"
+          >
             {tokenExpired ? '만료된 로그인 링크에요' : '로그인'}
           </Button>
         </CenterCard>
@@ -173,14 +192,12 @@ export const MainLayout = ({
       <Toaster />
       <Navbar />
       <div
+        id="main"
         className={classNames(
           'container mx-auto pt-4 py-4 px-4',
           tinyContainer && 'max-w-4xl',
           className,
         )}
-        style={{
-          minHeight: 'calc(100% - 64px)',
-        }}
       >
         {content}
       </div>

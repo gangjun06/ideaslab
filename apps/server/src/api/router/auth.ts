@@ -1,9 +1,12 @@
 import { TRPCError } from '@trpc/server'
+import axios from 'axios'
+import { ChannelType } from 'discord.js'
 
 import { dbClient } from '@ideaslab/db'
 import {
   authCheckHandleValidator,
   authLoginWithPinValidator,
+  authLoginWithTokenValidator,
   authSignUpValidator,
   authUpdateProfileValidator,
 } from '@ideaslab/validator'
@@ -12,29 +15,44 @@ import { loginedProcedure } from '~/api/base/auth-middleware'
 import { publicProcedure, router } from '~/api/base/trpc'
 import { client, currentGuildMember } from '~/bot/base/client'
 import config from '~/config'
-import { loginWithPin } from '~/service/auth'
+import { loginWithPin, loginWithToken } from '~/service/auth'
 import { getSetting } from '~/service/setting'
 import { Embed } from '~/utils/embed'
-
-import axios from 'axios'
-import { ChannelType } from 'discord.js'
 
 export const authRouter = router({
   loginWithPin: publicProcedure
     .input(authLoginWithPinValidator)
     .mutation(async ({ ctx, input }) => {
-      const token = await loginWithPin(input.pin)
-      return {
-        token,
-      }
+      const user = await loginWithPin(input.pin)
+      if (!user) return { success: false }
+
+      ctx.session.id = user.userId
+      ctx.session.isAdmin = user.isAdmin
+      await ctx.session.save()
+      return { success: true }
     }),
+  loginWithToken: publicProcedure
+    .input(authLoginWithTokenValidator)
+    .mutation(async ({ ctx, input }) => {
+      const user = await loginWithToken(input.token)
+      if (!user) return { success: false }
+
+      ctx.session.id = user.userId
+      ctx.session.isAdmin = user.isAdmin
+      await ctx.session.save()
+      return { success: true }
+    }),
+  logout: loginedProcedure.mutation(({ ctx }) => {
+    ctx.session.destroy()
+    return { success: true }
+  }),
   profile: loginedProcedure.query(async ({ ctx }) => {
     const user = await dbClient.user.findUnique({
-      where: { discordId: ctx.user.id },
+      where: { discordId: ctx.session.id },
       select: { discordId: true, avatar: true, roles: true, introduce: true, links: true },
     })
 
-    const member = await currentGuildMember(ctx.user.id)
+    const member = await currentGuildMember(ctx.session.id)
     const name = member.displayName
     const avatar = member.displayAvatarURL()
     const username = member.user.username
@@ -43,17 +61,19 @@ export const authRouter = router({
     if (user && user.avatar !== avatar) {
       try {
         await dbClient.user.update({
-          where: { discordId: ctx.user.id },
+          where: { discordId: ctx.session.id },
           data: {
             avatar,
           },
         })
-      } catch {}
+      } catch {
+        /* empty */
+      }
     }
 
     return {
-      userId: ctx.user.id,
-      isAdmin: ctx.user.isAdmin,
+      userId: ctx.session.id,
+      isAdmin: ctx.session.isAdmin,
       name,
       avatar,
       username,
@@ -87,13 +107,13 @@ export const authRouter = router({
     }
 
     const user = await dbClient.user.findUnique({
-      where: { discordId: ctx.user.id },
+      where: { discordId: ctx.session.id },
     })
     if (user) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: '이미 가입되어 있습니다.' })
     }
 
-    const member = await currentGuildMember(ctx.user.id)
+    const member = await currentGuildMember(ctx.session.id)
 
     if (member.displayName !== input.name) {
       member.setNickname(input.name)
@@ -101,7 +121,7 @@ export const authRouter = router({
 
     await dbClient.user.create({
       data: {
-        discordId: ctx.user.id,
+        discordId: ctx.session.id,
         avatar: member.displayAvatarURL(),
         name: input.name,
         handle: input.handle,
@@ -141,7 +161,7 @@ export const authRouter = router({
     .input(authUpdateProfileValidator)
     .mutation(async ({ ctx, input }) => {
       const user = await dbClient.user.findUnique({
-        where: { discordId: ctx.user.id },
+        where: { discordId: ctx.session.id },
       })
       if (!user) {
         throw new TRPCError({
@@ -150,7 +170,7 @@ export const authRouter = router({
         })
       }
 
-      const member = await currentGuildMember(ctx.user.id)
+      const member = await currentGuildMember(ctx.session.id)
 
       if (member.displayName !== input.name) {
         member.setNickname(input.name)
@@ -158,10 +178,10 @@ export const authRouter = router({
 
       await dbClient.user.update({
         where: {
-          discordId: ctx.user.id,
+          discordId: ctx.session.id,
         },
         data: {
-          discordId: ctx.user.id,
+          discordId: ctx.session.id,
           avatar: member.displayAvatarURL(),
           name: input.name,
           handle: input.handle,

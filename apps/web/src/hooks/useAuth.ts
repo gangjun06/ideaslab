@@ -17,6 +17,7 @@ export const tokenDataAtom = atom((get) => {
 
   try {
     const parsed = JSON.parse(Buffer.from(splited[1], 'base64').toString('base64'))
+    // eslint-disable-next-line @typescript-eslint/ban-types
     return parsed as {}
   } catch (e) {
     return null
@@ -27,15 +28,19 @@ type UserData = typeof appRouter.auth.profile['_def']['_output_out'] | null
 export const userDataAtom = atom<UserData>(null)
 
 export const useLoadUserData = () => {
-  const [token, setToken] = useAtom(tokenAtom)
+  // const [token, setToken] = useAtom(tokenAtom)
   const setUserData = useSetAtom(userDataAtom)
 
-  const enabled = !!token
+  // const enabled = !!token
 
   const profile = trpc.auth.profile.useQuery(undefined, {
-    enabled,
+    // enabled,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
     onError: (res) => {
-      toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
+      if (res.data?.code !== 'UNAUTHORIZED')
+        toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
     },
     onSuccess: (data) => {
       if (!data.isVerified && !sessionStorage.getItem('alert-not-verified')) {
@@ -45,18 +50,21 @@ export const useLoadUserData = () => {
       setUserData(data)
     },
     retry: (failureCount, error) => {
+      if (error.data?.code === 'UNAUTHORIZED') return false
+      if (failureCount < 2) return true
       return false
     },
     trpc: { ssr: false },
   })
 
-  useEffect(() => {
-    if (profile.data && token === null) {
-      setUserData(null)
-    }
-  }, [profile, profile.data, setUserData, token])
+  // useEffect(() => {
+  //   if (profile.data && token === null) {
+  //     setUserData(null)
+  //   }
+  // }, [profile, profile.data, setUserData, token])
+  const token = ''
 
-  return { profile, token, setToken, isLoading: enabled ? profile.isLoading : false }
+  return { profile, token, isLoading: profile.isLoading }
 }
 
 export const useUser = () => useAtomValue(userDataAtom)

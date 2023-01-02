@@ -122,3 +122,19 @@ input[type='number']::-webkit-outer-spin-button {
   @apply prose-headings:text-gray-800 dark:prose-headings:text-gray-200;
   @apply prose-a:text-primary-color max-w-none;
 }
+
+#main {
+  min-height: calc(100% - 80px - 100px);
+}
+.center-card-wrapper {
+  height: calc(100vh - 80px - 100px - 32px);
+}
+
+@media (min-width: 640px) {
+  #main {
+    min-height: calc(100% - 80px - 80px);
+  }
+  .center-card-wrapper {
+    height: calc(100vh - 80px - 80px - 32px);
+  }
+}

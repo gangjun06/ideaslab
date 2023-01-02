@@ -3,51 +3,40 @@ import { TRPCError } from '@trpc/server'
 import { middleware, publicProcedure } from './trpc'
 
 const checkAuth = middleware(async ({ next, ctx }) => {
-  if (ctx.user === 'invalid')
+  if (!ctx.session.id) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       cause: {
-        reason: 'invalid-token',
-      },
-    })
-
-  if (ctx.user) {
-    return next({
-      ctx: {
-        ...ctx,
-        user: {
-          ...ctx.user,
-        },
+        reason: 'invalid-session',
       },
     })
   }
-  throw new TRPCError({
-    code: 'UNAUTHORIZED',
+
+  return next({
+    ctx,
   })
 })
 
 const checkAdmin = middleware(async ({ next, ctx }) => {
-  if (ctx.user === 'invalid')
+  if (!ctx.session.id) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       cause: {
-        reason: 'invalid-token',
+        reason: 'invalid-session',
       },
     })
-
-  if (ctx.user?.isAdmin) {
-    return next({
-      ctx: {
-        ...ctx,
-        user: {
-          ...ctx.user,
-        },
+  }
+  if (!ctx.session.isAdmin) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      cause: {
+        reason: 'invalid-permission',
       },
     })
   }
 
-  throw new TRPCError({
-    code: 'UNAUTHORIZED',
+  return next({
+    ctx,
   })
 })
 

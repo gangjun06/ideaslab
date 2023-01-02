@@ -1,4 +1,10 @@
+// eslint-disable-next-line simple-import-sort/imports
+import 'dotenv/config'
+import 'module-alias/register'
+
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
+import http from 'http'
+import { exit } from 'process'
 
 import { createContext } from '~/api/base/context'
 import { client, initClient } from '~/bot/base/client'
@@ -6,11 +12,6 @@ import { Logger } from '~/utils/logger'
 
 import { appRouter } from './api/router/_app'
 import config from './config'
-
-import 'dotenv/config'
-import 'module-alias/register'
-import http from 'http'
-import { exit } from 'process'
 
 const logger = new Logger('main')
 
@@ -56,5 +57,5 @@ if (process.argv.includes('--register')) {
       // then we can pass the req/res to the tRPC handler
       trpcHandler(req, res)
     })
-    .listen(2022)
+    .listen(4000)
 }

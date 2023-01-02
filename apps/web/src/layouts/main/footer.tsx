@@ -3,31 +3,29 @@ import Link from 'next/link'
 
 export const Footer = () => {
   return (
-    <footer className="px-4 py-8 bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-      <div className="container flex flex-wrap items-center justify-center mx-auto space-y-4 sm:justify-between sm:space-y-0">
-        <div className="flex flex-row pr-3 space-x-4 sm:space-x-8">
-          <Image src="/favicon-196.png" width={48} height={48} alt="ideaslab logo" />
-          <ul className="flex flex-wrap items-center space-x-4 sm:space-x-8">
-            <li>
-              <Link href="/privacy">이용약관</Link>
-            </li>
-            <li>
-              <Link href="/info">웹사이트 정보</Link>
-            </li>
-          </ul>
+    <footer className="bg-gray-100 shadow p-4 sm:p-5 xl:p-5 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+      <div className="container sm:flex sm:items-center sm:justify-between mx-auto">
+        <p className="mb-2 text-sm text-center text-gray-500 dark:text-gray-400 sm:mb-0">
+          &copy; 2020-2023 <span>아이디어스 랩</span>
+        </p>
+        <div className="flex justify-center items-center space-x-1">
+          <Link href="/privacy" passHref>
+            <a className="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
+              이용약관
+            </a>
+          </Link>
+          <Link href="/info" passHref>
+            <a className="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
+              웹사이트 정보
+            </a>
+          </Link>
+          <a
+            href="https://github.com/gangjun06/ideaslab"
+            className="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600"
+          >
+            소스코드
+          </a>
         </div>
-        <ul className="flex flex-wrap pl-3 space-x-4 sm:space-x-8">
-          <li>
-            <a rel="noopener noreferrer" href="#">
-              디스코드
-            </a>
-          </li>
-          <li>
-            <a rel="noopener noreferrer" href="#">
-              깃허브
-            </a>
-          </li>
-        </ul>
       </div>
     </footer>
   )

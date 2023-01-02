@@ -57,7 +57,7 @@ export const getLoginToken = async (
   const token = jwt.sign({ name, avatar, isAdmin }, config.jwtSecret, {
     issuer: 'ideaslab',
     subject: userId,
-    expiresIn: loginTokenExpire,
+    expiresIn: Math.floor(Date.now() / 1000) + loginTokenExpire,
   })
 
   return { token, pin }
@@ -72,7 +72,8 @@ export const loginWithPin = async (pin: string) => {
   if (userData === null) return null
   const { userId, isAdmin } = JSON.parse(userData) as { userId: string; isAdmin: boolean }
 
-  return createAuthToken(userId, isAdmin)
+  // return createAuthToken(userId, isAdmin)
+  return { userId, isAdmin }
 }
 
 /**
@@ -86,7 +87,7 @@ export const loginWithToken = (loginToken: string) => {
       isAdmin: boolean
     }
 
-    return createAuthToken(userId, isAdmin)
+    return { userId, isAdmin }
   } catch {
     return null
   }

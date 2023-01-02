@@ -1,18 +1,15 @@
 import { useCallback, useState } from 'react'
 import type { NextPage } from 'next'
-import { useAtom } from 'jotai'
 import { toast } from 'react-hot-toast'
 
 import { PinInput } from '~/components/common/pin-input'
 import { TabSelect } from '~/components/common/tab-select'
-import { tokenAtom } from '~/hooks/useAuth'
 import { trpc } from '~/lib/trpc'
 
 import { MainLayout } from '../layouts'
 
 const LoginPage: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0)
-  const [token, setToken] = useAtom(tokenAtom)
 
   const loginWithPinMutation = trpc.auth.loginWithPin.useMutation({
     onMutate: () => {
@@ -21,13 +18,13 @@ const LoginPage: NextPage = () => {
     onError: () => {
       toast.error('요청 중 에러가 발생하였어요', { id: 'mutation' })
     },
-    onSuccess: ({ token }) => {
-      if (!token) {
+    onSuccess: ({ success }) => {
+      if (!success) {
         toast.error('잘못된 핀 번호에요', { id: 'mutation' })
         return
       }
       toast.success('성공적으로 로그인 되었어요.', { id: 'mutation' })
-      setToken(token)
+
       location.href = '/'
     },
   })

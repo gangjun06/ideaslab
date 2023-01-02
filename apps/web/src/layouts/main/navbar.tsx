@@ -24,7 +24,7 @@ export const Navbar = () => {
   const profile = useUser()
 
   return (
-    <nav className="h-16 shadow bg-white dark:bg-gray-800 flex items-center z-10">
+    <nav className="h-20 shadow bg-white dark:bg-gray-800 flex items-center z-10">
       <div className="px-4 container max-w-4xl mx-auto flex justify-between items-center">
         <Link href="/" passHref>
           <a className="font-bold">아이디어스랩</a>
