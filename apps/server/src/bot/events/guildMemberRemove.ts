@@ -3,14 +3,18 @@ import { dbClient } from '@ideaslab/db'
 import { Event } from '~/bot/base/event'
 
 export default new Event('guildMemberRemove', async (client, member) => {
-  await dbClient.user.update({
-    where: {
-      discordId: member.id,
-    },
-    data: {
-      leavedAt: new Date(),
-    },
-  })
+  try {
+    await dbClient.user.update({
+      where: {
+        discordId: member.id,
+      },
+      data: {
+        leavedAt: new Date(),
+      },
+    })
+  } catch {
+    /* empty */
+  }
   // const dmChannel = await member.createDM(true)
 
   // const embed = new Embed(client, 'info')

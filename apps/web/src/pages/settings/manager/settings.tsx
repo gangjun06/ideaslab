@@ -15,6 +15,7 @@ import { RoleSelector } from '~/components/role-selector'
 import { useForm } from '~/hooks/useForm'
 import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
+import { ChannelType } from 'discord.js'
 
 const SettingsPage: NextPage = () => {
   const { data: settings } = trpc.admin.loadSettings.useQuery(undefined, { trpc: { ssr: false } })
@@ -132,6 +133,20 @@ const FieldArray = ({
           <FormFieldBuilder name={`settings.${index}.value`}>
             {({ field: { onChange, onBlur, value }, error }) => (
               <ChannelSelector error={error} onChange={onChange} onBlur={onBlur} value={value} />
+            )}
+          </FormFieldBuilder>
+        )
+      case 'category':
+        return (
+          <FormFieldBuilder name={`settings.${index}.value`}>
+            {({ field: { onChange, onBlur, value }, error }) => (
+              <ChannelSelector
+                error={error}
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value}
+                category
+              />
             )}
           </FormFieldBuilder>
         )

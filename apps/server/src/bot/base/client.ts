@@ -10,7 +10,7 @@ import { BaseInteraction } from './interaction'
 // import DatabaseManager from './database-manager'
 import InteractionManager from './interaction-manager'
 
-import { Client, ClientEvents, ClientOptions, Collection } from 'discord.js'
+import { Client, ClientEvents, ClientOptions, Collection, InteractionType } from 'discord.js'
 import { config as dotenvConfig } from 'dotenv'
 
 const logger = new Logger('bot')

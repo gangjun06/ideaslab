@@ -15,6 +15,7 @@ export type ChannelSelectorProps = {
   onBlur?: React.PropsWithoutRef<JSX.IntrinsicElements['div']>['onBlur']
   label?: string
   ref?: any
+  category?: boolean
   filterType?: (
     | ChannelType.GuildText
     | ChannelType.GuildCategory
@@ -33,6 +34,7 @@ export const ChannelSelector = ({
   bottom,
   label,
   error,
+  category,
   filterType = [
     ChannelType.GuildText,
     ChannelType.GuildForum,
@@ -66,12 +68,13 @@ export const ChannelSelector = ({
 
   const filteredChannels = useMemo(
     () =>
-      data?.filter(
-        (channel) =>
-          filterType.includes(channel.type as any) &&
-          channel.name.replace(/\s+/g, '').includes(query.replace(/\s+/g, '')),
+      data?.filter((channel) =>
+        category
+          ? channel.type === ChannelType.GuildCategory
+          : filterType.includes(channel.type as any) &&
+            channel.name.replace(/\s+/g, '').includes(query.replace(/\s+/g, '')),
       ) ?? [],
-    [data, filterType, query],
+    [category, data, filterType, query],
   )
 
   return (
@@ -144,7 +147,7 @@ export const ChannelSelector = ({
                           )}
                         >
                           <span># {channel.name}</span>
-                          {channel.parentId && (
+                          {channel.parentId && !category && (
                             <span
                               className={classNames(
                                 'ml-2 text-ellipsis',

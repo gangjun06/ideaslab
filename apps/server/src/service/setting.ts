@@ -7,14 +7,18 @@ enum SettingValueType {
   String = 'string',
   LongText = 'longText',
   Channel = 'channel',
+  Category = 'category',
   Number = 'number',
   Tag = 'tag',
   Boolean = 'boolean',
+  Role = 'role',
 }
 
 const SettingList = {
   afkChannel: SettingValueType.Channel,
   voiceRoomCreateChannel: SettingValueType.Channel,
+  voiceRoomCategory: SettingValueType.Category,
+  userRole: SettingValueType.Role,
   achieveForumEatTag: SettingValueType.Tag,
   achieveForumWorkTag: SettingValueType.Tag,
   privacyPolicy: SettingValueType.LongText,
@@ -29,6 +33,8 @@ type SettingKeys = keyof typeof SettingList
 type SettingValueTypeConvert<T extends SettingValueType> = T extends SettingValueType.String
   ? string
   : T extends SettingValueType.Channel
+  ? string
+  : T extends SettingValueType.Role
   ? string
   : T extends SettingValueType.LongText
   ? string
@@ -61,7 +67,15 @@ export const settingDetails: {
     cache: false,
   },
   voiceRoomCreateChannel: {
-    description: '음성채널을 생성하는 채널을 설정합니다 ',
+    description: '음성채널을 생성하는 채널을 설정합니다.',
+    cache: true,
+  },
+  voiceRoomCategory: {
+    description: '음성채널의 카테고리를 설정합니다.',
+    cache: true,
+  },
+  userRole: {
+    description: '유저역할을 설정합니다.',
     cache: true,
   },
   privacyPolicy: {

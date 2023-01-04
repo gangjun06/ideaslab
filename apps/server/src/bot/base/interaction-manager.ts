@@ -6,6 +6,7 @@ import { BaseInteraction } from './interaction'
 
 import { lstatSync, readdirSync } from 'fs'
 import { join } from 'path'
+import { InteractionType } from '../types'
 
 export default class InteractionManager extends BaseManager {
   private logger = new Logger('InteractionManager')

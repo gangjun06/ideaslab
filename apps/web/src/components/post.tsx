@@ -70,7 +70,6 @@ export const PostView = ({
       className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
       key={post.id}
       onClick={(e) => {
-        console.log(e.target)
         if (
           (e.target as HTMLElement).classList.contains('no-click') ||
           (e.target as HTMLElement).parentElement?.classList.contains('no-click')
