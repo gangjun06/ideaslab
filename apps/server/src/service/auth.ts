@@ -1,10 +1,9 @@
+import jwt from 'jsonwebtoken'
+
 import config from '~/config'
 import { redis } from '~/lib/redis'
 
-import jwt from 'jsonwebtoken'
-
 const loginTokenExpire = 60 * 30 // 10 minutes
-const authTokenExpire = 60 * 60 * 24 * 30 // 30 days
 
 const redisLoginPinKey = (pin: string) => `${config.redisPrefix}loginPin:${pin}`
 
@@ -13,16 +12,6 @@ const randomNumber = (length: number) => {
   const max = 10 ** length - 1
 
   return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-const createAuthToken = (userId: string, isAdmin: boolean) => {
-  const token = jwt.sign({ isAdmin }, config.jwtSecret, {
-    issuer: 'ideaslab',
-    subject: userId,
-    expiresIn: authTokenExpire,
-  })
-
-  return token
 }
 
 const generatePin = async (): Promise<string> => {

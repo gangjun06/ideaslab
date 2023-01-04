@@ -1,3 +1,6 @@
+import { Message, WebhookClient } from 'discord.js'
+import { v4 } from 'uuid'
+
 import { ErrorReportOptions } from '~/bot/types'
 import config from '~/config'
 import { Embed } from '~/utils/embed'
@@ -5,9 +8,6 @@ import { Logger } from '~/utils/logger'
 
 import BaseManager from './base-manager'
 import BotClient from './client'
-
-import { WebhookClient } from 'discord.js'
-import { v4 } from 'uuid'
 
 /**
  * @extends BaseManager
@@ -36,8 +36,11 @@ export default class ErrorManager extends BaseManager {
       .addFields([{ name: '오류 코드', value: errorCode, inline: true }])
 
     if (options && options.isSend) {
-      //@ts-ignore
-      options.executer?.reply({ embeds: [errorEmbed] })
+      try {
+        ;(options.executer as Message).reply({ embeds: [errorEmbed] })
+      } catch {
+        /* empty */
+      }
     }
 
     if (config.errorWebhook !== '') {

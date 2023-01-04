@@ -1,12 +1,12 @@
+import type { ClientEvents } from 'discord.js'
+import { readdirSync } from 'fs'
+import { join } from 'path'
+
 import { Logger } from '~/utils/logger'
 
 import BaseManager from './base-manager'
 import type BotClient from './client'
 import { Event } from './event'
-
-import type { ClientEvents } from 'discord.js'
-import { readdirSync } from 'fs'
-import { join } from 'path'
 
 /**
  * @extends {BaseManager}
@@ -94,6 +94,7 @@ export default class EventManager extends BaseManager {
     }
     this.events.set(eventName, eventFuntion)
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.client.on(eventName, fn)
 

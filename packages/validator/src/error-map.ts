@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { ZodErrorMap, ZodIssueCode } from 'zod'
+import { ZodIssueCode } from 'zod'
 
 export const customErrorMap = (issue, ctx) => {
   switch (issue.code) {

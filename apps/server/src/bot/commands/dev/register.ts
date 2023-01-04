@@ -1,6 +1,6 @@
-import { SlashCommand } from '~/bot/base/command'
-
 import { SlashCommandBuilder } from 'discord.js'
+
+import { SlashCommand } from '~/bot/base/command'
 
 export default new SlashCommand(
   new SlashCommandBuilder().setName('명령어등록').setDescription('명령어를 업데이트 합니다.'),

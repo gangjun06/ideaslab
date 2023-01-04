@@ -1,5 +1,3 @@
-import { SlashCommand } from '~/bot/base/command'
-
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -7,6 +5,8 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js'
+
+import { SlashCommand } from '~/bot/base/command'
 
 export default new SlashCommand(
   new SlashCommandBuilder()

@@ -1,3 +1,6 @@
+import { Client, ClientEvents, ClientOptions, Collection } from 'discord.js'
+import { config as dotenvConfig } from 'dotenv'
+
 import config from '~/config'
 import { Logger } from '~/utils/logger'
 
@@ -9,9 +12,6 @@ import EventManager from './event-manager'
 import { BaseInteraction } from './interaction'
 // import DatabaseManager from './database-manager'
 import InteractionManager from './interaction-manager'
-
-import { Client, ClientEvents, ClientOptions, Collection, InteractionType } from 'discord.js'
-import { config as dotenvConfig } from 'dotenv'
 
 const logger = new Logger('bot')
 
@@ -51,11 +51,8 @@ export default class BotClient extends Client {
     await this.login(token).then(() => this.setStatus())
   }
 
-  public async setStatus(status: 'dev' | 'online' = 'online', name = '점검중...') {
-    //       this.user?.setPresence({
-    //         activities: [{ name: `` }],
-    //         status: 'online',
-    //       })
+  public async setStatus(_status: 'dev' | 'online' = 'online', _name = '점검중...') {
+    this.user?.setPresence({ status: 'online', activities: [{ name: '아이디어스랩 관리' }] })
   }
 }
 

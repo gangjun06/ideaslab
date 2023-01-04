@@ -1,11 +1,12 @@
+import Redis from 'ioredis'
+
 import config from '~/config'
 import { Logger } from '~/utils/logger'
-
-import Redis from 'ioredis'
 
 const logger = new Logger('redis')
 
 declare global {
+  // eslint-disable-next-line no-var
   var redis: Redis | undefined
 }
 

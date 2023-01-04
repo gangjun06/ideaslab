@@ -1,6 +1,3 @@
-import { BaseInteractionFunction, InteractionData } from '~/bot/types'
-import { InteractionType } from '~/bot/types'
-
 import {
   AutocompleteInteraction,
   ButtonInteraction,
@@ -8,6 +5,9 @@ import {
   ModalSubmitInteraction,
   SelectMenuInteraction,
 } from 'discord.js'
+
+import { BaseInteractionFunction, InteractionData } from '~/bot/types'
+import { InteractionType } from '~/bot/types'
 
 export class Button {
   public type: InteractionType.Button = InteractionType.Button

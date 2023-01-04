@@ -1,14 +1,6 @@
-import {
-  ActionRowBuilder,
-  ChannelType,
-  MessageType,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-} from 'discord.js'
+import { ChannelType } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
-import config from '~/config'
 import {
   voiceChannelAllow,
   voiceChannelVisible,

@@ -1,9 +1,9 @@
-import { LogLevel } from '~/bot/types'
-
 import chalk from 'chalk'
 import config from 'config'
 import stripColor from 'strip-ansi'
 import winston, { addColors, createLogger, format, transports } from 'winston'
+
+import { LogLevel } from '~/bot/types'
 
 const { printf, splat, colorize, timestamp, ms, combine } = format
 

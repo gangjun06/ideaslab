@@ -10,42 +10,40 @@ import { router } from '~/api/base/trpc'
 import { getAllSettings, setSetting } from '~/service/setting'
 
 export const adminRouter = router({
-  loadGallerySetting: adminProcedure.query(async ({ ctx }) => {
+  loadGallerySetting: adminProcedure.query(async () => {
     const categories = await dbClient.category.findMany()
     return {
       categories,
     }
   }),
-  gallerySetting: adminProcedure
-    .input(adminGallerySettingValidator)
-    .mutation(async ({ ctx, input }) => {
-      for (const category of input.categories) {
-        if (category.delete) {
-          await dbClient.category.delete({ where: { id: category.id } })
-        }
+  gallerySetting: adminProcedure.input(adminGallerySettingValidator).mutation(async ({ input }) => {
+    for (const category of input.categories) {
+      if (category.delete) {
+        await dbClient.category.delete({ where: { id: category.id } })
+      }
 
-        if (!category.id) {
-          await dbClient.category.create({
-            data: {
-              name: category.name,
-              discordChannel: category.discordChannel,
-              defaultOrder: category.defaultOrder,
-            },
-          })
-          continue
-        }
-
-        await dbClient.category.update({
-          where: { id: category.id },
+      if (!category.id) {
+        await dbClient.category.create({
           data: {
             name: category.name,
             discordChannel: category.discordChannel,
             defaultOrder: category.defaultOrder,
           },
         })
+        continue
       }
-    }),
-  loadRoles: adminProcedure.query(async ({ ctx }) => {
+
+      await dbClient.category.update({
+        where: { id: category.id },
+        data: {
+          name: category.name,
+          discordChannel: category.discordChannel,
+          defaultOrder: category.defaultOrder,
+        },
+      })
+    }
+  }),
+  loadRoles: adminProcedure.query(async () => {
     return await dbClient.role.findMany()
   }),
   saveRoles: adminProcedure.input(adminRoleSettingValidator).mutation(async ({ input }) => {
@@ -77,7 +75,7 @@ export const adminRouter = router({
       })
     }
   }),
-  loadSettings: adminProcedure.query(async ({ ctx }) => {
+  loadSettings: adminProcedure.query(async () => {
     return await getAllSettings()
   }),
   saveSettings: adminProcedure.input(adminSaveSettingsValidator).mutation(async ({ input }) => {

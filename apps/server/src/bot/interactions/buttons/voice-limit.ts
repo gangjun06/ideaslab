@@ -7,8 +7,6 @@ import {
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
-import config from '~/config'
-import { Embed } from '~/utils/embed'
 
 export default new Button(['voice-limit'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return

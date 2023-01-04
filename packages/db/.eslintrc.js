@@ -1,1 +1,1 @@
-module.exports = require('@ideaslab/config/eslint-preset')
+module.exports = require('@ideaslab/eslint-config/preset')

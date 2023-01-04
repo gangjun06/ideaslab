@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { customErrorMap } from './error-map'
 
 export const authLoginWithPinValidator = z.object({

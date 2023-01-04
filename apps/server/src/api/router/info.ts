@@ -1,11 +1,11 @@
+import { ChannelType } from 'discord.js'
+
 import { dbClient } from '@ideaslab/db'
 import { infoProfilesValidator } from '@ideaslab/validator'
 
 import { publicProcedure, router } from '~/api/base/trpc'
 import { currentGuild } from '~/bot/base/client'
 import { getSetting } from '~/service/setting'
-
-import { ChannelType } from 'discord.js'
 
 type Channel = {
   id: string
@@ -22,7 +22,7 @@ type Role = {
 }
 
 export const infoRouter = router({
-  stat: publicProcedure.query(async ({ ctx }) => {
+  stat: publicProcedure.query(async () => {
     const members = (await currentGuild()).memberCount
 
     return {
