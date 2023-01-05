@@ -1,9 +1,14 @@
 import {
   AutocompleteInteraction,
   ButtonInteraction,
+  CacheType,
+  ChannelSelectMenuInteraction,
   ContextMenuCommandInteraction,
+  MentionableSelectMenuInteraction,
   ModalSubmitInteraction,
+  RoleSelectMenuInteraction,
   SelectMenuInteraction,
+  UserSelectMenuInteraction,
 } from 'discord.js'
 
 import { BaseInteractionFunction, InteractionData } from '~/bot/types'
@@ -17,11 +22,23 @@ export class Button {
   ) {}
 }
 
-export class SelectMenu {
+type SelectMenuType = 'role' | 'user' | 'string' | 'channel' | 'mention'
+type SelectMenuDiscordType<T extends SelectMenuType, U extends CacheType> = T extends 'role'
+  ? UserSelectMenuInteraction<U>
+  : T extends 'role'
+  ? RoleSelectMenuInteraction<U>
+  : T extends 'string'
+  ? UserSelectMenuInteraction<U>
+  : T extends 'channel'
+  ? ChannelSelectMenuInteraction<U>
+  : MentionableSelectMenuInteraction<U>
+
+export class SelectMenu<T extends SelectMenuType> {
   public type: InteractionType.Select = InteractionType.Select
   constructor(
+    public menuType: T,
     public customId: string | string[],
-    public execute: BaseInteractionFunction<SelectMenuInteraction<'cached'>>,
+    public execute: BaseInteractionFunction<SelectMenuDiscordType<T, 'cached'>>,
   ) {}
 }
 
@@ -50,4 +67,9 @@ export class AutoComplete {
   ) {}
 }
 
-export type BaseInteraction = Button | SelectMenu | ContextMenu | Modal | AutoComplete
+export type BaseInteraction<T extends SelectMenuType = any> =
+  | Button
+  | SelectMenu<T>
+  | ContextMenu
+  | Modal
+  | AutoComplete

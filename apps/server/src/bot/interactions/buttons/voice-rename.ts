@@ -7,9 +7,11 @@ import {
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
+import { voiceChannelOwnerCheck } from '~/service/voice-channel'
 
 export default new Button(['voice-rename'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
+  if (!(await voiceChannelOwnerCheck(interaction))) return
 
   const modal = new ModalBuilder().setCustomId('modal.voice-rename').setTitle('음성채널 이름 변경')
 
@@ -25,17 +27,5 @@ export default new Button(['voice-rename'], async (client, interaction) => {
 
   modal.addComponents(firstActionRow)
 
-  // Show the modal to the user
   await interaction.showModal(modal)
-
-  //   const embed = new Embed(client, 'success')
-  //     .setTitle('아이디어스랩 가입 완료하기 [여기를 클릭]')
-  //     .setURL(`${config.webURL}/signup?token=${token.token}`)
-  //     .addFields({
-  //       name: '기타',
-  //       value: `관리자이시군요! 관리자 권한이 함께 설정되었어요.`,
-  //     })
-  //     .setFooter({ text: '링크는 10분 후 만료됩니다.' })
-
-  //   interaction.reply({ embeds: [embed], ephemeral: true })
 })

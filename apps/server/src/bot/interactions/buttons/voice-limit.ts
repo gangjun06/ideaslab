@@ -7,9 +7,11 @@ import {
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
+import { voiceChannelOwnerCheck } from '~/service/voice-channel'
 
 export default new Button(['voice-limit'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
+  if (!(await voiceChannelOwnerCheck(interaction))) return
 
   const modal = new ModalBuilder()
     .setCustomId('modal.voice-limit')

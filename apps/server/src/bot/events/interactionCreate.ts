@@ -35,16 +35,16 @@ export default new Event('interactionCreate', async (client, interaction) => {
     } catch (error: any) {
       errorManager.report(error, { executer: interaction, isSend: true })
     }
-  } else if (interaction.isSelectMenu()) {
+  } else if (interaction.isAnySelectMenu()) {
     const interactionData = interactionManager.get(interaction.customId)
 
     if (!interactionData) return
     if (interactionData.type !== InteractionType.Select) return
 
     try {
-      interactionData.execute(client, interaction)
+      interactionData.execute(client, interaction as any)
     } catch (error: any) {
-      errorManager.report(error, { executer: interaction, isSend: true })
+      errorManager.report(error, { executer: interaction as any, isSend: true })
     }
   } else if (
     interaction.isContextMenuCommand() ||

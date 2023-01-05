@@ -5,17 +5,25 @@ import {
   ChannelType,
   Client,
   GuildMember,
+  StringSelectMenuBuilder,
+  UserSelectMenuBuilder,
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
 import { voiceChannelVisibleState } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
-export const visibleSettingMessageContent = (
-  client: Client,
-  isPrivate: boolean,
-  members: GuildMember[],
-) => {
+export const visibleSettingMessageContent = ({
+  client,
+  isPrivate,
+  members,
+  mode = 'default',
+}: {
+  client: Client
+  isPrivate: boolean
+  members: GuildMember[]
+  mode?: 'default' | 'add' | 'remove'
+}) => {
   let memberList = members.map((item) => item.displayName).join(', ')
   if (memberList.length < 1) {
     memberList = '추가된 맴버 목록이 존재하지 않습니다.'
@@ -40,20 +48,52 @@ export const visibleSettingMessageContent = (
 
   const addButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
+    .setDisabled(mode === 'add')
     .setLabel('맴버 추가하기')
     .setCustomId('voice-visible-add')
 
   const removeButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
-    .setLabel('맴버 추가하기')
+    .setDisabled(mode === 'remove')
+    .setLabel('맴버 제거하기')
     .setCustomId('voice-visible-remove')
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    setButton,
-    addButton,
-    removeButton,
+  const components = []
+
+  components.push(
+    new ActionRowBuilder<ButtonBuilder>().addComponents(setButton, addButton, removeButton),
   )
-  return { embed, row }
+
+  if (mode === 'add') {
+    components.push(
+      new ActionRowBuilder<UserSelectMenuBuilder>().addComponents(
+        new UserSelectMenuBuilder({
+          customId: 'voice-visible-add-menu',
+          maxValues: 20,
+          minValues: 0,
+          placeholder: '추가할 맴버를 선택하세요',
+        }),
+      ),
+    )
+  } else if (mode === 'remove') {
+    components.push(
+      new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+        new StringSelectMenuBuilder({
+          customId: 'voice-visible-remove-menu',
+          placeholder: '제거할 맴버를 선택하세요.',
+          minValues: 0,
+          maxValues: members.length,
+          options: members.map(({ id, displayName, user: { username, discriminator } }) => ({
+            label: displayName,
+            value: id,
+            description: `${username}#${discriminator}`,
+          })),
+        }),
+      ),
+    )
+  }
+
+  return { embed, components }
 }
 
 export default new Button(['voice-visible'], async (client, interaction) => {
@@ -61,7 +101,10 @@ export default new Button(['voice-visible'], async (client, interaction) => {
 
   const { isPrivate, members } = await voiceChannelVisibleState(interaction.channel)
 
-  const { embed, row } = visibleSettingMessageContent(client, isPrivate, members)
-
-  await interaction.reply({ embeds: [embed], ephemeral: true, components: [row] })
+  const { embed, components } = visibleSettingMessageContent({ client, isPrivate, members })
+  await interaction.reply({
+    embeds: [embed],
+    ephemeral: true,
+    components,
+  })
 })

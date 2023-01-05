@@ -25,7 +25,7 @@ export default class BotClient extends Client {
   public commands: Collection<string, SlashCommand> = new Collection()
   public events: Collection<keyof ClientEvents, Event<keyof ClientEvents>> = new Collection()
   public errors: Collection<string, string> = new Collection()
-  public interactions: Collection<string | string[], BaseInteraction> = new Collection()
+  public interactions: Collection<string | string[], BaseInteraction<any>> = new Collection()
 
   public command: CommandManager = new CommandManager(this)
   public event: EventManager = new EventManager(this)

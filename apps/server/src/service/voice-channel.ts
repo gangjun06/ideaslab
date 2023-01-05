@@ -1,7 +1,9 @@
 import {
   ActionRowBuilder,
+  BaseInteraction,
   ButtonBuilder,
   ButtonStyle,
+  Channel,
   ChannelType,
   GuildMember,
   OverwriteType,
@@ -62,7 +64,7 @@ export const voiceChannelCreate = async (member: GuildMember) => {
     .setDescription(
       '음성채팅방에 오신것을 환영해요 :wave:\n아래의 버튼을 눌러 원하는 설정을 하실 수 있어요.\n만약 스크롤이 올라가 버튼을 찾기 힘들다면 /음성채널-설정을 이용하세요.',
     )
-    .setAuthor({ name: `채널 관리자: ${member.displayName}`, iconURL: member.displayAvatarURL() })
+    .setAuthor({ name: `채널 생성자: ${member.displayName}`, iconURL: member.displayAvatarURL() })
 
   const { row } = voiceComponents()
 
@@ -81,6 +83,7 @@ export const voiceChannelDelete = async (channelId: string) => {
 
 export const voiceChannelVisibleState = async (channel: VoiceChannel) => {
   const userRole = await getSetting('userRole')
+  const owner = (await redis.get(redisVoiceOwnerKey(channel.id))) ?? ''
   const members = await Promise.all(
     channel.permissionOverwrites.cache
       .filter(({ type }) => type === OverwriteType.Member)
@@ -89,9 +92,9 @@ export const voiceChannelVisibleState = async (channel: VoiceChannel) => {
         return member
       }),
   )
-  if (!userRole) return { isPrivate: false, members }
-  if (channel.permissionsLocked) return { isPrivate: false, members }
-  return { isPrivate: true, members }
+  if (!userRole) return { isPrivate: false, members, owner }
+  if (channel.permissionsLocked) return { isPrivate: false, members, owner }
+  return { isPrivate: true, members, owner }
 }
 
 export const voiceChannelVisible = async (channel: VoiceChannel, toggle: boolean) => {
@@ -115,14 +118,79 @@ export const voiceChannelVisible = async (channel: VoiceChannel, toggle: boolean
   await channel.setName(channel.name.replace(/^\[비공개\] /, ''))
 }
 
-export const voiceChannelAllow = async (channel: VoiceChannel, memberId: string) => {
-  await channel.permissionOverwrites.create(memberId, {
-    ViewChannel: true,
-    Connect: true,
-    Speak: true,
-  })
+export const voiceChannelAllow = async (channel: VoiceChannel, memberIds: string[]) => {
+  for (const id of memberIds) {
+    await channel.permissionOverwrites.create(id, {
+      ViewChannel: true,
+      Connect: true,
+      Speak: true,
+    })
+  }
 }
 
-export const voiceChannelDeny = async (channel: VoiceChannel, memberId: string) => {
-  await channel.permissionOverwrites.delete(memberId)
+export const voiceChannelDeny = async (channel: VoiceChannel, memberIds: string[]) => {
+  for (const id of memberIds) {
+    await channel.permissionOverwrites.delete(id)
+  }
+}
+
+export const voiceChannelOwnerCheck = async (interaction: BaseInteraction) => {
+  if (
+    !interaction.channelId ||
+    !interaction.channel ||
+    interaction.channel.type !== ChannelType.GuildVoice ||
+    !(interaction.isAnySelectMenu() || interaction.isButton() || interaction.isModalSubmit())
+  )
+    return false
+
+  if (!interaction.channel.members.get(interaction.user.id)) {
+    await interaction.reply({
+      embeds: [new Embed(client, 'error').setTitle('채널에 먼저 접속하여 주세요.')],
+      ephemeral: true,
+    })
+    return false
+  }
+
+  const owner = (await redis.get(redisVoiceOwnerKey(interaction.channelId))) ?? ''
+  if (interaction.user.id !== owner) {
+    const embed = new Embed(client, 'error')
+      .setTitle('채널 관리자가 아니군요.')
+      .setDescription('음성채널 설정은 채널 관리자만 할 수 있어요.')
+
+    const components = []
+
+    if (interaction.channel && interaction.channel.type === ChannelType.GuildVoice) {
+      const ownerData = interaction.channel.members.get(owner)
+      if (!ownerData) {
+        embed.addFields({
+          name: '안내',
+          value:
+            '채널 관리자가 채널에 없는것 같군요.\n아래 버튼을 눌러 채널 관리자 권한을 얻을 수 있어요.',
+        })
+        components.push(
+          new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
+              .setStyle(ButtonStyle.Primary)
+              .setLabel('권한 받기')
+              .setCustomId('voice-claim'),
+          ),
+        )
+      }
+    }
+
+    await interaction.reply({
+      embeds: [embed],
+      components,
+      ephemeral: true,
+    })
+    return false
+  }
+  return true
+}
+
+export const voiceChannelClaim = async (channel: VoiceChannel, member: GuildMember) => {
+  const currentOwner = await redis.get(redisVoiceOwnerKey(channel.id))
+  if (currentOwner && channel.members.get(currentOwner)) return false
+  await redis.set(redisVoiceOwnerKey(channel.id), member.id, 'EX', redisVoiceOwnerExpire)
+  return true
 }
