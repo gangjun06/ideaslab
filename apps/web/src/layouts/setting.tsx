@@ -86,16 +86,13 @@ export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
   return (
     <MainLayout showTitle tinyContainer {...mainLayoutProps}>
       <div className="mb-4 flex items-center">
-        <Image
-          src={profile?.avatar || ''}
-          className="rounded-full"
-          alt="profile"
-          width={64}
-          height={64}
-        />
+        <Image src={profile?.avatar || ''} className="rounded-full" alt="" width={64} height={64} />
         <div className="ml-4 flex flex-row justify-between w-full items-center">
           <div className="flex flex-col">
-            <div className="flex items-center gap-3 text-xl font-bold text-title-color">
+            <div
+              className="flex items-center gap-3 text-xl font-bold text-title-color"
+              role="presentation"
+            >
               <div className="">{`${profile?.isAdmin ? ' [관리자]' : ''} ${profile?.name}`}</div>
               <div className="mb-1 font-normal text-gray-400">/</div>
               <div>{curPage?.name}</div>

@@ -85,19 +85,19 @@ export const PostView = ({
             src={image.url}
             width={image.width}
             height={image.height}
-            alt="image"
+            alt=""
             className="rounded-lg"
           />
         </div>
       )}
       <Link href={`/@${post.author.handle}`} passHref>
-        <a className="flex gap-x-2 items-center mb-2 no-click" onClick={() => {}}>
+        <a className="flex gap-x-2 items-center mb-2 no-click">
           <Image
             src={post.author.avatar}
             width={48}
             height={48}
             className="rounded-full no-click"
-            alt="avatar image"
+            alt=""
           />
           <div className="flex flex-col justify-center no-click">
             <div className="text-title-color">{post.author.name}</div>
@@ -149,7 +149,11 @@ export const GalleryDetailModal = ({
                 <Suspense
                   fallback={
                     <>
-                      <div className="animate-pulse flex flex-col px-8 mt-8 gap-y-4">
+                      <div
+                        className="animate-pulse flex flex-col px-8 mt-8 gap-y-4"
+                        role="presentation"
+                        aria-label="데이터 불러오는중"
+                      >
                         <div className="flex justify-between items-center">
                           <div className="h-12 bg-gray-800 rounded w-48"></div>
                           <Button variant="subtle" onClick={onClose} forIcon>
@@ -225,11 +229,16 @@ export const PostDetail = ({
               width={48}
               height={48}
               className="rounded-full"
-              alt="avatar image"
+              alt=""
             />
             <div className="flex flex-col justify-center">
               <div className="text-title-color">{post.author.name}</div>
-              <div className="text-description-color text-sm">{fullTimeFormat(post.createdAt)}</div>
+              <time
+                className="text-description-color text-sm"
+                dateTime={post.createdAt.toISOString()}
+              >
+                {fullTimeFormat(post.createdAt)}
+              </time>
             </div>
           </a>
         </Link>
@@ -307,7 +316,7 @@ export const PostDetail = ({
                 avatar={comment.author.avatar}
                 username={comment.author.name}
                 content={comment.content}
-                time={relativeTimeFormat(comment.createdAt)}
+                time={comment.createdAt}
                 parent={
                   parent
                     ? {
@@ -336,7 +345,7 @@ const Comment = ({
   parent,
 }: {
   avatar: string
-  time: string
+  time: Date
   content: string
   username: string
   parent?: {
@@ -350,34 +359,20 @@ const Comment = ({
       {parent && (
         <div className="flex mb-3 card px-2 py-2 items-center">
           {parent.avatar && (
-            <Image
-              width={24}
-              height={24}
-              className="rounded-full"
-              src={parent.avatar}
-              alt="reply from"
-            />
+            <Image width={24} height={24} className="rounded-full" src={parent.avatar} alt="" />
           )}
-          {parent.username && <div className="ml-1 text-sm">{parent.username}</div>}
+          {parent.username && <div className="ml-1.5 text-sm">{parent.username}</div>}
           <div className="ml-2 text-description-color text-ellipsis text-sm">{parent.content}</div>
         </div>
       )}
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-            <Image
-              width={24}
-              height={24}
-              className="mr-2 rounded-full"
-              src={avatar}
-              alt={`${username}의 프로필`}
-            />
-            {username}
+            <Image width={24} height={24} className="mr-2 rounded-full" src={avatar} alt="" />
+            <div className="ml-1.5">{username}</div>
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            <time dateTime="2022-03-12" title="March 12th, 2022">
-              {time}
-            </time>
+            <time dateTime={time.toISOString()}>{relativeTimeFormat(time)}</time>
           </p>
         </div>
       </footer>

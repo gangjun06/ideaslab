@@ -44,11 +44,7 @@ const HeaderSection = () => (
       </div>
     </div>
     <div className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 flex-1">
-      <Image
-        src={MainImage}
-        alt="main image"
-        className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112"
-      />
+      <Image src={MainImage} alt="" className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112" />
     </div>
   </div>
 )

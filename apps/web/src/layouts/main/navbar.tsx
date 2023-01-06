@@ -1,5 +1,6 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -24,10 +25,16 @@ export const Navbar = () => {
   const profile = useUser()
 
   return (
-    <nav className="h-20 shadow bg-white dark:bg-gray-800 flex items-center z-10">
+    <nav
+      className="shadow bg-white dark:bg-gray-800 flex items-center z-10"
+      style={{ height: 'var(--nav-height)' }}
+    >
       <div className="px-4 container max-w-4xl mx-auto flex justify-between items-center">
         <Link href="/" passHref>
-          <a className="font-bold">아이디어스랩</a>
+          <a className="flex items-center gap-x-3">
+            <Image width={32} height={32} alt="" src="/favicon-196.png" />
+            <span className="font-bold text-xl">아이디어스랩</span>
+          </a>
         </Link>
         <div className="flex gap-x-4 items-center">
           <NavItem name="홈" href="/" isActive={pathname === '/'} />

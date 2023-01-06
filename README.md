@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/gangjun06/ideaslab">
-    <img width="100" src="assets/icon.png" alt="Ideaslab">
+    <img width="100" src="assets/icon.png" alt="">
   </a>
   <h3>아이디어스 랩</h3>
 </div>

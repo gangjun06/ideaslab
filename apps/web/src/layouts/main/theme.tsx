@@ -23,7 +23,7 @@ export const ThemeChanger = () => {
     setTheme('dark')
   }, [setTheme, theme])
   return (
-    <Button forIcon onClick={toggleTheme}>
+    <Button forIcon onClick={toggleTheme} aria-label="테마 변경">
       {currentTheme === 'dark' ? (
         <SunIcon width={18} height={18} />
       ) : (

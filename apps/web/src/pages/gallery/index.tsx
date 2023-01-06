@@ -20,14 +20,14 @@ const breakpointColumns = {
 }
 
 const GalleryPage = () => {
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<number | null>(null)
   const {
     data: posts,
     isLoading,
     fetchNextPage,
     hasNextPage,
   } = trpc.gallery.posts.useInfiniteQuery(
-    { limit: LIMIT, categoryIds: selectedCategories },
+    { limit: LIMIT, categoryIds: selectedCategories ? [selectedCategories] : undefined },
     {
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined
@@ -40,25 +40,26 @@ const GalleryPage = () => {
   return (
     <MainLayout title="갤러리" description="서로의 작품을 올리고 공유해요" guard="default">
       <div className="flex flex-wrap gap-x-2 justify-center items-center w-full max-w-4xl mx-auto">
-        <div
-          className={classNames('tag hover', selectedCategories.length === 0 && 'primary')}
-          onClick={() => setSelectedCategories([])}
+        <button
+          className={classNames('tag hover', selectedCategories === null && 'primary')}
+          onClick={() => setSelectedCategories(null)}
+          aria-label="전체보기"
+          aria-checked={selectedCategories === null}
         >
           <Square2StackIcon width={24} height={24} />
           전체
-        </div>
+        </button>
         {categories?.map(({ name, id }) => (
-          <div
-            className={classNames('tag hover', selectedCategories.includes(id) && 'primary')}
+          <button
+            role="checkbox"
+            className={classNames('tag hover', selectedCategories === id && 'primary')}
+            aria-checked={selectedCategories === id}
             key={id}
-            onClick={() =>
-              setSelectedCategories((prev) =>
-                prev.includes(id) ? prev.filter((item) => item !== id) : prev.concat(id),
-              )
-            }
+            onClick={() => setSelectedCategories(id)}
+            aria-label={`필터 ${name}`}
           >
             {name}
-          </div>
+          </button>
         ))}
       </div>
       <PostDetailModalWrapper>
