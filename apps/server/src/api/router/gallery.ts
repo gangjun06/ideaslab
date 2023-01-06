@@ -65,6 +65,7 @@ export const galleryRouter = router({
         updateAt: true,
         tags: {
           select: {
+            id: true,
             name: true,
           },
         },

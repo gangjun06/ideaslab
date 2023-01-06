@@ -12,3 +12,5 @@ export const parseJWT = <T>(token: string | null) => {
     return null
   }
 }
+
+export * from './time'

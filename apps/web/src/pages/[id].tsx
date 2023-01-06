@@ -9,7 +9,7 @@ import Masonry from 'react-masonry-css'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
-import { dateShortFormat } from '~/utils/time'
+import { dateShortFormat } from '~/utils'
 
 const LIMIT = 50
 

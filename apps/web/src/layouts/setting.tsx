@@ -14,9 +14,7 @@ import classNames from 'classnames'
 import { useUser } from '~/hooks/useAuth'
 import { MainLayout } from '~/layouts'
 
-interface Props extends Omit<ComponentProps<typeof MainLayout>, 'showTitle' | 'tinyContainer'> {
-  a?: string
-}
+type Props = Omit<ComponentProps<typeof MainLayout>, 'showTitle' | 'tinyContainer'>
 
 type NavFieldType = {
   url: string
@@ -75,7 +73,7 @@ const navList: NavType[] = [
   },
 ]
 
-export const SettingLayout = ({ a, children, ...mainLayoutProps }: Props) => {
+export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
   const profile = useUser()
   const { pathname } = useRouter()
 

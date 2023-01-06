@@ -13,11 +13,12 @@ import classNames from 'classnames'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
-import { appRouter } from '~/../../server/src/api/router/_app'
+import { appRouter } from '@ideaslab/server/app'
+
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
-import { fullTimeFormat, relativeTimeFormat } from '~/utils/time'
+import { fullTimeFormat, relativeTimeFormat } from '~/utils'
 
 import { Button, ButtonLink, TransitionChild } from './common'
 
@@ -240,8 +241,8 @@ export const PostDetail = ({
           {post.tags.length > 0 && (
             <div className="w-1.5 h-1.5 rounded-full bg-gray-600 dark:bg-gray-300"></div>
           )}
-          {post.tags.map(({ name }) => (
-            <div className="tag">
+          {post.tags.map(({ name, id }) => (
+            <div className="tag" key={id}>
               <TagIcon width={24} height={24} />
               {name}
             </div>
@@ -255,12 +256,16 @@ export const PostDetail = ({
             if ((image as any)?.contentType?.startsWith('image/')) {
               return (
                 <Image
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   src={image?.url ?? ''}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   width={image?.width ?? 0}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   height={image?.height ?? 0}
+                  alt="첨부한 이미지"
                 />
               )
             }
@@ -360,7 +365,13 @@ const Comment = ({
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-            <img className="mr-2 w-6 h-6 rounded-full" src={avatar} alt="Bonnie Green" />
+            <Image
+              width={24}
+              height={24}
+              className="mr-2 rounded-full"
+              src={avatar}
+              alt={`${username}의 프로필`}
+            />
             {username}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">

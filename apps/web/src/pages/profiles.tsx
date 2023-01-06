@@ -11,7 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
-import { relativeTimeFormat } from '~/utils/time'
+import { relativeTimeFormat } from '~/utils'
 
 const LIMIT = 50
 
@@ -95,7 +95,10 @@ const ProfilesPage = () => {
               .map((_, index) => <div key={index} className={`h-48 bg-pulse rounded w-full`} />)
           : profiles?.pages.map((page) =>
               page.map((profile) => (
-                <div className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4">
+                <div
+                  key={profile.discordId}
+                  className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
+                >
                   <Link href={`/@${profile.handle}`} passHref>
                     <a className="flex flex-col mb-2 no-click h-full" onClick={() => {}}>
                       <div className="flex flex-col h-full flex-grow">
@@ -105,6 +108,7 @@ const ProfilesPage = () => {
                             width={48}
                             height={48}
                             className="rounded-full"
+                            alt={`${profile.name}의 프로필 사진`}
                           />
                           <div className="flex flex-col">
                             <div className="text-title-color">{profile.name}</div>

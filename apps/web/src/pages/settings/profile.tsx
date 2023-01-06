@@ -9,11 +9,8 @@ import toast from 'react-hot-toast'
 import { authUpdateProfileValidator, z } from '@ideaslab/validator'
 
 import { Button, GripVerticalIcon } from '~/components/common'
-import { Form, FormFieldBuilder, Input } from '~/components/form'
-import { FormBlock } from '~/components/form/form-block'
-import { Textarea } from '~/components/form/textarea'
-import { useUser } from '~/hooks/useAuth'
-import { useForm, UseFormRegister } from '~/hooks/useForm'
+import { Form, FormBlock, FormFieldBuilder, Input, Textarea } from '~/components/form'
+import { useForm, UseFormRegister, useUser } from '~/hooks'
 import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
 
