@@ -54,6 +54,8 @@
 ### 개발서버
 
 ```bash
+# 먼저 각 폴더의 .env를 수정해주세요.
+
 # Start dev server
 docker-compose -f -d docker-compose.dev.yml up --build --force-recreate
 
