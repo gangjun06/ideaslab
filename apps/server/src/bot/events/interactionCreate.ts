@@ -57,7 +57,7 @@ export default new Event('interactionCreate', async (client, interaction) => {
     if (interactionData.type !== InteractionType.ContextMenu) return
 
     try {
-      interactionData.execute(client, interaction)
+      interactionData.execute(client, interaction as any)
     } catch (error: any) {
       errorManager.report(error, { executer: interaction, isSend: true })
     }

@@ -50,6 +50,7 @@ export const getCurrentVoiceLog = async (userId: string) => {
   const date = await redis.get(redisVoiceKey(userId))
   let current: number | null = null
   let today: number | null = null
+  let all: number | null = null
 
   if (date) {
     const dateInt = parseInt(date)
@@ -76,9 +77,20 @@ export const getCurrentVoiceLog = async (userId: string) => {
     },
   })
 
-  if (todaySum[0]) today = todaySum[0]._sum.value
+  const allSum = await dbClient.voiceLog.groupBy({
+    by: ['userDiscordId'],
+    _sum: {
+      value: true,
+    },
+    where: {
+      userDiscordId: userId,
+    },
+  })
 
-  return { current, today }
+  if (todaySum[0]) today = todaySum[0]._sum.value
+  if (allSum[0]) all = allSum[0]._sum.value
+
+  return { current, today, all }
 }
 
 export const formatSeconds = (seconds: number) => {

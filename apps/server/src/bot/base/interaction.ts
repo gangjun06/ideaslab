@@ -1,13 +1,18 @@
 import {
+  ApplicationCommandType,
   AutocompleteInteraction,
   ButtonInteraction,
   CacheType,
   ChannelSelectMenuInteraction,
+  ContextMenuCommandBuilder,
   ContextMenuCommandInteraction,
+  ContextMenuCommandType,
   MentionableSelectMenuInteraction,
+  MessageContextMenuCommandInteraction,
   ModalSubmitInteraction,
   RoleSelectMenuInteraction,
   SelectMenuInteraction,
+  UserContextMenuCommandInteraction,
   UserSelectMenuInteraction,
 } from 'discord.js'
 
@@ -42,13 +47,26 @@ export class SelectMenu<T extends SelectMenuType> {
   ) {}
 }
 
-export class ContextMenu {
+type ContextMenuExecuteType<
+  T extends ContextMenuCommandType,
+  U extends CacheType,
+> = T extends ApplicationCommandType.Message
+  ? MessageContextMenuCommandInteraction<U>
+  : UserContextMenuCommandInteraction<U>
+
+export class ContextMenu<T extends ContextMenuCommandType = ApplicationCommandType.Message> {
   public type: InteractionType.ContextMenu = InteractionType.ContextMenu
+  public data: InteractionData
+  public customId: string
   constructor(
-    public customId: string | string[],
-    public data: InteractionData,
-    public execute: BaseInteractionFunction<ContextMenuCommandInteraction<'cached'>>,
-  ) {}
+    public contextType: T,
+    public builder: ContextMenuCommandBuilder,
+    public execute: BaseInteractionFunction<ContextMenuExecuteType<T, 'cached'>>,
+  ) {
+    builder.setType(contextType)
+    this.customId = builder.name
+    this.data = builder.toJSON()
+  }
 }
 
 export class Modal {
