@@ -4,8 +4,8 @@ import { Button } from '~/bot/base/interaction'
 import {
   voiceChannelAllow,
   voiceChannelOwnerCheck,
-  voiceChannelVisible,
   voiceChannelState,
+  voiceChannelVisible,
 } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 

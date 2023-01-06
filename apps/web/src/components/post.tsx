@@ -261,10 +261,11 @@ export const PostDetail = ({
           {post.content.replace(/\n/g, '\n\n')}
         </ReactMarkdown>
         <div className="mt-4 flex flex-col items-center justify-center gap-3">
-          {post.attachments.map((image) => {
+          {post.attachments.map((image, index) => {
             if ((image as any)?.contentType?.startsWith('image/')) {
               return (
                 <Image
+                  key={index}
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   src={image?.url ?? ''}

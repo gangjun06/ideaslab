@@ -5,13 +5,11 @@ import {
   CacheType,
   ChannelSelectMenuInteraction,
   ContextMenuCommandBuilder,
-  ContextMenuCommandInteraction,
   ContextMenuCommandType,
   MentionableSelectMenuInteraction,
   MessageContextMenuCommandInteraction,
   ModalSubmitInteraction,
   RoleSelectMenuInteraction,
-  SelectMenuInteraction,
   UserContextMenuCommandInteraction,
   UserSelectMenuInteraction,
 } from 'discord.js'

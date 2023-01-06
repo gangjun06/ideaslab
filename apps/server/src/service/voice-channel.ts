@@ -3,7 +3,6 @@ import {
   BaseInteraction,
   ButtonBuilder,
   ButtonStyle,
-  Channel,
   ChannelType,
   GuildMember,
   OverwriteType,
