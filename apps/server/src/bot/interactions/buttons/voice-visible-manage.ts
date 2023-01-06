@@ -5,7 +5,7 @@ import {
   voiceChannelAllow,
   voiceChannelDeny,
   voiceChannelOwnerCheck,
-  voiceChannelVisibleState,
+  voiceChannelState,
 } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
@@ -23,7 +23,7 @@ export default new Button(
 
     const onCollectorEnd = async (_: any, reason: string) => {
       if (reason === 'limit') return
-      const { isPrivate, members } = await voiceChannelVisibleState(channel)
+      const { isPrivate, members } = await voiceChannelState(channel)
       const { embed, components } = visibleSettingMessageContent({
         client,
         isPrivate,
@@ -55,7 +55,7 @@ export default new Button(
         time: 10000,
       })
 
-    const { isPrivate, members } = await voiceChannelVisibleState(channel)
+    const { isPrivate, members } = await voiceChannelState(channel)
     const { embed, components } = visibleSettingMessageContent({
       client,
       isPrivate,

@@ -7,6 +7,14 @@ import { Embed } from '~/utils/embed'
 export default new Button(['voice-claim'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
 
+  if (!interaction.channel.members.get(interaction.user.id)) {
+    await interaction.reply({
+      embeds: [new Embed(client, 'error').setTitle('채널에 먼저 접속하여 주세요.')],
+      ephemeral: true,
+    })
+    return false
+  }
+
   const success = await voiceChannelClaim(interaction.channel, interaction.member)
   if (!success) {
     await interaction.reply({
@@ -20,10 +28,7 @@ export default new Button(['voice-claim'], async (client, interaction) => {
     return
   }
   await interaction.deferUpdate()
-  //   await interaction.reply({
-  //     embeds: [new Embed(client, 'success').setTitle('이제 음성채팅방을 관리할 수 있습니다.')],
-  //     ephemeral: true,
-  //   })
+
   await interaction.channel?.send({
     embeds: [
       new Embed(client, 'success').setTitle(

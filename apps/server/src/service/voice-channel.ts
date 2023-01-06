@@ -20,7 +20,7 @@ import { getSetting } from './setting'
 const redisVoiceOwnerKey = (key: string) => `${config.redisPrefix}voice:${key}`
 const redisVoiceOwnerExpire = 60 * 60 * 24 * 14
 
-const voiceComponents = () => {
+export const voiceComponents = () => {
   const renameButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
     .setLabel('이름 변경하기')
@@ -81,7 +81,7 @@ export const voiceChannelDelete = async (channelId: string) => {
   }
 }
 
-export const voiceChannelVisibleState = async (channel: VoiceChannel) => {
+export const voiceChannelState = async (channel: VoiceChannel) => {
   const userRole = await getSetting('userRole')
   const owner = (await redis.get(redisVoiceOwnerKey(channel.id))) ?? ''
   const members = await Promise.all(

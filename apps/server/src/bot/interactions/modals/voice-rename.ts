@@ -1,7 +1,11 @@
+import { ChannelType } from 'discord.js'
+
 import { Modal } from '~/bot/base/interaction'
+import { voiceChannelState } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
 export default new Modal('modal.voice-rename', async (client, interaction) => {
+  if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
   let newName = interaction.fields.getTextInputValue('nameInput')
 
   if (newName === '') {
@@ -16,8 +20,14 @@ export default new Modal('modal.voice-rename', async (client, interaction) => {
     return
   }
 
+  const { isPrivate } = await voiceChannelState(interaction.channel)
+
+  if (isPrivate) {
+    newName = `[비공개] ${newName}`
+  }
+
   try {
-    await interaction.channel?.setName(newName)
+    await interaction.channel.setName(newName)
   } catch {
     await interaction.reply({
       embeds: [new Embed(client, 'error').setTitle('채널 이름 설정에 실패했어요.')],

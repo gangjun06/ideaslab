@@ -11,12 +11,16 @@ export default new Event('messageUpdate', async (client, message) => {
 
   if (!message.content) return
 
-  await dbClient.comment.update({
-    where: {
-      discordId: message.id,
-    },
-    data: {
-      content: message.content,
-    },
-  })
+  try {
+    await dbClient.comment.update({
+      where: {
+        discordId: message.id,
+      },
+      data: {
+        content: message.content,
+      },
+    })
+  } catch {
+    /* empty */
+  }
 })

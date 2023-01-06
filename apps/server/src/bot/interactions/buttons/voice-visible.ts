@@ -10,7 +10,7 @@ import {
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
-import { voiceChannelVisibleState } from '~/service/voice-channel'
+import { voiceChannelState } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
 export const visibleSettingMessageContent = ({
@@ -99,7 +99,7 @@ export const visibleSettingMessageContent = ({
 export default new Button(['voice-visible'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
 
-  const { isPrivate, members } = await voiceChannelVisibleState(interaction.channel)
+  const { isPrivate, members } = await voiceChannelState(interaction.channel)
 
   const { embed, components } = visibleSettingMessageContent({ client, isPrivate, members })
   await interaction.reply({

@@ -5,7 +5,7 @@ import {
   voiceChannelAllow,
   voiceChannelOwnerCheck,
   voiceChannelVisible,
-  voiceChannelVisibleState,
+  voiceChannelState,
 } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
@@ -17,7 +17,7 @@ export default new Button(['voice-visible-setting'], async (client, interaction)
 
   await interaction.deferUpdate()
 
-  const { isPrivate, members } = await voiceChannelVisibleState(interaction.channel)
+  const { isPrivate, members } = await voiceChannelState(interaction.channel)
 
   const { embed, components } = visibleSettingMessageContent({
     client,
