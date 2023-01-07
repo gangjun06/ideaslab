@@ -1,8 +1,8 @@
-import { Prisma } from '@prisma/client'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js'
 
+import { dbClient, Prisma } from '@ideaslab/db'
+
 import { Event } from '~/bot/base/event'
-import { dbClient } from '~/lib/db'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return

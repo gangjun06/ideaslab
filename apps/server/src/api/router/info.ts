@@ -1,10 +1,10 @@
 import { ChannelType } from 'discord.js'
 
+import { dbClient } from '@ideaslab/db'
 import { infoProfilesValidator } from '@ideaslab/validator'
 
 import { publicProcedure, router } from '~/api/base/trpc'
 import { currentGuild } from '~/bot/base/client'
-import { dbClient } from '~/lib/db'
 import { getSetting } from '~/service/setting'
 
 type Channel = {

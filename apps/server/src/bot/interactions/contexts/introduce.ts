@@ -1,7 +1,8 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js'
 
+import { dbClient } from '@ideaslab/db'
+
 import { ContextMenu } from '~/bot/base/interaction'
-import { dbClient } from '~/lib/db'
 import { Embed } from '~/utils/embed'
 
 export default new ContextMenu(

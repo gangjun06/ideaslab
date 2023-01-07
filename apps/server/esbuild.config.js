@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const { buildSync } = require('esbuild')
 const { copyFileSync, readdirSync } = require('fs')
 const { join } = require('path')
@@ -16,7 +18,10 @@ buildSync({
   },
 })
 
-copyFileSync(join(__dirname, './prisma/schema.prisma'), join(__dirname, './dist/schema.prisma'))
+copyFileSync(
+  join(__dirname, '../../packages/db/prisma/schema.prisma'),
+  join(__dirname, './dist/schema.prisma'),
+)
 const engineName = readdirSync(join(__dirname, '../../node_modules/.prisma/client')).filter(
   (name) => name.startsWith('libquery_engine'),
 )[0]

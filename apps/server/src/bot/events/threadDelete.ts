@@ -1,7 +1,8 @@
 import { ChannelType } from 'discord.js'
 
+import { dbClient } from '@ideaslab/db'
+
 import { Event } from '~/bot/base/event'
-import { dbClient } from '~/lib/db'
 
 export default new Event('threadDelete', async (client, threadChannel) => {
   if (threadChannel.parent?.type !== ChannelType.GuildForum) return

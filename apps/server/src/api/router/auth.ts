@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import axios from 'axios'
 import { ChannelType } from 'discord.js'
 
+import { dbClient } from '@ideaslab/db'
 import {
   authCheckHandleValidator,
   authLoginWithPinValidator,
@@ -14,7 +15,6 @@ import { loginedProcedure } from '~/api/base/auth-middleware'
 import { publicProcedure, router } from '~/api/base/trpc'
 import { client, currentGuildMember } from '~/bot/base/client'
 import config from '~/config'
-import { dbClient } from '~/lib/db'
 import { loginWithPin, loginWithToken } from '~/service/auth'
 import { getSetting } from '~/service/setting'
 import { Embed } from '~/utils/embed'

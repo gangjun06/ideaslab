@@ -1,7 +1,7 @@
+import { dbClient } from '@ideaslab/db'
 import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
 
 import { publicProcedure, router } from '~/api/base/trpc'
-import { dbClient } from '~/lib/db'
 
 export const galleryRouter = router({
   posts: publicProcedure.input(galleryPostsValidator).query(async ({ input }) => {

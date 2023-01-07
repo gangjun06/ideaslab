@@ -1,3 +1,4 @@
+import { dbClient } from '@ideaslab/db'
 import {
   adminGallerySettingValidator,
   adminRoleSettingValidator,
@@ -6,7 +7,6 @@ import {
 
 import { adminProcedure } from '~/api/base/auth-middleware'
 import { router } from '~/api/base/trpc'
-import { dbClient } from '~/lib/db'
 import { getAllSettings, setSetting } from '~/service/setting'
 
 export const adminRouter = router({
