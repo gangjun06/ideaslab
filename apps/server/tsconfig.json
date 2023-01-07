@@ -5,16 +5,17 @@
 	],
 	"exclude": [
 		"node_modules",
-		"dist"
+		"dist",
+		".turbo",
+		"generator.js"
 	],
 	"compilerOptions": {
 		"outDir": "dist",
 		"composite": true,
-		"baseUrl": "src",
 		"paths": {
 			"~/*": [
-				"*"
+				"./src/*"
 			]
 		}
-	}
+	},
 }

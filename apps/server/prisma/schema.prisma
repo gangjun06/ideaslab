@@ -1,0 +1,124 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  discordId    String    @id
+  name         String
+  avatar       String
+  introduce    String
+  handle       String    @unique
+  links        Json[]
+  registerFrom String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  leavedAt     DateTime?
+  roles        Role[]
+
+  likes       Like[]
+  posts       Post[]
+  VoiceLog    VoiceLog[]
+  Comment     Comment[]
+  Achievement Achievement[]
+}
+
+model Achievement {
+  id           Int    @id @default(autoincrement())
+  name         String
+  currentValue Int?
+  userId       String
+  User         User   @relation(fields: [userId], references: [discordId])
+}
+
+model Category {
+  id             Int      @id @default(autoincrement())
+  name           String
+  discordChannel String   @unique
+  defaultOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @updatedAt
+  posts          Post[]
+}
+
+model Comment {
+  discordId String    @id
+  authorId  String
+  content   String
+  parentId  String?
+  hasParent Boolean   @default(false) // Make it true when connect parent comment. Can use this value to display "original message deleted"
+  parent    Comment?  @relation("CommentParent", fields: [parentId], references: [discordId])
+  comments  Comment[] @relation("CommentParent")
+
+  author User @relation(fields: [authorId], references: [discordId])
+
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updateAt  DateTime @updatedAt @db.Timestamptz()
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model Role {
+  id           Int    @id @default(autoincrement())
+  defaultOrder Int    @default(0)
+  name         String
+  discordRole  String @unique
+  Users        User[]
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  posts     Post[]   @relation("PostToTag")
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  discordId   String    @unique
+  attachments Json[]
+  title       String
+  content     String
+  categoryId  Int
+  authorId    String
+  createdAt   DateTime  @default(now()) @db.Timestamptz()
+  updateAt    DateTime  @updatedAt @db.Timestamptz()
+  likes       Like[]
+  author      User      @relation(fields: [authorId], references: [discordId])
+  category    Category  @relation(fields: [categoryId], references: [id])
+  tags        Tag[]     @relation("PostToTag")
+  comments    Comment[]
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model Like {
+  id     Int    @id @default(autoincrement())
+  userId String
+  postId Int
+  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [discordId])
+}
+
+model VoiceLog {
+  time          DateTime @default(now()) @db.Timestamptz()
+  value         Int
+  userDiscordId String
+  user          User     @relation(fields: [userDiscordId], references: [discordId])
+
+  @@unique([userDiscordId, time])
+  @@index([time(sort: Desc)])
+}
+
+model Setting {
+  key   String @id
+  value String
+}

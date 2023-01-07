@@ -1,45 +1,52 @@
 {
-  "name": "@ideaslab/server",
-  "version": "1.0.0",
-  "license": "AGPL",
-  "main": "dist/index.js",
-  "files": [
-    "src"
-  ],
-  "scripts": {
-    "start": "yarn build && node .",
-    "start:node": "node .",
-    "dev": "nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src",
-    "register": "nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
-    "generate": "prisma generate",
-    "build": "tsc && tsc-alias",
-    "lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
-  },
-  "dependencies": {
-    "@trpc/server": "^10.5.0",
-    "axios": "^1.2.1",
-    "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3",
-    "form-data": "^4.0.0",
-    "ioredis": "^5.2.4",
-    "iron-session": "^6.3.1",
-    "jsonwebtoken": "^8.5.1",
-    "module-alias": "^2.2.2",
-    "superjson": "^1.12.0",
-    "uuid": "^9.0.0",
-    "winston": "^3.8.2"
-  },
-  "devDependencies": {
-    "@ideaslab/db": "*",
-    "@ideaslab/eslint-config": "*",
-    "@ideaslab/validator": "*",
-    "@types/jsonwebtoken": "^8.5.9",
-    "@types/node": "^18.11.15",
-    "@types/uuid": "^9.0.0",
-    "nodemon": "^2.0.20",
-    "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.2",
-    "tsconfig-paths": "^4.1.1",
-    "typescript": "^4.9.4"
-  }
+	"name": "@ideaslab/server",
+	"version": "1.0.0",
+	"license": "AGPL",
+	"main": "dist/index.js",
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"start": "node .",
+		"dev": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src",
+		"register": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
+		"generate": "node generator.js",
+		"build": "yarn generate && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix",
+		"build-es": "node ./esbuild.config.js",
+		"db:migrate:deploy": "prisma migrate deploy",
+		"db:migrate:dev": "prisma migrate dev",
+		"db:generate": "prisma generate",
+		"db:push": "prisma db push"
+	},
+	"dependencies": {
+		"@prisma/client": "^4.8.1",
+		"@trpc/server": "^10.5.0",
+		"axios": "^1.2.1",
+		"discord.js": "^14.7.1",
+		"dotenv": "^16.0.3",
+		"form-data": "^4.0.0",
+		"ioredis": "^5.2.4",
+		"iron-session": "^6.3.1",
+		"jsonwebtoken": "^8.5.1",
+		"module-alias": "^2.2.2",
+		"superjson": "^1.12.0",
+		"uuid": "^9.0.0",
+		"winston": "^3.8.2"
+	},
+	"devDependencies": {
+		"@ideaslab/eslint-config": "*",
+		"@ideaslab/validator": "*",
+		"@types/jsonwebtoken": "^8.5.9",
+		"@types/node": "^18.11.15",
+		"@types/uuid": "^9.0.0",
+		"esbuild": "^0.16.14",
+		"fast-glob": "^3.2.12",
+		"nodemon": "^2.0.20",
+		"prisma": "^4.8.1",
+		"ts-node-dev": "^2.0.0",
+		"tsc-alias": "^1.8.2",
+		"tsconfig-paths": "^4.1.1",
+		"typescript": "^4.9.4"
+	}
 }

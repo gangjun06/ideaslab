@@ -1,8 +1,7 @@
 import { ChannelType } from 'discord.js'
 
-import { dbClient } from '@ideaslab/db'
-
 import { Event } from '~/bot/base/event'
+import { dbClient } from '~/lib/db'
 
 export default new Event('messageUpdate', async (client, message) => {
   if (message.channel.type !== ChannelType.PublicThread) return

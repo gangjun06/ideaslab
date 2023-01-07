@@ -1,6 +1,5 @@
-import { dbClient } from '@ideaslab/db'
-
 import config from '~/config'
+import { dbClient } from '~/lib/db'
 import { redis } from '~/lib/redis'
 
 enum SettingValueType {

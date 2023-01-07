@@ -1,7 +1,6 @@
 import { ApplicationCommandDataResolvable, Collection, REST, Routes } from 'discord.js'
-import fs from 'fs'
-import path from 'path'
 
+import { commands } from '~/_generated/commands'
 import { InteractionData } from '~/bot/types'
 import { InteractionType } from '~/bot/types'
 import config from '~/config'
@@ -24,45 +23,22 @@ export default class CommandManager extends BaseManager {
   /**
    * Load Commands from "../commands" folder
    */
-  public load(commandPath: string = path.join(__dirname, '../commands')): void {
+  public load(): void {
     this.logger.debug('Loading commands...')
 
-    try {
-      const commandFolder = fs.readdirSync(commandPath)
+    commands.forEach((command) => {
+      try {
+        this.commands.set(command.data.name, command)
 
-      commandFolder.forEach((folder) => {
-        if (!fs.lstatSync(path.join(commandPath, folder)).isDirectory()) return
-
-        try {
-          const commandFiles = fs.readdirSync(path.join(commandPath, folder))
-
-          commandFiles.forEach((commandFile) => {
-            try {
-              const command =
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                require(`../commands/${folder}/${commandFile}`).default
-
-              if (!command.data.name)
-                return this.logger.debug(`Command ${commandFile} has no name. Skipping.`)
-
-              this.commands.set(command.data.name, command)
-
-              this.logger.debug(`Loaded command ${command.name}`)
-            } catch (error: any) {
-              this.logger.error(`Error loading command '${commandFile}'.\n` + error.stack)
-            } finally {
-              this.logger.debug(`Succesfully loaded commands. count: ${this.commands.size}`)
-              // eslint-disable-next-line no-unsafe-finally
-              return this.commands
-            }
-          })
-        } catch (error: any) {
-          this.logger.error(`Error loading command folder '${folder}'.\n` + error.stack)
-        }
-      })
-    } catch (error: any) {
-      this.logger.error('Error fetching folder list.\n' + error.stack)
-    }
+        this.logger.debug(`Loaded command ${command.data.name}`)
+      } catch (error: any) {
+        this.logger.error(`Error loading command '${command.data.name}'.\n` + error.stack)
+      } finally {
+        this.logger.debug(`Succesfully loaded commands. count: ${this.commands.size}`)
+        // eslint-disable-next-line no-unsafe-finally
+        return this.commands
+      }
+    })
   }
 
   public get(commandName: string): SlashCommand | undefined {
@@ -71,12 +47,12 @@ export default class CommandManager extends BaseManager {
     return command
   }
 
-  public reload(commandPath: string = path.join(__dirname, '../commands')) {
+  public reload() {
     this.logger.debug('Reloading commands...')
 
     this.commands.clear()
     try {
-      this.load(commandPath)
+      this.load()
     } finally {
       this.logger.debug('Succesfully reloaded commands.')
       // eslint-disable-next-line no-unsafe-finally

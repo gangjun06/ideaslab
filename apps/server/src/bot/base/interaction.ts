@@ -86,6 +86,6 @@ export class AutoComplete {
 export type BaseInteraction<T extends SelectMenuType = any> =
   | Button
   | SelectMenu<T>
-  | ContextMenu
+  | ContextMenu<any>
   | Modal
   | AutoComplete

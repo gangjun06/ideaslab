@@ -1,7 +1,6 @@
 import type { ClientEvents } from 'discord.js'
-import { readdirSync } from 'fs'
-import { join } from 'path'
 
+import { events } from '~/_generated/events'
 import { Logger } from '~/utils/logger'
 
 import BaseManager from './base-manager'
@@ -23,22 +22,17 @@ export default class EventManager extends BaseManager {
     this.events = client.events
   }
 
-  public async load(eventPath = join(__dirname, '../events')) {
+  public async load() {
     this.logger.debug('Loading events...')
 
-    const eventFiles = readdirSync(eventPath)
-
-    eventFiles.forEach(async (eventFile) => {
+    events.forEach(async (event) => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const event = require(`../events/${eventFile}`).default
-
-        if (!event.name) return this.logger.debug(`Event ${eventFile} has no name. Skipping.`)
+        if (!event.name) return this.logger.debug(`Event has no name. Skipping.`)
 
         this.events.set(event.name, event)
-        this.logger.debug(`Loaded event ${eventFile}`)
+        this.logger.debug(`Loaded event ${event.name}`)
       } catch (error: any) {
-        this.logger.error(`Error loading events '${eventFile}'.\n` + error.stack)
+        this.logger.error(`Error loading events '${event.name}'.\n` + error.stack)
       }
     })
     this.logger.debug(`Succesfully loaded events. count: ${this.events.size}`)
@@ -68,12 +62,12 @@ export default class EventManager extends BaseManager {
     })
   }
 
-  public reload(eventPath = join(__dirname, '../events')) {
+  public reload() {
     this.logger.debug('Reloading events...')
 
     this.events.clear()
 
-    this.load(eventPath)
+    this.load()
   }
 
   /**

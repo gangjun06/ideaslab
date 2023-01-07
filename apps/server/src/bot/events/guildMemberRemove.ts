@@ -1,6 +1,5 @@
-import { dbClient } from '@ideaslab/db'
-
 import { Event } from '~/bot/base/event'
+import { dbClient } from '~/lib/db'
 
 export default new Event('guildMemberRemove', async (client, member) => {
   try {
