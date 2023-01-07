@@ -1,8 +1,9 @@
-FROM node:16
+FROM node:16 AS Builder
 
 WORKDIR /app
 
 COPY package.json ./
+COPY turbo.json ./
 COPY yarn.lock ./
 COPY .yarnrc.yml ./
 COPY .yarn/ ./.yarn/
@@ -13,6 +14,15 @@ COPY packages/ ./packages/
 
 RUN yarn install
 
-COPY . .
+COPY apps/server ./apps/server/
 
-CMD ["yarn", "start"]
+RUN yarn build
+
+FROM node:16-alpine AS Server
+
+WORKDIR /app
+
+COPY --from=Builder /app/apps/server/dist/ ./
+RUN echo '{ "name": "ideaslab-server", "version": "1.0.0", "license": "AGPL", "main": "./index.js" }' > package.json
+
+CMD ["node", "./index.js"]
