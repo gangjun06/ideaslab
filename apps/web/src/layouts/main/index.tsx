@@ -152,9 +152,6 @@ export const MainLayout = ({
     if (guard === 'authOnly' && !profile.data?.isVerified) {
       return (
         <>
-          {showTitle && (
-            <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
-          )}
           <CenterCard>
             <div className="font-bold text-lg mt-2">
               아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요

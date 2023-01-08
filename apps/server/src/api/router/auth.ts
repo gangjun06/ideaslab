@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import axios from 'axios'
 import { ChannelType } from 'discord.js'
 
-import { dbClient } from '@ideaslab/db'
+import { dbClient, DefaultVisible } from '@ideaslab/db'
 import {
   authCheckHandleValidator,
   authLoginWithPinValidator,
@@ -11,7 +11,11 @@ import {
   authUpdateProfileValidator,
 } from '@ideaslab/validator'
 
-import { loginedProcedure } from '~/api/base/auth-middleware'
+import {
+  loginedProcedure,
+  unverifiedOnlyProcedure,
+  verifiedProcedure,
+} from '~/api/base/auth-middleware'
 import { publicProcedure, router } from '~/api/base/trpc'
 import { client, currentGuildMember } from '~/bot/base/client'
 import config from '~/config'
@@ -27,8 +31,14 @@ export const authRouter = router({
       const user = await loginWithPin(input.pin)
       if (!user) return { success: false }
 
+      const dbUser = await dbClient.user.findUnique({
+        where: { discordId: user.userId },
+        select: { discordId: true },
+      })
+
       ctx.session.id = user.userId
       ctx.session.isAdmin = user.isAdmin
+      ctx.session.verified = !!dbUser
       await ctx.session.save()
       return { success: true }
     }),
@@ -38,12 +48,21 @@ export const authRouter = router({
       const user = await loginWithToken(input.token)
       if (!user) return { success: false }
 
+      const dbUser = await dbClient.user.findUnique({
+        where: { discordId: user.userId },
+        select: { discordId: true },
+      })
+
       ctx.session.id = user.userId
       ctx.session.isAdmin = user.isAdmin
+      ctx.session.verified = !!dbUser
       await ctx.session.save()
       return { success: true }
     }),
-  logout: loginedProcedure.mutation(({ ctx }) => {
+  logout: loginedProcedure.mutation(async ({ ctx }) => {
+    console.log(ctx.session)
+    console.log(typeof ctx.session.destroy)
+    console.log(typeof ctx.session.save)
     ctx.session.destroy()
     return { success: true }
   }),
@@ -90,7 +109,7 @@ export const authRouter = router({
     if (user) return false
     return true
   }),
-  signup: loginedProcedure.input(authSignUpValidator).mutation(async ({ ctx, input }) => {
+  signup: unverifiedOnlyProcedure.input(authSignUpValidator).mutation(async ({ ctx, input }) => {
     const res = await axios.post(
       'https://hcaptcha.com/siteverify',
       `response=${input.captcha}&secret=${config.hCaptchaSecretKey}`,
@@ -127,6 +146,8 @@ export const authRouter = router({
         introduce: input.introduce,
         registerFrom: input.registerFrom,
         roles: { connect: input.roles.map((id) => ({ id })) },
+        defaultVisible:
+          input.defaultVisible === 'public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
       },
     })
 
@@ -152,11 +173,14 @@ export const authRouter = router({
       await welcomeChannel.send({ embeds: [embed] })
     }
 
+    ctx.session.verified = true
+    await ctx.session.save()
+
     return {
       success: true,
     }
   }),
-  updateProfile: loginedProcedure
+  updateProfile: verifiedProcedure
     .input(authUpdateProfileValidator)
     .mutation(async ({ ctx, input }) => {
       const user = await dbClient.user.findUnique({
@@ -187,6 +211,8 @@ export const authRouter = router({
           introduce: input.introduce,
           links: input.links,
           roles: { connect: input.roles.map((id) => ({ id })) },
+          defaultVisible:
+            input.defaultVisible === 'public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
         },
       })
 

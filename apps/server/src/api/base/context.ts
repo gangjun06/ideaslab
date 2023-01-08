@@ -17,8 +17,9 @@ export const sessionOptions: IronSessionOptions = {
 
 declare module 'iron-session' {
   interface IronSessionData {
-    id: string
-    isAdmin: boolean
+    id?: string
+    isAdmin?: boolean
+    verified?: boolean
   }
 }
 

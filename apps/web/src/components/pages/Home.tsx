@@ -50,7 +50,7 @@ const HeaderSection = () => (
 )
 
 const StatSection = () => {
-  const { data: stat } = trpc.info.stat.useQuery()
+  const { data: stat } = trpc.info.stat.useQuery(undefined, { trpc: { ssr: true } })
 
   return (
     <section className="p-6 text-gray-800 dark:text-gray-100">

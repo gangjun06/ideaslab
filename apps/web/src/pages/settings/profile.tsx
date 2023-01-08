@@ -54,7 +54,7 @@ const ProfileSetting: NextPage = () => {
       roles: profile?.roles?.map((role) => role.id),
       links: profile?.links as any,
     })
-  }, [form])
+  }, [form, profile])
 
   return (
     <SettingLayout title="프로필 설정" guard="authOnly">

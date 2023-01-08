@@ -35,10 +35,11 @@ export const useLoadUserData = () => {
 
   const profile = trpc.auth.profile.useQuery(undefined, {
     // enabled,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     onError: (res) => {
+      console.log(res)
       if (res.data?.code !== 'UNAUTHORIZED')
         toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
     },
@@ -54,17 +55,9 @@ export const useLoadUserData = () => {
       if (failureCount < 2) return true
       return false
     },
-    trpc: { ssr: false },
   })
 
-  // useEffect(() => {
-  //   if (profile.data && token === null) {
-  //     setUserData(null)
-  //   }
-  // }, [profile, profile.data, setUserData, token])
-  const token = ''
-
-  return { profile, token, isLoading: profile.isLoading }
+  return { profile, isLoading: profile.isLoading }
 }
 
 export const useUser = () => useAtomValue(userDataAtom)

@@ -1,10 +1,10 @@
-import { dbClient } from '@ideaslab/db'
+import { dbClient, DefaultVisible } from '@ideaslab/db'
 import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
 
 import { publicProcedure, router } from '~/api/base/trpc'
 
 export const galleryRouter = router({
-  posts: publicProcedure.input(galleryPostsValidator).query(async ({ input }) => {
+  posts: publicProcedure.input(galleryPostsValidator).query(async ({ ctx, input }) => {
     const { limit, cursor, categoryIds, authorHandle } = input
 
     const result = await dbClient.post.findMany({
@@ -48,11 +48,12 @@ export const galleryRouter = router({
         author: {
           handle: authorHandle,
         },
+        visible: ctx.session.id ? undefined : DefaultVisible.Public,
       },
     })
     return result
   }),
-  postDetail: publicProcedure.input(detailValidator).query(async ({ input: { id } }) => {
+  postDetail: publicProcedure.input(detailValidator).query(async ({ ctx, input: { id } }) => {
     const res = await dbClient.post.findUnique({
       where: {
         id,
@@ -85,35 +86,43 @@ export const galleryRouter = router({
             handle: true,
           },
         },
-        comments: {
-          select: {
-            discordId: true,
-            content: true,
-            createdAt: true,
-            hasParent: true,
-            author: {
-              select: {
-                avatar: true,
-                name: true,
-              },
-            },
-            parent: {
-              select: {
-                discordId: true,
-                content: true,
-                author: {
-                  select: {
-                    avatar: true,
-                    name: true,
+        ...(ctx.session.id
+          ? {
+              comments: {
+                select: {
+                  discordId: true,
+                  content: true,
+                  createdAt: true,
+                  hasParent: true,
+                  author: {
+                    select: {
+                      avatar: true,
+                      name: true,
+                    },
+                  },
+                  parent: {
+                    select: {
+                      discordId: true,
+                      content: true,
+                      author: {
+                        select: {
+                          avatar: true,
+                          name: true,
+                        },
+                      },
+                    },
                   },
                 },
               },
-            },
-          },
-        },
+            }
+          : {}),
+        visible: true,
       },
     })
-    return res
+    if (res && res.visible !== DefaultVisible.Public && !ctx.session.id) {
+      return { memberOnly: true }
+    }
+    return { ...res, memberOnly: false }
   }),
   categories: publicProcedure.query(async () => {
     return await dbClient.category.findMany({ select: { name: true, id: true } })

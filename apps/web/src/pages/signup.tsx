@@ -63,7 +63,7 @@ const Intro = ({ next }: StepContentProps) => {
       <div className="mx-auto px-4 text-center md:px-10 lg:px-32 xl:max-w-3xl h-full flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <h1 className="text-4xl font-bold sm:text-5xl">
-            <div>{userData?.username}님,</div>
+            <div>{userData?.name}님,</div>
             <div className="my-1.5">
               <span className="title-highlight">아이디어스랩</span>에
             </div>
@@ -86,7 +86,6 @@ const Intro = ({ next }: StepContentProps) => {
 
 const Policy = ({ prev, next }: StepContentProps) => {
   const { data: privacyPolicy } = trpc.info.privacyPolicy.useQuery(undefined, {
-    refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   })
@@ -116,7 +115,6 @@ const Policy = ({ prev, next }: StepContentProps) => {
 
 const Rule = ({ prev, next }: StepContentProps) => {
   const { data: serverRule } = trpc.info.serverRule.useQuery(undefined, {
-    refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   })
@@ -163,14 +161,27 @@ const Rule = ({ prev, next }: StepContentProps) => {
   )
 }
 
-const Complete = ({ next }: StepContentProps) => <div>가입 끝</div>
+const Complete = ({ next: _ }: StepContentProps) => (
+  <div className="mx-auto px-4 text-center md:px-10 lg:px-32 xl:max-w-3xl h-full flex-1 flex items-center justify-center">
+    <div className="flex flex-col items-center">
+      <h1 className="text-4xl font-bold sm:text-5xl">
+        <div className="mb-1.5">
+          <span className="title-highlight">아이디어스랩</span>에
+        </div>
+        가입하신것을 환영합니다!
+      </h1>
+      <p className="px-8 mt-8 mb-12 text-lg">
+        이제 디스코드로 돌아가 즐거운 아이디어스 랩 활동을 시작하세요.
+      </p>
+    </div>
+  </div>
+)
 
 const SignupForm = ({ prev, next }: StepContentProps) => {
   const userData = useUser()
   const theme = useCurrentTheme()
 
   const { data: artistRoles } = trpc.info.artistRoles.useQuery(undefined, {
-    refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   })
@@ -199,7 +210,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     defaultValues: {
       handle: userData?.userId,
       name: userData?.name,
-      registerFrom: '디스보드',
+      roles: [],
     },
   })
 
@@ -209,7 +220,7 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     setValue,
     setError,
     watch,
-    formState: { errors, isDirty },
+    formState: { errors, isSubmitting },
   } = form
 
   return (
@@ -241,7 +252,9 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
             <Select
               label="가입경로"
               description="어떻게 아이디어스랩에 가입하게 되셨나요?"
+              required
               name={name}
+              defaultValue=""
               error={error}
               onChange={onChange}
               options={[
@@ -295,31 +308,29 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
           error={errors?.links?.message ?? ''}
         />
 
-        {isDirty && Object.keys(errors).filter((key) => key !== 'captcha').length === 0 && (
-          <FormBlock
-            label="캡챠"
-            description="자동 가입을 방지하기 위해 클릭해주세요."
-            error={watch('captcha') === '' ? '캡챠를 클릭해 주세요.' : ''}
-          >
-            {process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY && (
-              <HCaptcha
-                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY}
-                theme={theme}
-                languageOverride="ko"
-                onVerify={(token) => {
-                  console.log(token)
-                  setValue('captcha', token)
-                }}
-              />
-            )}
-          </FormBlock>
-        )}
+        <FormBlock
+          label="캡챠"
+          description="자동 가입을 방지하기 위해 클릭해주세요."
+          error={watch('captcha') === '' ? '캡챠를 클릭해 주세요.' : ''}
+        >
+          {process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY && (
+            <HCaptcha
+              sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY}
+              theme={theme}
+              languageOverride="ko"
+              onVerify={(token) => {
+                console.log(token)
+                setValue('captcha', token)
+              }}
+            />
+          )}
+        </FormBlock>
       </div>
       <div className="flex justify-between w-full mt-4">
         <Button variant="default" onClick={prev}>
           뒤로가기
         </Button>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" loading={isSubmitting}>
           가입하기
         </Button>
       </div>

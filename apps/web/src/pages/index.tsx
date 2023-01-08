@@ -1,11 +1,12 @@
 import type { NextPage } from 'next'
-import dynamic from 'next/dynamic'
+
+import { HomePage } from '~/components/pages/Home'
 
 import { MainLayout } from '../layouts'
 
-const HomePage = dynamic(() => import('../components/pages/Home').then((d) => d.HomePage), {
-  ssr: false,
-})
+// const HomePage = dynamic(() => import('../components/pages/Home').then((d) => d.HomePage), {
+//   ssr: false,
+// })
 
 const Home: NextPage = () => {
   return (

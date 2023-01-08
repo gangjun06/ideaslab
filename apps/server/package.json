@@ -12,11 +12,7 @@
 		"register": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
 		"generate": "node generator.js",
 		"build": "yarn generate && node ./esbuild.config.js",
-		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix",
-		"db:migrate:deploy": "prisma migrate deploy",
-		"db:migrate:dev": "prisma migrate dev",
-		"db:generate": "prisma generate",
-		"db:push": "prisma db push"
+		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
 	},
 	"dependencies": {
 		"@trpc/server": "^10.5.0",
