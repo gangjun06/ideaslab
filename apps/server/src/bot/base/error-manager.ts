@@ -3,6 +3,7 @@ import { v4 } from 'uuid'
 
 import { ErrorReportOptions } from '~/bot/types'
 import config from '~/config'
+import { ignoreError } from '~/utils'
 import { Embed } from '~/utils/embed'
 import { Logger } from '~/utils/logger'
 
@@ -36,11 +37,7 @@ export default class ErrorManager extends BaseManager {
       .addFields([{ name: '오류 코드', value: errorCode, inline: true }])
 
     if (options && options.isSend) {
-      try {
-        ;(options.executer as Message).reply({ embeds: [errorEmbed] })
-      } catch {
-        /* empty */
-      }
+      ignoreError((options.executer as Message).reply({ embeds: [errorEmbed] }))
     }
 
     if (config.errorWebhook !== '') {

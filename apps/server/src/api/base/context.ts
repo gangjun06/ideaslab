@@ -11,7 +11,7 @@ export const sessionOptions: IronSessionOptions = {
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production' ? true : false,
     httpOnly: process.env.NODE_ENV === 'production' ? false : true,
-    domain: process.env.NODE_ENV === 'production' ? 'ideaslab.kr' : 'localhost',
+    domain: config.webURL.replace(/https?:\/\//, '').replace(/:\d+$/, ''),
   },
 }
 

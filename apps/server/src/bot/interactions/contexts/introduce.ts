@@ -3,6 +3,7 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js'
 import { dbClient } from '@ideaslab/db'
 
 import { ContextMenu } from '~/bot/base/interaction'
+import config from '~/config'
 import { Embed } from '~/utils/embed'
 
 export default new ContextMenu(
@@ -34,7 +35,7 @@ export default new ContextMenu(
       .setAuthor({
         name: targetMember.displayName,
         iconURL: targetMember.displayAvatarURL(),
-        url: `https://ideaslab.kr/@${user.handle}`,
+        url: `${config.webURL}/@${user.handle}`,
       })
 
     if (user.links.length > 0) {

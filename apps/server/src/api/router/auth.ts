@@ -17,6 +17,7 @@ import { client, currentGuildMember } from '~/bot/base/client'
 import config from '~/config'
 import { loginWithPin, loginWithToken } from '~/service/auth'
 import { getSetting } from '~/service/setting'
+import { ignoreError } from '~/utils'
 import { Embed } from '~/utils/embed'
 
 export const authRouter = router({
@@ -59,16 +60,14 @@ export const authRouter = router({
     const discriminator = member.user.discriminator
 
     if (user && user.avatar !== avatar) {
-      try {
-        await dbClient.user.update({
+      await ignoreError(
+        dbClient.user.update({
           where: { discordId: ctx.session.id },
           data: {
             avatar,
           },
-        })
-      } catch {
-        /* empty */
-      }
+        }),
+      )
     }
 
     return {
@@ -148,7 +147,7 @@ export const authRouter = router({
         .setAuthor({
           name: input.name,
           iconURL: member.displayAvatarURL(),
-          url: `https://ideaslab.kr/@${input.handle}`,
+          url: `${config.webURL}/@${input.handle}`,
         })
       await welcomeChannel.send({ embeds: [embed] })
     }

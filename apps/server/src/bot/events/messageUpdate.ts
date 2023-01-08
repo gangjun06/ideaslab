@@ -3,6 +3,7 @@ import { ChannelType } from 'discord.js'
 import { dbClient } from '@ideaslab/db'
 
 import { Event } from '~/bot/base/event'
+import { ignoreError } from '~/utils'
 
 export default new Event('messageUpdate', async (client, message) => {
   if (message.channel.type !== ChannelType.PublicThread) return
@@ -12,6 +13,7 @@ export default new Event('messageUpdate', async (client, message) => {
   if (!message.content) return
 
   try {
+    // Update Comment
     await dbClient.comment.update({
       where: {
         discordId: message.id,
@@ -21,6 +23,16 @@ export default new Event('messageUpdate', async (client, message) => {
       },
     })
   } catch {
-    /* empty */
+    // Update Gallery Post
+    await ignoreError(
+      dbClient.post.update({
+        where: {
+          discordId: message.channel.id,
+        },
+        data: {
+          content: message.content,
+        },
+      }),
+    )
   }
 })
