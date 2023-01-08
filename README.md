@@ -15,10 +15,30 @@
   <summary>목차</summary>
   <ol>
     <li>
-      <a href="#📖 프로젝트 소개">📖 프로젝트 소개</a>
+      <a href="#-프로젝트-소개">📖 프로젝트 소개</a>
       <ul>
-        <li><a href="#전체기능">전체 기능</a></li>
+        <li><a href="#전체-기능">전체 기능</a></li>
       </ul>
+    </li>
+    <li>
+      <a href="#-시작하기">🚀 시작하기</a>
+      <ul>
+        <li><a href="#개발서버">개발서버</a></li>
+        <li><a href="#빌드">빌드</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#-프로젝트-구성">📦 프로젝트 구성</a>
+      <ul>
+        <li><a href="#사용된-기술">사용된 기술</a></li>
+        <li><a href="#폴더-구조">폴더 구조</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#-기여">🌱 기여</a>
+    </li>
+    <li>
+      <a href="#-라이선스">📝 라이선스</a>
     </li>
   </ol>
 </details>
@@ -56,7 +76,10 @@
 ```bash
 # 먼저 각 폴더의 .env를 수정해주세요.
 
-# Start dev server
+# Install dependencies
+yarn install
+
+# Start dev server (http://localhost:8000)
 docker-compose -f -d docker-compose.dev.yml up --build --force-recreate
 
 # Show Logs
@@ -66,21 +89,31 @@ docker-compose -f docker-compose.dev.yml logs -f <main | nginx>
 docker-compose -f docker-compose.dev.yml down
 ```
 
+### 빌드
+
+```bash
+# Build server with docker
+docker build . -f ./Dockerfile.server -t <tag_name>
+
+# Build web with turbo
+turbo run build --filter=web
+```
+
 ## 📦 프로젝트 구성
 
 ### 사용된 기술
 
-### 공통
+#### 공통
 
 Turbopack, zod, redis
 
-### 웹
+#### 웹
 
 Next.js, Tailwind css, react-hook-form, trpc (react-query), jotai
 
-### 백엔드 & 봇
+#### 백엔드 & 봇
 
-Trpc, Discord.js, Prisma
+Trpc, Discord.js, Prisma, esbuild
 
 ### 폴더 구조
 
@@ -100,4 +133,12 @@ packages/ # apps에서 사용하는 패키지들
 
 ## 🌱 기여
 
+기여, 이슈 및 기능요청은 언제나 환영입니다!
+
+자유롭게 [이슈](https://github.com/gangjun06/ideaslab/issues) 페이지를 살펴보고 [풀 리퀘스트](https://github.com/gangjun06/ideaslab/pulls)를 보내주세요.
+
 ## 📝 라이선스
+
+본 프로젝트는 AGPL 라이선스를 따르고 있습니다.
+
+자세한 내용은 [LICENSE](./LICENSE) 를 참고하세요.
