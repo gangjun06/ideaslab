@@ -50,12 +50,11 @@ export const MainLayout = ({
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
   const [tokenExpired, setTokenExpired] = useState<boolean>(false)
-  const { token: storageToken, profile, isLoading } = useLoadUserData()
+  const { profile, isLoading } = useLoadUserData()
 
   const loginWithToken = trpc.auth.loginWithToken.useMutation()
 
   useEffect(() => {
-    console.log(router.query)
     const { token } = router.query
     if (typeof token === 'string') {
       const parsed = parseJWT<{ name: string; avatar: string; isAdmin: boolean }>(token)
@@ -69,13 +68,7 @@ export const MainLayout = ({
     }
   }, [router.query])
 
-  const displayTitle = useMemo(() => {
-    if (title === '') return '아이디어스랩'
-    return `${title} | 아이디어스랩`
-  }, [title])
-
   const login = useCallback(async () => {
-    console.log('로그인')
     if (authConfirm?.token) {
       const result = await loginWithToken.mutateAsync({ token: authConfirm.token })
       if (!result.success) {
@@ -188,7 +181,23 @@ export const MainLayout = ({
 
   return (
     <>
-      <NextSeo title={displayTitle} description={description} />
+      <NextSeo
+        title={title}
+        titleTemplate="%s | 아이디어스랩"
+        description={description}
+        openGraph={{
+          type: 'web',
+          locale: 'ko_KR',
+          siteName: '아이디어스랩',
+          url: '',
+          description: '',
+        }}
+        twitter={{
+          handle: '@handle',
+          site: '@site',
+          cardType: 'summary_large_image',
+        }}
+      />
       <Toaster />
       <Navbar />
       <div
