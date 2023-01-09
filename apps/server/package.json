@@ -2,16 +2,16 @@
 	"name": "@ideaslab/server",
 	"version": "1.0.0",
 	"license": "AGPL",
-	"main": "dist/index.js",
 	"files": [
-		"src"
+		"src",
+		"scripts"
 	],
 	"scripts": {
-		"start": "node .",
-		"dev": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src",
+		"start": "node ./dist",
+		"dev": "yarn generate && concurrently \"node ./scripts/esbuild.dev.js\" \"nodemon --watch .dev/index.js .dev/index.js\"",
 		"register": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
-		"generate": "node generator.js",
-		"build": "yarn generate && node ./esbuild.config.js",
+		"generate": "node scripts/generator.js",
+		"build": "yarn generate && node ./scripts/esbuild.js",
 		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
 	},
 	"dependencies": {
@@ -35,10 +35,12 @@
 		"@types/jsonwebtoken": "^8.5.9",
 		"@types/node": "^18.11.15",
 		"@types/uuid": "^9.0.0",
+		"chokidar": "^3.5.3",
+		"concurrently": "^7.6.0",
 		"esbuild": "^0.16.14",
 		"fast-glob": "^3.2.12",
 		"nodemon": "^2.0.20",
-		"ts-node-dev": "^2.0.0",
+		"ts-node": "^10.9.1",
 		"tsc-alias": "^1.8.2",
 		"tsconfig-paths": "^4.1.1",
 		"typescript": "^4.9.4"

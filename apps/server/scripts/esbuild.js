@@ -4,6 +4,8 @@ const { buildSync } = require('esbuild')
 const { copyFileSync, readdirSync } = require('fs')
 const { join } = require('path')
 
+const cwd = process.cwd()
+
 buildSync({
   entryPoints: ['src/index.ts'],
   outfile: './dist/index.js',
@@ -18,14 +20,11 @@ buildSync({
   },
 })
 
-copyFileSync(
-  join(__dirname, '../../packages/db/prisma/schema.prisma'),
-  join(__dirname, './dist/schema.prisma'),
-)
-const engineName = readdirSync(join(__dirname, '../../node_modules/.prisma/client')).filter(
-  (name) => name.startsWith('libquery_engine'),
+copyFileSync(join(cwd, '../../packages/db/prisma/schema.prisma'), join(cwd, './dist/schema.prisma'))
+const engineName = readdirSync(join(cwd, '../../node_modules/.prisma/client')).filter((name) =>
+  name.startsWith('libquery_engine'),
 )[0]
 copyFileSync(
-  join(__dirname, `../../node_modules/.prisma/client/${engineName}`),
-  join(__dirname, 'dist', engineName),
+  join(cwd, `../../node_modules/.prisma/client/${engineName}`),
+  join(cwd, 'dist', engineName),
 )

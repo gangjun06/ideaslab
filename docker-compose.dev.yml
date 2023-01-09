@@ -53,3 +53,5 @@ services:
       - ideaslab-dev
     depends_on:
       - cache
+    environment:
+      - DB_ENGINE=openssl

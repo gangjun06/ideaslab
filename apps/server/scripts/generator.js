@@ -2,6 +2,8 @@
 const { readdirSync, writeFileSync, mkdirSync, existsSync } = require('fs')
 const path = require('path')
 
+const cwd = process.cwd()
+
 const config = {
   resultPath: './src/_generated',
   eventPath: './src/bot/events',
@@ -27,13 +29,13 @@ const snakeToCamel = (str) =>
 
 // -----------------------------
 
-if (!existsSync(path.join(__dirname, config.resultPath))) {
-  mkdirSync(path.join(__dirname, config.resultPath))
+if (!existsSync(path.join(cwd, config.resultPath))) {
+  mkdirSync(path.join(cwd, config.resultPath))
 }
 
 // -----------------------------
 
-const eventsPath = readdirSync(path.join(__dirname, config.eventPath))
+const eventsPath = readdirSync(path.join(cwd, config.eventPath))
 const events = eventsPath.map((filename) => removeExtension(filename))
 
 const eventText = `${prefix}
@@ -48,16 +50,16 @@ export const events: Event<any>[] = [
 ]
 `
 
-writeFileSync(path.join(__dirname, config.resultPath, 'events.ts'), eventText)
+writeFileSync(path.join(cwd, config.resultPath, 'events.ts'), eventText)
 
 // ------
 
-const commandsFolderPath = readdirSync(path.join(__dirname, config.commandPath))
+const commandsFolderPath = readdirSync(path.join(cwd, config.commandPath))
 const commands = []
 
 for (const item of commandsFolderPath) {
   commands.push(
-    ...readdirSync(path.join(__dirname, config.commandPath, item)).map((filename) => ({
+    ...readdirSync(path.join(cwd, config.commandPath, item)).map((filename) => ({
       folder: item,
       filename: removeExtension(filename),
       filenameCamel: snakeToCamel(`${item}-${removeExtension(filename)}`),
@@ -78,16 +80,16 @@ export const commands = [
 ]
 `
 
-writeFileSync(path.join(__dirname, config.resultPath, 'commands.ts'), commandsText)
+writeFileSync(path.join(cwd, config.resultPath, 'commands.ts'), commandsText)
 
 // ------
 
-const interactionsFolderPath = readdirSync(path.join(__dirname, config.interactionPath))
+const interactionsFolderPath = readdirSync(path.join(cwd, config.interactionPath))
 const interactions = []
 
 for (const item of interactionsFolderPath) {
   interactions.push(
-    ...readdirSync(path.join(__dirname, config.interactionPath, item)).map((filename) => ({
+    ...readdirSync(path.join(cwd, config.interactionPath, item)).map((filename) => ({
       folder: item,
       filename: removeExtension(filename),
       filenameCamel: snakeToCamel(`${item}-${removeExtension(filename)}`),
@@ -110,6 +112,6 @@ export const interactions: BaseInteraction[] = [
 ]
 `
 
-writeFileSync(path.join(__dirname, config.resultPath, 'interactions.ts'), interactionsText)
+writeFileSync(path.join(cwd, config.resultPath, 'interactions.ts'), interactionsText)
 
 // ------

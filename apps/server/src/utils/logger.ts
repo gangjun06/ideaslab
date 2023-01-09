@@ -20,23 +20,14 @@ const colors = {
 const myFormat = printf(({ level, message, label, ms }) => {
   const _level = stripColor(level) as LogLevel
   const colorizer = colors[_level]
-  return `${chalk.grey(
-    `[${
-      new Date().getFullYear() +
-      '-' +
-      new Date().getMonth() +
-      '-' +
-      new Date().getDate() +
-      ' ' +
-      new Date().getHours() +
-      ':' +
-      new Date().getMinutes() +
-      ':' +
-      new Date().getSeconds()
-    }]`,
-  )} ${_level === 'chat' ? '' : `[ ${label} ] `}${level} ${colorizer(
-    message,
-  )} ${chalk.magentaBright(ms)}`
+  const date = new Date()
+  const dateStr = `[${date.getFullYear()}-${date.getMonth()}-${
+    date.getDate() + 1
+  }-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}]`
+  const labelStr = _level === 'chat' ? '' : `[${label}] `
+  return `${chalk.grey(dateStr)} ${labelStr} ${level} ${colorizer(message)} ${chalk.magentaBright(
+    ms,
+  )}`
 })
 
 const myCustomLevels = {

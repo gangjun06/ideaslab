@@ -6,11 +6,13 @@
 	"exclude": [
 		"node_modules",
 		"dist",
+		".dev",
 		".turbo",
-		"generator.js"
 	],
 	"compilerOptions": {
 		"outDir": "dist",
+		"target": "ESNext",
+		"module": "ESNext",
 		"composite": true,
 		"paths": {
 			"~/*": [

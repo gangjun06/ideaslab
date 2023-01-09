@@ -1,7 +1,4 @@
-// eslint-disable-next-line simple-import-sort/imports
-import 'dotenv/config'
-import 'module-alias/register'
-
+// import 'module-alias/register'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 import http from 'http'
 import { exit } from 'process'
@@ -12,6 +9,8 @@ import { Logger } from '~/utils/logger'
 
 import { appRouter } from './api/router/_app'
 import config from './config'
+
+import 'dotenv/config'
 
 const logger = new Logger('main')
 
