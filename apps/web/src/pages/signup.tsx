@@ -248,13 +248,13 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
           }}
         />
         <FormFieldBuilder name="registerFrom">
-          {({ field: { name, onChange }, error }) => (
+          {({ field: { name, onChange, value }, error }) => (
             <Select
               label="가입경로"
               description="어떻게 아이디어스랩에 가입하게 되셨나요?"
               required
               name={name}
-              defaultValue=""
+              value={value}
               error={error}
               onChange={onChange}
               options={[
@@ -307,6 +307,44 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
           register={registerForm}
           error={errors?.links?.message ?? ''}
         />
+        <FormFieldBuilder name="profileVisible">
+          {({ field: { name, onChange, value }, error }) => (
+            <Select
+              label="프로필 공개범위"
+              description="프로필을 공개할지/비공개로 할지 설정할 수 있어요."
+              options={[
+                { label: '공개', value: 'Public' },
+                {
+                  label: '맴버 전용 (오직 아이디어스랩 회원만 프로필을 확인할 수 있어요)',
+                  value: 'MemberOnly',
+                },
+              ]}
+              value={value}
+              name={name}
+              onChange={onChange}
+              error={error}
+            />
+          )}
+        </FormFieldBuilder>
+        <FormFieldBuilder name="defaultVisible">
+          {({ field: { name, onChange, value }, error }) => (
+            <Select
+              label="기본 갤러리 공개범위"
+              description="갤러리에 글을 올릴 때의 기본 공개범위를 설정해요. (글을 올린 후 언제든지 변경할 수 있어요)"
+              options={[
+                { label: '공개', value: 'Public' },
+                {
+                  label: '맴버 전용 (오직 아이디어스랩 회원만 글을 확인할 수 있어요)',
+                  value: 'MemberOnly',
+                },
+              ]}
+              value={value}
+              name={name}
+              onChange={onChange}
+              error={error}
+            />
+          )}
+        </FormFieldBuilder>
 
         <FormBlock
           label="캡챠"

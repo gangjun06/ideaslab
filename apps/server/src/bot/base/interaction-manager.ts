@@ -28,6 +28,11 @@ export default class InteractionManager extends BaseManager {
   }
 
   public get(customId: string): BaseInteraction | undefined {
-    return this.interactions.find((_, id) => id.includes(customId))
+    const found = this.interactions.get(customId)
+    if (found) return found
+    return this.interactions.find((_, id) => {
+      if (typeof id === 'string') id.startsWith(customId)
+      return id.includes(customId)
+    })
   }
 }

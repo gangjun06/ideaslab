@@ -99,7 +99,7 @@ const ProfilesPage = () => {
                   key={profile.discordId}
                   className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
                 >
-                  <Link href={`/@${profile.handle}`} passHref>
+                  <Link href={`/@${profile.handleDisplay}`} passHref>
                     <a className="flex flex-col mb-2 no-click h-full" onClick={() => {}}>
                       <div className="flex flex-col h-full flex-grow">
                         <div className="flex gap-x-2 items-center">
@@ -113,19 +113,19 @@ const ProfilesPage = () => {
                           <div className="flex flex-col">
                             <div className="text-title-color">{profile.name}</div>
                             <div className="text-description-color text-sm">
-                              {`@${profile.handle}`}
+                              {`@${profile.handleDisplay}`}
                             </div>
                           </div>
                         </div>
+                        <div className="text-description-color mt-2 text-sm">
+                          {profile.introduce}
+                        </div>
                         <div className="flex gap-x-2 mt-2">
                           {profile.roles?.map((item, index) => (
-                            <div key={index} className="tag">
+                            <div key={index} className="tag small">
                               {item.name}
                             </div>
                           ))}
-                        </div>
-                        <div className="text-description-color mt-2 text-sm">
-                          {profile.introduce}
                         </div>
                         {profile.links.length > 0 && (
                           <div className="mt-2">

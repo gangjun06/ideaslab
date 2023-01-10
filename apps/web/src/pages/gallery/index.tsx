@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
 import { PostDetailModalWrapper, PostView } from '~/components/post'
+import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
 
@@ -20,6 +21,8 @@ const breakpointColumns = {
 }
 
 const GalleryPage = () => {
+  const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
+
   const [selectedCategories, setSelectedCategories] = useState<number | null>(null)
   const {
     data: posts,
@@ -44,6 +47,7 @@ const GalleryPage = () => {
           className={classNames('tag hover', selectedCategories === null && 'primary')}
           onClick={() => setSelectedCategories(null)}
           aria-label="전체보기"
+          role="checkbox"
           aria-checked={selectedCategories === null}
         >
           <Square2StackIcon width={24} height={24} />
@@ -84,12 +88,9 @@ const GalleryPage = () => {
               breakpointCols={breakpointColumns}
             >
               {isLoading
-                ? new Array(40).fill({}).map((_, index) => {
-                    const sizes = ['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'][
-                      Math.floor(Math.random() * 6)
-                    ]
-                    return <div key={index} className={`${sizes} bg-pulse rounded w-full`}></div>
-                  })
+                ? loadingItemList.map((size, index) => (
+                    <div key={index} className={`${size} bg-pulse rounded w-full`}></div>
+                  ))
                 : posts?.pages.map((page) =>
                     page.map((post) => (
                       <PostView key={post.id} post={post} onClick={() => showDetail(post.id)} />

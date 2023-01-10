@@ -60,16 +60,22 @@ export const authRouter = router({
       return { success: true }
     }),
   logout: loginedProcedure.mutation(async ({ ctx }) => {
-    console.log(ctx.session)
-    console.log(typeof ctx.session.destroy)
-    console.log(typeof ctx.session.save)
     ctx.session.destroy()
     return { success: true }
   }),
   profile: loginedProcedure.query(async ({ ctx }) => {
     const user = await dbClient.user.findUnique({
       where: { discordId: ctx.session.id },
-      select: { discordId: true, avatar: true, roles: true, introduce: true, links: true },
+      select: {
+        discordId: true,
+        avatar: true,
+        roles: true,
+        introduce: true,
+        links: true,
+        handleDisplay: true,
+        defaultVisible: true,
+        profileVisible: true,
+      },
     })
 
     const member = await currentGuildMember(ctx.session.id)
@@ -100,11 +106,14 @@ export const authRouter = router({
       introduce: user?.introduce,
       isVerified: user ? true : false,
       links: user?.links,
+      handleDisplay: user?.handleDisplay,
+      defaultVisible: user?.defaultVisible,
+      profileVisible: user?.profileVisible,
     }
   }),
   checkHandle: publicProcedure.input(authCheckHandleValidator).mutation(async ({ input }) => {
     const user = await dbClient.user.findUnique({
-      where: { handle: input.handle },
+      where: { handle: input.handle.toLowerCase() },
     })
     if (user) return false
     return true
@@ -142,12 +151,15 @@ export const authRouter = router({
         discordId: ctx.session.id,
         avatar: member.displayAvatarURL(),
         name: input.name,
-        handle: input.handle,
+        handle: input.handle.toLowerCase(),
+        handleDisplay: input.handle,
         introduce: input.introduce,
         registerFrom: input.registerFrom,
         roles: { connect: input.roles.map((id) => ({ id })) },
         defaultVisible:
-          input.defaultVisible === 'public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
+          input.defaultVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
+        profileVisible:
+          input.profileVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
       },
     })
 
@@ -207,12 +219,15 @@ export const authRouter = router({
           discordId: ctx.session.id,
           avatar: member.displayAvatarURL(),
           name: input.name,
-          handle: input.handle,
+          handle: input.handle.toLowerCase(),
+          handleDisplay: input.handle,
           introduce: input.introduce,
           links: input.links,
           roles: { connect: input.roles.map((id) => ({ id })) },
           defaultVisible:
-            input.defaultVisible === 'public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
+            input.defaultVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
+          profileVisible:
+            input.profileVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
         },
       })
 

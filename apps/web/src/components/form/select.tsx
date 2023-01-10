@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useCallback, useState } from 'react'
+import { forwardRef, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
@@ -10,6 +10,7 @@ type OptionType<T> = { label: string; value: T }
 export type SelectProps<T> = {
   name?: string
   defaultValue?: T
+  value?: T
   options: OptionType<T>[]
   onChange?: (value: T) => void
   labelProps?: React.ComponentPropsWithoutRef<'label'>
@@ -18,27 +19,17 @@ export type SelectProps<T> = {
 } & FormBlockProps
 
 const SelectContent = <T extends number | string>(
-  { name, defaultValue, options, onChange, ...props }: SelectProps<T>,
+  { name, value, options, onChange, ...props }: SelectProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) => {
-  const [selected, setSelected] = useState<T>(defaultValue ?? options[0].value)
-
-  const onSelect = useCallback(
-    (value: any) => {
-      setSelected(value)
-      if (typeof onChange === 'function') onChange(value)
-    },
-    [onChange],
-  )
-
   return (
-    <Listbox as="div" name={name} {...props} value={selected} onChange={onSelect}>
+    <Listbox as="div" name={name} {...props} value={value} onChange={onChange}>
       {({ open }) => (
         <div ref={ref} className="relative">
           <FormBlock {...props} customLabel={Listbox.Label} name={name}>
             <Listbox.Button className="relative w-full cursor-default rounded-lg border text-subtitle-color border-base-color bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left sm:text-sm">
               <span className="bl0ck truncate">
-                {options.find((o) => o.value === selected)?.label ?? '항목을 선택하세요...'}
+                {options.find((o) => o.value === value)?.label ?? '항목을 선택하세요...'}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronDownIcon

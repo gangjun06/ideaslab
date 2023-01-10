@@ -122,6 +122,28 @@ export const PostView = ({
   )
 }
 
+export const PostLoading = ({ right }: { right?: ReactNode }) => (
+  <>
+    <div
+      className="animate-pulse flex flex-col px-8 mt-8 gap-y-4 lg:max-w-4xl"
+      role="presentation"
+      aria-label="데이터 불러오는중"
+    >
+      <div className="flex justify-between items-center">
+        <div className="h-12 bg-gray-800 rounded w-48"></div>
+        {right}
+      </div>
+      <div className="h-12 bg-pulse rounded mt-4 w-80"></div>
+      <div className="h-96 bg-pulse rounded w-full"></div>
+      <div className="mt-8 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+    </div>
+  </>
+)
+
 export const GalleryDetailModal = ({
   id,
   show,
@@ -148,27 +170,13 @@ export const GalleryDetailModal = ({
               >
                 <Suspense
                   fallback={
-                    <>
-                      <div
-                        className="animate-pulse flex flex-col px-8 mt-8 gap-y-4"
-                        role="presentation"
-                        aria-label="데이터 불러오는중"
-                      >
-                        <div className="flex justify-between items-center">
-                          <div className="h-12 bg-gray-800 rounded w-48"></div>
-                          <Button variant="subtle" onClick={onClose} forIcon>
-                            <XMarkIcon width={24} height={24} />
-                          </Button>
-                        </div>
-                        <div className="h-12 bg-pulse rounded mt-4 w-80"></div>
-                        <div className="h-96 bg-pulse rounded w-full"></div>
-                        <div className="mt-8 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-                        <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-                      </div>
-                    </>
+                    <PostLoading
+                      right={
+                        <Button variant="subtle" onClick={onClose} forIcon>
+                          <XMarkIcon width={24} height={24} />
+                        </Button>
+                      }
+                    />
                   }
                 >
                   <DetailContent id={id} onClose={onClose} />
@@ -281,7 +289,7 @@ export const PostDetail = ({
             }
           })}
         </div>
-        <div className="flex gap-x-2 mt-4 w-full items-center justify-center">
+        <div className="flex gap-x-2 mt-4 w-full items-center justify-center flex-wrap">
           <Button
             variant="subtle"
             onClick={() => {
@@ -304,35 +312,40 @@ export const PostDetail = ({
             </>
           </ButtonLink>
         </div>
-        <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
-          <div className="max-w-2xl mx-auto px-4">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-                디스코드 댓글
-              </h2>
+        {post.comments && (
+          <section className="py-8 lg:py-16">
+            <div className="max-w-2xl mx-auto px-4">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+                  디스코드 댓글
+                </h2>
+              </div>
+              {post.comments?.length === 0 && (
+                <div>아직 작성된 댓글이 없어요. 디스코드에서 먼저 댓글을 남겨보세요!</div>
+              )}
+              {post.comments?.map(({ parent, ...comment }) => (
+                <Comment
+                  key={comment.discordId}
+                  avatar={comment.author.avatar}
+                  username={comment.author.name}
+                  content={comment.content}
+                  time={comment.createdAt}
+                  parent={
+                    parent
+                      ? {
+                          avatar: parent.author.avatar,
+                          content: parent.content,
+                          username: parent.author.name,
+                        }
+                      : comment.hasParent
+                      ? { content: '원본 메시지가 삭제되었어요.' }
+                      : null
+                  }
+                />
+              ))}
             </div>
-            {post.comments.map(({ parent, ...comment }) => (
-              <Comment
-                key={comment.discordId}
-                avatar={comment.author.avatar}
-                username={comment.author.name}
-                content={comment.content}
-                time={comment.createdAt}
-                parent={
-                  parent
-                    ? {
-                        avatar: parent.author.avatar,
-                        content: parent.content,
-                        username: parent.author.name,
-                      }
-                    : comment.hasParent
-                    ? { content: '원본 메시지가 삭제되었어요.' }
-                    : null
-                }
-              />
-            ))}
-          </div>
-        </section>
+          </section>
+        )}
       </div>
     </>
   )

@@ -95,7 +95,15 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .tag {
-  @apply rounded-full px-2 py-1 border flex gap-x-1 transition select-none items-center text-subtitle-color;
+  @apply rounded-full border flex gap-x-1 transition select-none items-center text-subtitle-color;
+}
+
+.tag:not(.small) {
+  @apply px-2 py-1;
+}
+
+.tag.small {
+  @apply px-1.5 py-0.5 text-sm;
 }
 
 .tag:not(.primary) {

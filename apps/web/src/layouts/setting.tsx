@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 
+import { ButtonLink } from '~/components/common'
 import { useUser } from '~/hooks/useAuth'
 import { MainLayout } from '~/layouts'
 
@@ -99,6 +100,11 @@ export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
             </div>
             <div className="text-description-color">{curPage?.description}</div>
           </div>
+          {profile?.handleDisplay && (
+            <Link href={`/@${profile?.handleDisplay}`} passHref>
+              <ButtonLink>프로필 보기</ButtonLink>
+            </Link>
+          )}
         </div>
       </div>
       <div className="flex flex-col divide-y md:divide-y-0 md:grid grid-flow-col gap-x-12">

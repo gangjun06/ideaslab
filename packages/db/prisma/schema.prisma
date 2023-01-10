@@ -19,11 +19,13 @@ model User {
   avatar         String
   introduce      String
   handle         String         @unique
+  handleDisplay  String         @default("")
   links          Json[]
   registerFrom   String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   leavedAt       DateTime?
+  profileVisible DefaultVisible @default(Public)
   defaultVisible DefaultVisible @default(Public)
   roles          Role[]
 

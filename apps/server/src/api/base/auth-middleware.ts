@@ -50,10 +50,6 @@ const checkAuth = (type: 'admin' | 'logined' | 'verified' | 'unverified') =>
         break
     }
 
-    console.log(ctx.session)
-    console.log(typeof ctx.session.destroy)
-    console.log(typeof ctx.session.save)
-
     return next({
       ctx: {
         ...ctx,

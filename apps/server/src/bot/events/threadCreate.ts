@@ -3,6 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'disco
 import { dbClient, Prisma } from '@ideaslab/db'
 
 import { Event } from '~/bot/base/event'
+import config from '~/config'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return
@@ -20,6 +21,13 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
     where: { discordChannel: threadChannel.parentId },
   })
   if (!category) return
+  const user = await dbClient.user.findUnique({
+    where: { discordId: threadChannel.ownerId },
+    select: {
+      defaultVisible: true,
+    },
+  })
+  if (!user) return
 
   const attachments = message.attachments.map((attachment) => {
     return {
@@ -41,7 +49,7 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
   })
 
   try {
-    await dbClient.post.create({
+    const postData = await dbClient.post.create({
       data: {
         discordId: threadChannel.id,
         categoryId: category.id,
@@ -49,6 +57,7 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
         content: message.content ?? '',
         title: threadChannel.name,
         attachments: attachments as unknown as Prisma.JsonArray,
+        visible: user.defaultVisible,
         tags: {
           connectOrCreate: postTags.map((tag) => ({
             where: { name: tag },
@@ -59,19 +68,18 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
         },
       },
     })
+
+    const button = new ButtonBuilder()
+      .setStyle(ButtonStyle.Link)
+      .setLabel('웹에서 보기')
+      .setURL(`${config.webURL}/gallery/${postData.id}`)
+
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button)
+
+    threadChannel.send({
+      components: [row],
+    })
   } catch (e) {
     console.error(e)
   }
-
-  // const embed = new Embed(client, 'success').
-  const button = new ButtonBuilder()
-    .setStyle(ButtonStyle.Link)
-    .setLabel('웹에서 보기')
-    .setURL('https://google.com')
-
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button)
-
-  threadChannel.send({
-    components: [row],
-  })
 })

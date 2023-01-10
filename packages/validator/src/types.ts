@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { customErrorMap } from './error-map'
 
-export const Visible = z.enum(['public', 'memberOnly'])
+export const Visible = z.enum(['Public', 'MemberOnly'])
 
 export const authLoginWithPinValidator = z.object({
   pin: z.string().min(6).max(6),
@@ -41,7 +41,8 @@ export const authSignUpValidator = z.object({
   captcha: z.string(),
   links: z.array(linkValidator).min(0).max(6),
   roles: z.array(z.number()).min(0).max(20),
-  defaultVisible: Visible.default('public'),
+  defaultVisible: Visible.default('Public'),
+  profileVisible: Visible.default('Public'),
 })
 
 export const authUpdateProfileValidator = z.object({
@@ -58,7 +59,8 @@ export const authUpdateProfileValidator = z.object({
   introduce: z.string().min(1).max(300),
   links: z.array(linkValidator).min(0).max(6),
   roles: z.array(z.number()).min(0).max(20),
-  defaultVisible: Visible.default('public'),
+  defaultVisible: Visible.default('Public'),
+  profileVisible: Visible.default('Public'),
 })
 
 export const adminGallerySettingValidator = z.object({
@@ -98,6 +100,7 @@ export const galleryPostsValidator = z.object({
   cursor: z.number().optional(),
   limit: z.number().min(10).max(50).default(50),
   categoryIds: z.array(z.number()).max(100).optional(),
+  authorId: z.string().optional(),
   authorHandle: z.string().optional(),
 })
 

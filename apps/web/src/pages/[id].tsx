@@ -1,12 +1,16 @@
-import { useEffect } from 'react'
-import { NextPage } from 'next'
+import { useMemo } from 'react'
+import { GetServerSideProps } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
+import ForbiddenImage from '~/assets/forbidden.svg'
+import { ButtonLink } from '~/components/common'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
+import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
 import { dateShortFormat } from '~/utils'
@@ -20,14 +24,34 @@ const breakpointColumns = {
   500: 1,
 }
 
-const MemberDetailPage: NextPage = () => {
-  const { query } = useRouter()
-  const router = useRouter()
+interface Props {
+  profileHandle: string
+}
 
-  const { data } = trpc.gallery.profile.useQuery(
-    { id: typeof query.id === 'string' ? query.id.substring(1) : '' },
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
+  if (typeof query.id !== 'string' || !query.id.startsWith('@')) return { notFound: true }
+
+  const queryId = query.id.substring(1)
+
+  return {
+    props: {
+      profileHandle: queryId,
+    },
+  }
+}
+
+const MemberDetailPage = ({ profileHandle }: Props) => {
+  const router = useRouter()
+  const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
+
+  const {
+    data: profile,
+    isLoading: isProfileLoading,
+    error: profileError,
+  } = trpc.gallery.profile.useQuery(
+    { id: profileHandle },
     {
-      enabled: typeof query?.id === 'string',
+      enabled: !!profileHandle,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
     },
@@ -39,9 +63,10 @@ const MemberDetailPage: NextPage = () => {
     fetchNextPage,
     hasNextPage,
   } = trpc.gallery.posts.useInfiniteQuery(
-    { limit: LIMIT, authorHandle: typeof query.id === 'string' ? query.id.substring(1) : '' },
+    { limit: LIMIT, authorId: profileHandle },
     {
-      enabled: typeof query?.id === 'string',
+      enabled: !!profileHandle,
+      refetchOnReconnect: false,
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined
         return lastPage.at(-1)?.id ?? undefined
@@ -49,38 +74,70 @@ const MemberDetailPage: NextPage = () => {
     },
   )
 
-  useEffect(() => {
-    if (typeof query.id !== 'string') {
-      return
+  const status = useMemo(() => {
+    if (profileError?.data?.code === 'FORBIDDEN') {
+      return 'forbidden'
     }
-    if (query.id.length > 0 && !query.id.startsWith('@')) {
-      router.push('/')
+    if (isLoading || isProfileLoading || !profile || !posts) {
+      return 'loading'
     }
-  }, [])
+    return 'loaded'
+  }, [isLoading, isProfileLoading, posts, profile, profileError?.data?.code])
 
   return (
-    <MainLayout title={'프로필 상세보기'} className="mt-6">
-      {data && (
-        <div className="flex flex-col gap-y-12 lg:flex-row gap-x-12">
-          <div className="relative w-full lg:max-w-xs flex justify-center lg:block">
+    <MainLayout title={profile?.name ?? '프로필 상세보기'} className="pt-6">
+      {status === 'forbidden' && (
+        <div className="text-center flex items-center justify-center flex-col h-full mt-4">
+          <div className="w-48">
+            <Image alt="" src={ForbiddenImage} />
+          </div>
+          <div className="font-bold text-title-color text-lg mt-4">
+            아이디어스랩 회원만 볼 수 있는 프로필이에요
+          </div>
+          <div className="text-description-color">
+            아이디어스 랩 디스코드 서버에 가입하여 다양한 컨텐츠들을 즐기세요!
+          </div>
+          <div className="flex mt-2">
+            <Link href="/" passHref>
+              <ButtonLink variant="light">확인하러 가기</ButtonLink>
+            </Link>
+          </div>
+          <div className="text-xl font-bold mt-8">이미 회원이신가요?</div>
+          <div className="flex mt-2">
+            <Link href="/login" passHref>
+              <ButtonLink variant="light">로그인하기</ButtonLink>
+            </Link>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col gap-y-12 lg:flex-row gap-x-12">
+        <div className="relative w-full lg:max-w-xs flex justify-center lg:block">
+          {status === 'loading' && <div className={`h-48 bg-pulse rounded w-full`}></div>}
+          {status === 'loaded' && profile && (
             <div className="flex flex-col lg:card items-center justify-center px-4 py-6 w-full">
-              <Image src={data.avatar} width={128} height={128} className="rounded-full" />
+              <Image
+                alt=""
+                src={profile?.avatar ?? ''}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
               <div className="text-title-color text-lg font-bold tracking-wide mt-2">
-                {data.name}
+                {profile?.name}
               </div>
-              <div className="text-subtitle-color">{`@${data.handle}`}</div>
+              <div className="text-subtitle-color">{`@${profile?.handle}`}</div>
+              <div className="text-description-color mt-2 text-sm">{profile?.introduce}</div>
               <div className="flex gap-x-2 mt-2">
-                {data.roles?.map((item, index) => (
-                  <div key={index} className="tag">
+                {profile?.roles?.map((item, index) => (
+                  <div key={index} className="tag small">
                     {item.name}
                   </div>
                 ))}
               </div>
-              <div className="text-description-color mt-2 text-sm">{data.introduce}</div>
 
-              {data.links.length > 0 && (
+              {profile?.links.length > 0 && (
                 <div className="mt-2">
-                  {data.links.map((link: any, index) => (
+                  {profile?.links.map((link: any, index) => (
                     <a key={index} href={link?.url ?? ''} className="title-highlight">
                       {link?.name}
                     </a>
@@ -90,64 +147,57 @@ const MemberDetailPage: NextPage = () => {
               <div className="flex justify-around w-full mt-4">
                 <div className="flex-col text-center">
                   <div className="text-lg font-bold text-title-color">작성글</div>
-                  <div className="text-md text-subtitle-color">{data._count.posts}</div>
+                  <div className="text-md text-subtitle-color">{profile?._count.posts}</div>
                 </div>
                 <div className="flex-col text-center">
                   <div className="text-xl font-bold text-title-color">가입일</div>
                   <div className="text-md text-subtitle-color">
-                    {dateShortFormat(data.createdAt)}
+                    {dateShortFormat(profile?.createdAt)}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="w-full">
-            <PostDetailModalWrapper baseUrl={`/@${router.query.id?.slice(1)}`}>
-              {({ showDetail }) => (
-                <InfiniteScroll
-                  className="h-full w-full"
-                  next={fetchNextPage}
-                  dataLength={posts?.pages.reduce((prev, cur) => prev + cur.length, 0) ?? 0}
-                  hasMore={hasNextPage ?? false}
-                  loader={
-                    <div className="w-full text-subtitle-color text-lg font-bold">
-                      데이터를 불러오고 있어요
-                    </div>
-                  }
-                >
-                  <Masonry
-                    className={classNames(
-                      'my-masonry-grid flex gap-4',
-                      isLoading && 'animate-pulse',
-                    )}
-                    columnClassName="my-masonry-grid_column flex flex-col gap-y-3"
-                    breakpointCols={breakpointColumns}
-                  >
-                    {isLoading
-                      ? new Array(40).fill({}).map((_, index) => {
-                          const sizes = ['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'][
-                            Math.floor(Math.random() * 6)
-                          ]
-                          return (
-                            <div key={index} className={`${sizes} bg-pulse rounded w-full`}></div>
-                          )
-                        })
-                      : posts?.pages.map((page) =>
-                          page.map((post) => (
-                            <PostView
-                              key={post.id}
-                              post={post}
-                              onClick={() => showDetail(post.id)}
-                            />
-                          )),
-                        )}
-                  </Masonry>
-                </InfiniteScroll>
-              )}
-            </PostDetailModalWrapper>
-          </div>
+          )}
         </div>
-      )}
+        <div className="w-full">
+          <PostDetailModalWrapper baseUrl={`/@${router.query.id?.slice(1)}`}>
+            {({ showDetail }) => (
+              <InfiniteScroll
+                className="h-full w-full"
+                next={fetchNextPage}
+                dataLength={posts?.pages.reduce((prev, cur) => prev + cur.length, 0) ?? 0}
+                hasMore={hasNextPage ?? false}
+                loader={
+                  <div className="w-full text-subtitle-color text-lg font-bold">
+                    데이터를 불러오고 있어요
+                  </div>
+                }
+              >
+                <Masonry
+                  className={classNames('my-masonry-grid flex gap-4', isLoading && 'animate-pulse')}
+                  columnClassName="my-masonry-grid_column flex flex-col gap-y-3"
+                  breakpointCols={breakpointColumns}
+                >
+                  {status === 'loading'
+                    ? loadingItemList.map((size, index) => (
+                        <div key={index} className={`${size} bg-pulse rounded w-full`}></div>
+                      ))
+                    : posts?.pages.map((page) =>
+                        page.map((post) => (
+                          <PostView key={post.id} post={post} onClick={() => showDetail(post.id)} />
+                        )),
+                      )}
+                </Masonry>
+                {status === 'loaded' && posts?.pages[0].length === 0 && (
+                  <div className="w-full bg-gray-100 dark:bg-gray-800 rounded text-subtitle-color text-center py-8">
+                    업로드된 게시글이 존재하지 않습니다
+                  </div>
+                )}
+              </InfiniteScroll>
+            )}
+          </PostDetailModalWrapper>
+        </div>
+      </div>
     </MainLayout>
   )
 }

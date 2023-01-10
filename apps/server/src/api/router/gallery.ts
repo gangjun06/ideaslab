@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { dbClient, DefaultVisible } from '@ideaslab/db'
 import { detailStringValidator, detailValidator, galleryPostsValidator } from '@ideaslab/validator'
 
@@ -5,7 +7,7 @@ import { publicProcedure, router } from '~/api/base/trpc'
 
 export const galleryRouter = router({
   posts: publicProcedure.input(galleryPostsValidator).query(async ({ ctx, input }) => {
-    const { limit, cursor, categoryIds, authorHandle } = input
+    const { limit, cursor, categoryIds, authorId, authorHandle } = input
 
     const result = await dbClient.post.findMany({
       ...(cursor
@@ -46,7 +48,8 @@ export const galleryRouter = router({
           in: (categoryIds ?? [])?.length > 0 ? categoryIds : undefined,
         },
         author: {
-          handle: authorHandle,
+          discordId: authorId,
+          handle: authorHandle?.toLowerCase(),
         },
         visible: ctx.session.id ? undefined : DefaultVisible.Public,
       },
@@ -120,17 +123,20 @@ export const galleryRouter = router({
       },
     })
     if (res && res.visible !== DefaultVisible.Public && !ctx.session.id) {
-      return { memberOnly: true }
+      throw new TRPCError({ code: 'FORBIDDEN' })
     }
-    return { ...res, memberOnly: false }
+    return res
   }),
   categories: publicProcedure.query(async () => {
     return await dbClient.category.findMany({ select: { name: true, id: true } })
   }),
-  profile: publicProcedure.input(detailStringValidator).query(async ({ input }) => {
+  profile: publicProcedure.input(detailStringValidator).query(async ({ ctx, input }) => {
     const user = await dbClient.user.findUnique({
-      where: { handle: input.id },
+      where: {
+        handle: input.id.toLowerCase(),
+      },
       select: {
+        discordId: true,
         avatar: true,
         createdAt: true,
         handle: true,
@@ -143,6 +149,7 @@ export const galleryRouter = router({
             name: true,
           },
         },
+        profileVisible: true,
         _count: {
           select: {
             posts: true,
@@ -150,7 +157,9 @@ export const galleryRouter = router({
         },
       },
     })
-
+    if (user && user.profileVisible !== DefaultVisible.Public && !ctx.session.id) {
+      throw new TRPCError({ code: 'FORBIDDEN' })
+    }
     return user
   }),
 })

@@ -39,7 +39,7 @@ export const useLoadUserData = () => {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     onError: (res) => {
-      console.log(res)
+      console.log('error auth')
       if (res.data?.code !== 'UNAUTHORIZED')
         toast.error('로그인 정보를 받아오던 중 에러가 발생하였어요.')
     },

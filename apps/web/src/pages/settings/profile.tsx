@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { authUpdateProfileValidator, z } from '@ideaslab/validator'
 
 import { Button, GripVerticalIcon } from '~/components/common'
-import { Form, FormBlock, FormFieldBuilder, Input, Textarea } from '~/components/form'
+import { Form, FormBlock, FormFieldBuilder, Input, Select, Textarea } from '~/components/form'
 import { useForm, UseFormRegister, useUser } from '~/hooks'
 import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
@@ -49,10 +49,12 @@ const ProfileSetting: NextPage = () => {
     if (!profile) return
     form.reset({
       name: profile?.name,
-      handle: profile?.userId,
+      handle: profile?.handleDisplay,
       introduce: profile?.introduce,
       roles: profile?.roles?.map((role) => role.id),
       links: profile?.links as any,
+      defaultVisible: profile?.defaultVisible,
+      profileVisible: profile?.profileVisible,
     })
   }, [form, profile])
 
@@ -112,6 +114,44 @@ const ProfileSetting: NextPage = () => {
             )}
           </FormFieldBuilder>
         </FormBlock>
+        <FormFieldBuilder name="profileVisible">
+          {({ field: { name, onChange, value }, error }) => (
+            <Select
+              label="프로필 공개범위"
+              description="프로필을 공개할지/비공개로 할지 설정할 수 있어요."
+              options={[
+                { label: '공개', value: 'Public' },
+                {
+                  label: '맴버 전용 (오직 아이디어스랩 회원만 프로필을 확인할 수 있어요)',
+                  value: 'MemberOnly',
+                },
+              ]}
+              value={value}
+              name={name}
+              onChange={onChange}
+              error={error}
+            />
+          )}
+        </FormFieldBuilder>
+        <FormFieldBuilder name="defaultVisible">
+          {({ field: { name, onChange, value }, error }) => (
+            <Select
+              label="기본 갤러리 공개범위"
+              description="갤러리에 글을 올릴 때의 기본 공개범위를 설정해요. (글을 올린 후 언제든지 변경할 수 있어요)"
+              options={[
+                { label: '공개', value: 'Public' },
+                {
+                  label: '맴버 전용 (오직 아이디어스랩 회원만 글을 확인할 수 있어요)',
+                  value: 'MemberOnly',
+                },
+              ]}
+              value={value}
+              name={name}
+              onChange={onChange}
+              error={error}
+            />
+          )}
+        </FormFieldBuilder>
         <div className="flex justify-end gap-x-2">
           <Button disabled={!isDirty} onClick={() => reset()}>
             취소

@@ -1,10 +1,11 @@
 import { ChannelType } from 'discord.js'
 
-import { dbClient } from '@ideaslab/db'
+import { dbClient, DefaultVisible, Prisma } from '@ideaslab/db'
 import { infoProfilesValidator } from '@ideaslab/validator'
 
 import { publicProcedure, router } from '~/api/base/trpc'
 import { currentGuild } from '~/bot/base/client'
+import { Empty } from '~/bot/types'
 import { getSetting } from '~/service/setting'
 
 type Channel = {
@@ -85,42 +86,51 @@ export const infoRouter = router({
       orderBy: { defaultOrder: 'asc' },
     })
   }),
-  profiles: publicProcedure.input(infoProfilesValidator).query(async ({ input }) => {
+  profiles: publicProcedure.input(infoProfilesValidator).query(async ({ ctx, input }) => {
     const { cursor, limit, orderBy, roles } = input
+
+    const cursorData = {
+      take: limit,
+      ...(cursor
+        ? {
+            cursor: {
+              discordId: cursor,
+            },
+            skip: 1,
+          }
+        : ({} as Empty)),
+    }
+
+    const authorWhere: Prisma.UserWhereInput = {
+      ...(roles && roles.length > 0
+        ? {
+            roles: {
+              some: {
+                id: {
+                  in: roles,
+                },
+              },
+            },
+          }
+        : {}),
+      profileVisible: ctx.session.id ? undefined : DefaultVisible.Public,
+    }
+
     if (orderBy === 'recentActive') {
       const result = await dbClient.post.findMany({
         distinct: ['authorId'],
         orderBy: {
           createdAt: 'desc',
         },
-        ...(cursor
-          ? {
-              cursor: {
-                discordId: cursor,
-              },
-              skip: 1,
-            }
-          : {}),
-        take: limit,
-        ...(roles &&
-          roles.length > 0 && {
-            where: {
-              author: {
-                roles: {
-                  some: {
-                    id: {
-                      in: roles,
-                    },
-                  },
-                },
-              },
-            },
-          }),
+        ...cursorData,
+        where: {
+          author: authorWhere,
+        },
         select: {
           author: {
             select: {
               discordId: true,
-              handle: true,
+              handleDisplay: true,
               name: true,
               avatar: true,
               createdAt: true,
@@ -146,34 +156,17 @@ export const infoRouter = router({
       })
       return result.map(({ author }) => author)
     }
+
     const result = await dbClient.user.findMany({
       orderBy: {
         createdAt: 'desc',
       },
-      ...(cursor
-        ? {
-            cursor: {
-              discordId: cursor,
-            },
-            skip: 1,
-          }
-        : {}),
+      ...cursorData,
       take: limit,
-      ...(roles &&
-        roles.length > 0 && {
-          where: {
-            roles: {
-              some: {
-                id: {
-                  in: roles,
-                },
-              },
-            },
-          },
-        }),
+      where: authorWhere,
       select: {
         discordId: true,
-        handle: true,
+        handleDisplay: true,
         name: true,
         avatar: true,
         createdAt: true,

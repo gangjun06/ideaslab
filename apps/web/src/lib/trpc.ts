@@ -11,8 +11,34 @@ const getBaseUrl = (isServer: boolean) => {
   return `${process.env.NEXT_PUBLIC_BACKEND_URL}`
 }
 
+type ConfigType = ReturnType<Parameters<typeof createTRPCNext>[0]['config']>
+
 export const trpc = createTRPCNext<AppRouter>({
   config({ ctx }) {
+    const config: Pick<ConfigType, 'queryClientConfig'> = {
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+            retry: (failureCount, error) => {
+              if ((error as any)?.data?.code === 'UNAUTHORIZED') return false
+              if (failureCount < 2) return true
+              return false
+            },
+          },
+        },
+        logger: {
+          log: console.log,
+          warn: console.warn,
+          error(...args) {
+            if (args[0]?.data?.code === 'FORBIDDEN' || args[0]?.data?.code === 'UNAUTHORIZED')
+              return
+            console.error(...args)
+          },
+        },
+      },
+    }
     // Client request
     if (typeof window !== 'undefined') {
       return {
@@ -22,6 +48,7 @@ export const trpc = createTRPCNext<AppRouter>({
             url: getBaseUrl(false),
           }),
         ],
+        ...config,
       }
     }
     // SSR
@@ -42,6 +69,7 @@ export const trpc = createTRPCNext<AppRouter>({
           },
         }),
       ],
+      ...config,
     }
   },
   ssr: true,
