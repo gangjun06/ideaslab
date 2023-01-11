@@ -19,32 +19,43 @@ const DialogTitle = ({ title }: { title: string }) => {
       {({ close: onClose }) => (
         <HDialog.Title
           as="h3"
-          className="w-full px-6 py-5 text-2xl font-medium leading-6 text-title-color flex justify-between items-center"
+          className="w-full text-2xl font-medium leading-6 text-title-color flex justify-between items-center pb-4"
         >
           <div>{title}</div>
-          {onClose && (
-            <Button forIcon variant="subtle" onClick={onClose}>
-              <span className="sr-only">모달 닫기</span>
-              <XMarkIcon className="w-5 h-5" />
-            </Button>
-          )}
+          <Button forIcon variant="subtle" onClick={onClose}>
+            <span className="sr-only">모달 닫기</span>
+            <XMarkIcon className="w-5 h-5" />
+          </Button>
         </HDialog.Title>
       )}
     </dialogContext.Consumer>
   )
 }
 
-const DialogContent = ({ children }: { children: ReactNode }) => {
+const DialogContent = ({
+  children,
+  size = 'full',
+}: {
+  children: ReactNode
+  size?: 'full' | 'auto'
+}) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center overflow-y-auto sm:p-5">
-      <div className="flex items-center justify-center text-center h-full min-h-full w-full">
+      <div
+        className={classNames(
+          'flex items-center justify-center text-center h-full min-h-full w-full',
+          size === 'auto' && 'p-5',
+        )}
+      >
         <TransitionChild type="modal">
           <HDialog.Panel
             className={classNames(
-              'bg-base h-full text-base-color w-full max-w-full lg:max-w-4xl transform sm:rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all flex flex-col',
+              'bg-base text-base-color max-w-full lg:max-w-4xl transform text-left align-middle shadow-xl backdrop-blur-md transition-all flex flex-col',
+              size === 'full' && 'w-full h-full sm:rounded-xl',
+              size === 'auto' && 'rounded-xl',
             )}
           >
-            {children}
+            <div className="px-8 py-8">{children}</div>
           </HDialog.Panel>
         </TransitionChild>
       </div>
@@ -74,6 +85,10 @@ const DialogLoading = ({ children }: { children?: ReactNode }) => {
   )
 }
 
+const DialogActions = ({ children }: { children: ReactNode }) => {
+  return <div className="flex gap-x-3">{children}</div>
+}
+
 export const Dialog = ({
   isOpen,
   close,
@@ -100,3 +115,4 @@ export const Dialog = ({
 Dialog.Title = DialogTitle
 Dialog.Loading = DialogLoading
 Dialog.Content = DialogContent
+Dialog.Actions = DialogActions

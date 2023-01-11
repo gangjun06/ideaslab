@@ -113,10 +113,7 @@ export const PostView = ({
       </div>
 
       <div className="flex">
-        <div className="tag">
-          {/* <TagIcon width={24} height={24} /> */}
-          {post.category.name}
-        </div>
+        <div className="tag">{post.category.name}</div>
       </div>
     </div>
   )
@@ -183,12 +180,7 @@ export const PostDetail = ({
   return (
     <>
       {forDialog && <Dialog.Title title={post.title ?? '이미지 상세보기'} />}
-      <div
-        className={classNames(
-          forDialog && 'px-6 py-2 pb-5',
-          'text-base-color overflow-y-auto custom-scroll flex-1',
-        )}
-      >
+      <div className={classNames('text-base-color overflow-y-auto custom-scroll flex-1')}>
         <Link href={`/@${post.author.handle}`} passHref>
           <a className="flex gap-x-2 items-center">
             <Image

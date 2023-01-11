@@ -8,10 +8,10 @@ import { trpc } from '~/lib/trpc'
 const HeaderSection = () => (
   <div className="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between gap-x-8 mt-12">
     <div className="flex flex-col justify-center p-6 text-center rounded-sm lg:text-left w-full flex-1">
-      <h1 className="text-5xl font-bold leading-none sm:text-6xl">
+      <h1 className="text-4xl font-bold sm:text-6xl">
         <Typed
           strings={[
-            '당신의 <span class="title-highlight">아이디어에</span> 축복을',
+            '당신의 <span class="title-highlight">아이디어가</span><br /> 현실로 이루길',
             '<span class="title-highlight">아이디어스</span>랩',
           ]}
           smartBackspace
@@ -21,7 +21,7 @@ const HeaderSection = () => (
       </h1>
       <div className="mt-6 mb-8 text-lg sm:mb-12 text-subtitle-color">
         <p className="inline title-highlight">아이디어스랩</p>
-        은 창작자들의 아이디어에 날개를 달아주는 디스코드 서버입니다.
+        은 창작자의 아이디어가 현실로 이루어지도록 도와주는 디스코드 서버입니다.
         <br />
         여러 분야의 창작자와 작업, 아이디어 논의, 프로젝트 진행 등을 할 수 있어요
         <br />
@@ -111,14 +111,15 @@ const DescriptionSection = () => {
               name="즐거움은 커뮤니티다"
               description="일상이야기, 작업관련 이야기, 작품추천, 정보를 포럼형태로 이야기 할 수 있습니다."
             />
-            <InnerContent
-              name="다양한 분야의 갤러리"
-              description="일상이야기, 작업관련 이야기, 작품추천, 정보를 포럼형태로 이야기 할 수 있습니다."
-            />
+
             <InnerContent
               name="사소한 것부터 큰 것 까지! 같이하실분"
               description="같이 할 친구부터 해서 동료까지 구하는 곳입니다. 예를들어 게임부터해서 스터디,
                     함께할 프로젝트 인원을 구할 수 있습니다."
+            />
+            <InnerContent
+              name="아이디어스 랩의 꽃, 프로젝트"
+              description="프로젝트 인원을 구하게 되면 서버내에서 논의하고 진행할 수 있습니다. 프로젝트가 완료되면 프로젝트 결과물을 올릴 수 있습니다."
             />
           </div>
         </div>

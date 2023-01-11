@@ -1,14 +1,12 @@
 import { useMemo } from 'react'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
-import ForbiddenImage from '~/assets/forbidden.svg'
-import { ButtonLink } from '~/components/common'
+import { MemberOnlyContent } from '~/components/login'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
@@ -86,30 +84,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
 
   return (
     <MainLayout title={profile?.name ?? '프로필 상세보기'} className="pt-6">
-      {status === 'forbidden' && (
-        <div className="text-center flex items-center justify-center flex-col h-full mt-4">
-          <div className="w-48">
-            <Image alt="" src={ForbiddenImage} />
-          </div>
-          <div className="font-bold text-title-color text-lg mt-4">
-            아이디어스랩 회원만 볼 수 있는 프로필이에요
-          </div>
-          <div className="text-description-color">
-            아이디어스 랩 디스코드 서버에 가입하여 다양한 컨텐츠들을 즐기세요!
-          </div>
-          <div className="flex mt-2">
-            <Link href="/" passHref>
-              <ButtonLink variant="light">확인하러 가기</ButtonLink>
-            </Link>
-          </div>
-          <div className="text-xl font-bold mt-8">이미 회원이신가요?</div>
-          <div className="flex mt-2">
-            <Link href="/login" passHref>
-              <ButtonLink variant="light">로그인하기</ButtonLink>
-            </Link>
-          </div>
-        </div>
-      )}
+      {status === 'forbidden' && <MemberOnlyContent name="프로필" />}
       <div className="flex flex-col gap-y-12 lg:flex-row gap-x-12">
         <div className="relative w-full lg:max-w-xs flex justify-center lg:block">
           {status === 'loading' && <div className={`h-48 bg-pulse rounded w-full`}></div>}
