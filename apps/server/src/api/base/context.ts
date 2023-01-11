@@ -10,8 +10,9 @@ export const sessionOptions: IronSessionOptions = {
   cookieName: 'ideas-lab/session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production' ? true : false,
-    httpOnly: process.env.NODE_ENV === 'production' ? false : true,
+    httpOnly: false,
     domain: config.webURL.replace(/https?:\/\//, '').replace(/:\d+$/, ''),
+    maxAge: 2147483647 - 60,
   },
 }
 

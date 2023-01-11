@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import superjson from 'superjson'
@@ -15,29 +16,36 @@ type ConfigType = ReturnType<Parameters<typeof createTRPCNext>[0]['config']>
 
 export const trpc = createTRPCNext<AppRouter>({
   config({ ctx }) {
-    const config: Pick<ConfigType, 'queryClientConfig'> = {
-      queryClientConfig: {
+    const config: Pick<ConfigType, 'queryClient'> = {
+      queryClient: new QueryClient({
         defaultOptions: {
           queries: {
             refetchOnReconnect: false,
             refetchOnWindowFocus: false,
             retry: (failureCount, error) => {
-              if ((error as any)?.data?.code === 'UNAUTHORIZED') return false
+              if (
+                (error as any)?.data?.code === 'UNAUTHORIZED' ||
+                (error as any)?.data?.code === 'FORBIDDEN'
+              )
+                return false
               if (failureCount < 2) return true
               return false
             },
+            // onError: (err) => {
+            //   console.log()
+            // },
           },
         },
-        logger: {
-          log: console.log,
-          warn: console.warn,
-          error(...args) {
-            if (args[0]?.data?.code === 'FORBIDDEN' || args[0]?.data?.code === 'UNAUTHORIZED')
-              return
-            console.error(...args)
-          },
-        },
-      },
+        // logger: {
+        //   log: console.log,
+        //   warn: console.warn,
+        //   error(...args) {
+        //     if (args[0]?.data?.code === 'FORBIDDEN' || args[0]?.data?.code === 'UNAUTHORIZED')
+        //       return
+        //     console.error(...args)
+        //   },
+        // },
+      }),
     }
     // Client request
     if (typeof window !== 'undefined') {

@@ -68,7 +68,7 @@ export const PostView = ({
 
   return (
     <div
-      className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
+      className="bg-white dark:bg-gray-700/50 border-base-color rounded-lg galleryUploadCard relative flex flex-col px-4 py-4 drop-shadow-sm border"
       key={post.id}
       onClick={(e) => {
         if (

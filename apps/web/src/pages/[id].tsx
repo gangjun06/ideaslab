@@ -65,7 +65,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
   } = trpc.gallery.posts.useInfiniteQuery(
     { limit: LIMIT, authorId: profileHandle },
     {
-      enabled: !!profileHandle,
+      enabled: !!profileHandle && !!profile?.discordId,
       refetchOnReconnect: false,
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined

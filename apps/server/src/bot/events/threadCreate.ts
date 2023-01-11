@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js'
 
-import { dbClient, Prisma } from '@ideaslab/db'
+import { dbClient, DefaultVisible, Prisma } from '@ideaslab/db'
 
 import { Event } from '~/bot/base/event'
 import config from '~/config'
@@ -69,14 +69,21 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
       },
     })
 
+    const visibleButton = new ButtonBuilder()
+      .setStyle(ButtonStyle.Secondary)
+      .setLabel(
+        `공개 설정: ${user.defaultVisible === DefaultVisible.Public ? '공개' : '맴버 공개'}`,
+      )
+      .setCustomId('post-visible')
+
     const button = new ButtonBuilder()
       .setStyle(ButtonStyle.Link)
       .setLabel('웹에서 보기')
       .setURL(`${config.webURL}/gallery/${postData.id}`)
 
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button)
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(visibleButton, button)
 
-    threadChannel.send({
+    await threadChannel.send({
       components: [row],
     })
   } catch (e) {

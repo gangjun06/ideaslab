@@ -48,8 +48,8 @@ module.exports = {
       },
       borderColor: {
         base: {
-          light: colors.gray['300'],
-          dark: colors.gray['600'],
+          light: colors.zinc['200'],
+          dark: colors.zinc['700'],
         },
       },
     },

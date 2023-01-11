@@ -97,7 +97,7 @@ const ProfilesPage = () => {
               page.map((profile) => (
                 <div
                   key={profile.discordId}
-                  className="bg-white dark:bg-gray-700/50 dark:border-base-dark rounded galleryUploadCard relative flex flex-col px-4 py-4"
+                  className="bg-white dark:bg-gray-700/50 border-base-color rounded-lg relative flex flex-col px-4 py-4 border drop-shadow-sm"
                 >
                   <Link href={`/@${profile.handleDisplay}`} passHref>
                     <a className="flex flex-col mb-2 no-click h-full" onClick={() => {}}>

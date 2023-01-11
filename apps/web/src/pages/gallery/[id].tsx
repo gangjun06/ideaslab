@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,13 +13,17 @@ import { trpc } from '~/lib/trpc'
 const GalleryDetailPage: NextPage = () => {
   const { query } = useRouter()
 
+  const id = useMemo(() => {
+    if (typeof query.id !== 'string' || isNaN(query.id as any)) return -1
+    return parseInt(query.id)
+  }, [query])
+
   const { data, isLoading, error } = trpc.gallery.postDetail.useQuery(
-    { id: typeof query.id === 'string' && !isNaN(query.id as any) ? parseInt(query?.id) : 0 },
+    { id },
     {
-      enabled: typeof query?.id === 'string',
+      enabled: id > 0,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onError: () => {},
       retry: (failureCount, error) => {
         if (error.data?.code === 'FORBIDDEN') return false
         if (failureCount < 2) return true

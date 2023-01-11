@@ -10,7 +10,11 @@ import { Transition } from './transition'
 
 export const UserMenu = () => {
   const profile = useUser()
-  const logout = trpc.auth.logout.useMutation()
+  const logout = trpc.auth.logout.useMutation({
+    onSuccess: () => {
+      location.reload()
+    },
+  })
 
   if (typeof profile !== 'object' || !profile) return <></>
   const { avatar, name } = profile

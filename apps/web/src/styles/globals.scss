@@ -71,7 +71,8 @@ html.dark {
 }
 
 html:not(.dark) {
-  background-color: rgb(250 250 250);
+  // background-color: rgb(250 250 250);
+  background-color: rgb(248, 250, 252);
 }
 
 .title-highlight {
@@ -95,7 +96,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .tag {
-  @apply rounded-full border flex gap-x-1 transition select-none items-center text-subtitle-color;
+  @apply rounded-full border flex gap-x-1 transition select-none items-center text-subtitle-color drop-shadow-sm;
 }
 
 .tag:not(.small) {

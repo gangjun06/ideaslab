@@ -28,13 +28,9 @@ type UserData = typeof appRouter.auth.profile['_def']['_output_out'] | null
 export const userDataAtom = atom<UserData>(null)
 
 export const useLoadUserData = () => {
-  // const [token, setToken] = useAtom(tokenAtom)
   const setUserData = useSetAtom(userDataAtom)
 
-  // const enabled = !!token
-
   const profile = trpc.auth.profile.useQuery(undefined, {
-    // enabled,
     refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

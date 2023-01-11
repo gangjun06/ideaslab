@@ -744,6 +744,7 @@ __metadata:
     react-markdown: ^8.0.4
     react-masonry-css: ^1.0.16
     react-typed: ^1.2.0
+    react-use-cookie: ^1.4.0
     sass: ^1.57.1
     superjson: ^1.12.0
     swr: ^1.3.0
@@ -7474,6 +7475,15 @@ __metadata:
     react: ^16.3.0
     react-dom: ^16.3.0
   checksum: c750d68710f918904b9bf07ea253e51d3447f9533c8277bd0afcdd20725b9e42e52ddcccd63ce93b4d0eb40db14573ccc82fce27b568b72a250d2167fc375b6f
+  languageName: node
+  linkType: hard
+
+"react-use-cookie@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "react-use-cookie@npm:1.4.0"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 79e4494ab60858e7e6cbdbe5d55e8968f9d66100b6914de759c6db18b894d4c137976b91551bfc0226eec44101c06751fe9091ac30a0e24f480a00d5a3f6f595
   languageName: node
   linkType: hard
 

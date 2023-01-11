@@ -57,7 +57,7 @@ export const getLoginToken = async (
  * @param pin pin code witch generated in getLoginToken
  */
 export const loginWithPin = async (pin: string) => {
-  const userData = await redis.get(redisLoginPinKey(pin))
+  const userData = await redis.getdel(redisLoginPinKey(pin))
   if (userData === null) return null
   const { userId, isAdmin } = JSON.parse(userData) as { userId: string; isAdmin: boolean }
 

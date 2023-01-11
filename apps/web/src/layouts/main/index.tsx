@@ -77,7 +77,7 @@ export const MainLayout = ({
       }
     }
     if (router.pathname === '/login') router.push('/')
-    // location.reload()
+    location.href = location.href.replace(/token=[a-zA-Z0-9._-]+/, '')
   }, [authConfirm?.token, loginWithToken, router])
 
   useEffect(() => {
