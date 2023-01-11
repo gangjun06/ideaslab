@@ -1,13 +1,11 @@
 import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Dialog, Transition } from '@headlessui/react'
 import {
   ArchiveBoxIcon,
   ChatBubbleLeftRightIcon,
   LinkIcon,
   TagIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import toast from 'react-hot-toast'
@@ -20,7 +18,7 @@ import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
 import { fullTimeFormat, relativeTimeFormat } from '~/utils'
 
-import { Button, ButtonLink, TransitionChild } from './common'
+import { Button, ButtonLink, Dialog } from './common'
 
 export const PostDetailModalWrapper = ({
   baseUrl = '',
@@ -48,7 +46,9 @@ export const PostDetailModalWrapper = ({
 
   return (
     <>
-      <GalleryDetailModal show={showDetailModal} onClose={onClose} id={id} />
+      <Dialog isOpen={showDetailModal} close={onClose}>
+        <GalleryDetailModal id={id} />
+      </Dialog>
       {children({ showDetail })}
     </>
   )
@@ -122,108 +122,67 @@ export const PostView = ({
   )
 }
 
-export const PostLoading = ({ right }: { right?: ReactNode }) => (
+const PostLoadingInner = () => (
   <>
-    <div
-      className="animate-pulse flex flex-col px-8 mt-8 gap-y-4 lg:max-w-4xl"
-      role="presentation"
-      aria-label="데이터 불러오는중"
-    >
-      <div className="flex justify-between items-center">
-        <div className="h-12 bg-pulse rounded w-48"></div>
-        {right}
-      </div>
-      <div className="h-12 bg-pulse rounded mt-4 w-80"></div>
-      <div className="h-96 bg-pulse rounded w-full"></div>
-      <div className="mt-8 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-      <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
-    </div>
+    <div className="h-12 bg-pulse rounded mt-4 w-80"></div>
+    <div className="h-96 bg-pulse rounded w-full"></div>
+    <div className="mt-8 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+    <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+    <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+    <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
+    <div className="mt-4 h-24 bg-pulse rounded-lg w-3/5 mx-auto"></div>
   </>
 )
 
-export const GalleryDetailModal = ({
-  id,
-  show,
-  onClose,
-}: {
-  id?: number | null
-  show: boolean
-  onClose: () => void
-}) => {
-  return (
-    <Transition appear show={show} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
-        <TransitionChild type="overlay">
-          <div className="fixed inset-0 bg-black bg-opacity-50" />
-        </TransitionChild>
+export const PostLoading = () => (
+  <div
+    className="animate-pulse flex flex-col px-8 mt-8 gap-y-4 lg:max-w-4xl"
+    role="presentation"
+    aria-label="데이터 불러오는중"
+  >
+    <div className="flex justify-between items-center">
+      <div className="h-12 bg-pulse rounded w-48"></div>
+    </div>
+    <PostLoadingInner />
+  </div>
+)
 
-        <div className="fixed inset-0 flex items-center justify-center overflow-y-auto sm:p-5">
-          <div className="flex items-center justify-center text-center h-full min-h-full w-full">
-            <TransitionChild type="modal">
-              <Dialog.Panel
-                className={classNames(
-                  'bg-base h-full text-base-color w-full max-w-full lg:max-w-4xl transform sm:rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all flex flex-col',
-                )}
-              >
-                <Suspense
-                  fallback={
-                    <PostLoading
-                      right={
-                        <Button variant="subtle" onClick={onClose} forIcon>
-                          <XMarkIcon width={24} height={24} />
-                        </Button>
-                      }
-                    />
-                  }
-                >
-                  <DetailContent id={id} onClose={onClose} />
-                </Suspense>
-              </Dialog.Panel>
-            </TransitionChild>
-          </div>
-        </div>
-      </Dialog>
-    </Transition>
+export const GalleryDetailModal = ({ id }: { id?: number | null }) => {
+  return (
+    <Dialog.Content>
+      <Suspense
+        fallback={
+          <Dialog.Loading>
+            <PostLoadingInner />
+          </Dialog.Loading>
+        }
+      >
+        <DetailContent id={id} />
+      </Suspense>
+    </Dialog.Content>
   )
 }
 
-export const DetailContent = ({ id, onClose }: { id?: number | null; onClose: () => void }) => {
+export const DetailContent = ({ id }: { id?: number | null }) => {
   const { data } = trpc.gallery.postDetail.useQuery(
     { id: id ?? 0 },
     { enabled: typeof id === 'number', suspense: true },
   )
 
-  return <PostDetail forDialog onClose={onClose} post={data} />
+  return <PostDetail forDialog post={data} />
 }
 
 export const PostDetail = ({
   post,
-  onClose,
   forDialog = false,
 }: {
   post?: Unarray<typeof appRouter.gallery.postDetail['_def']['_output_out']>
-  onClose: () => void
   forDialog?: boolean
 }) => {
   if (!post) return <></>
   return (
     <>
-      {forDialog && (
-        <Dialog.Title
-          as="h3"
-          className="w-full px-6 py-5 text-2xl font-medium leading-6 text-title-color flex justify-between items-center"
-        >
-          <div>{post.title ?? '이미지 상세보기'}</div>
-          {onClose && (
-            <Button forIcon variant="subtle" onClick={onClose}>
-              <XMarkIcon className="w-5 h-5" />
-            </Button>
-          )}
-        </Dialog.Title>
-      )}
+      {forDialog && <Dialog.Title title={post.title ?? '이미지 상세보기'} />}
       <div
         className={classNames(
           forDialog && 'px-6 py-2 pb-5',

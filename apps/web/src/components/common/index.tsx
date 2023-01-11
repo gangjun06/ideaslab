@@ -1,4 +1,5 @@
 export * from './button'
+export * from './dialog'
 export * from './icons'
 export * from './pin-input'
 export * from './step'
