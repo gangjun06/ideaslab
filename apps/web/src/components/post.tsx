@@ -130,7 +130,7 @@ export const PostLoading = ({ right }: { right?: ReactNode }) => (
       aria-label="데이터 불러오는중"
     >
       <div className="flex justify-between items-center">
-        <div className="h-12 bg-gray-800 rounded w-48"></div>
+        <div className="h-12 bg-pulse rounded w-48"></div>
         {right}
       </div>
       <div className="h-12 bg-pulse rounded mt-4 w-80"></div>

@@ -200,10 +200,11 @@ export const MainLayout = ({
       <div
         id="main"
         className={classNames(
-          'container mx-auto pt-4 py-4 px-4',
+          'container mx-auto pb-4 px-4',
           tinyContainer && 'max-w-4xl',
           className,
         )}
+        style={{ paddingTop: 'calc(var(--nav-height) + 1rem)' }}
       >
         {content}
       </div>

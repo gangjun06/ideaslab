@@ -1,5 +1,7 @@
-import { forwardRef, ReactNode } from 'react'
+import React, { forwardRef, ReactNode } from 'react'
 import classNames from 'classnames'
+
+import { LoadingIcon } from './icons'
 
 interface StyleProps {
   variant?: 'primary' | 'default' | 'subtle' | 'light'
@@ -12,13 +14,18 @@ interface DefaultProps extends StyleProps {
   children: string | ReactNode
 }
 
-export const btnClassNames = (
-  { compact, variant, forIcon }: StyleProps,
-  { disabled, active }: { disabled?: boolean; active?: boolean },
+export const buttonClassNames = (
+  {
+    compact = false,
+    variant = 'default',
+    forIcon = false,
+    disabled,
+    active,
+  }: StyleProps & { disabled?: boolean; active?: boolean },
   otherClasses?: string,
 ) =>
   classNames(
-    'transition rounded flex-none text-center border flex gap-x-3 items-center justify-center',
+    'transition rounded flex-none text-center border flex gap-x-3 items-center',
     {
       'px-4 py-1.5': !compact && !forIcon,
       'px-2 py-1': compact && !forIcon,
@@ -55,43 +62,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    props.disabled
     return (
       <button
         ref={ref}
         {...props}
         disabled={props.disabled || loading}
-        className={btnClassNames(
-          { compact, variant, forIcon },
-          { disabled: props.disabled },
+        className={buttonClassNames(
+          { compact, variant, forIcon, disabled: props.disabled },
           className,
         )}
       >
-        {loading && (
-          <>
-            {/*Refference: Tailwind CSS: https://tailwindcss.com/docs/animation */}
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </>
-        )}
+        {loading && <LoadingIcon />}
         {children}
       </button>
     )
@@ -112,7 +93,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       <a
         ref={ref}
         {...props}
-        className={btnClassNames({ compact, variant, forIcon }, { active }, className)}
+        className={buttonClassNames({ compact, variant, forIcon, active }, className)}
       >
         {children}
       </a>
