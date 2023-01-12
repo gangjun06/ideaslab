@@ -151,3 +151,7 @@ input[type='number']::-webkit-outer-spin-button {
     height: calc(100vh - 80px - 32px);
   }
 }
+
+.goBack:hover > .arrow {
+  @apply -translate-x-1;
+}

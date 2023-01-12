@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { ComponentProps, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import { NextSeo } from 'next-seo'
 import toast, { Toaster } from 'react-hot-toast'
 
-import { Button, ButtonLink } from '~/components/common'
+import { Button, ButtonLink, PageBack } from '~/components/common'
 import { useLoadUserData } from '~/hooks/useAuth'
 import { trpc } from '~/lib/trpc'
 import { parseJWT } from '~/utils'
@@ -22,6 +22,7 @@ type props = {
   tinyContainer?: boolean
   guard?: 'default' | 'authOnly' | 'adminOnly' | 'guestOnly' | 'unverifyOnly'
   className?: string
+  pageBack?: ComponentProps<typeof PageBack>
 }
 
 type JWTToken = {
@@ -46,6 +47,7 @@ export const MainLayout = ({
   description,
   guard = 'default',
   className = '',
+  pageBack,
 }: props) => {
   const router = useRouter()
   const [authConfirm, setAuthConfirm] = useState<null | (JWTToken & { token: string })>(null)
@@ -84,6 +86,16 @@ export const MainLayout = ({
     if (guard === 'guestOnly' && profile.data) router.push('/')
   }, [guard, profile.data, router])
 
+  const titleComponent = useMemo(() => {
+    if (!showTitle) return <></>
+    return (
+      <>
+        {pageBack && <PageBack label={pageBack.label} to={pageBack.to} />}
+        <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
+      </>
+    )
+  }, [pageBack, showTitle, title])
+
   const content = useMemo(() => {
     if (authConfirm) {
       return (
@@ -119,9 +131,7 @@ export const MainLayout = ({
     if (guard === 'authOnly' && !profile.data) {
       return (
         <>
-          {showTitle && (
-            <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
-          )}
+          {titleComponent}
           <CenterCard>
             <div className="font-bold text-lg mt-2">
               현재 페이지는 로그인된 사용자만 이용할 수 있어요
@@ -139,9 +149,7 @@ export const MainLayout = ({
     if (guard === 'adminOnly' && !profile.data?.isAdmin) {
       return (
         <>
-          {showTitle && (
-            <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
-          )}
+          {titleComponent}
           <CenterCard>
             <div className="font-bold text-lg mt-2">관리자만 이용할 수 있는 페이지에요.</div>
           </CenterCard>
@@ -152,6 +160,7 @@ export const MainLayout = ({
     if (guard === 'authOnly' && !profile.data?.isVerified) {
       return (
         <>
+          {titleComponent}
           <CenterCard>
             <div className="font-bold text-lg mt-2">
               아이디어스랩을 이용하시려면 회원가입을 먼저 완료해주세요
@@ -168,13 +177,11 @@ export const MainLayout = ({
 
     return (
       <>
-        {showTitle && (
-          <h1 className={classNames('text-title-color font-bold text-4xl mt-2 mb-4')}>{title}</h1>
-        )}
+        {titleComponent}
         {children}
       </>
     )
-  }, [authConfirm, children, guard, login, profile.data, showTitle, title, tokenExpired, isLoading])
+  }, [authConfirm, isLoading, guard, profile.data, titleComponent, children, login, tokenExpired])
 
   return (
     <>

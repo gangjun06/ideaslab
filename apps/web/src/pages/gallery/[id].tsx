@@ -30,7 +30,12 @@ const GalleryDetailPage: NextPage = () => {
   )
 
   return (
-    <MainLayout title={data?.title ?? ''} tinyContainer showTitle>
+    <MainLayout
+      title={data?.title ?? ''}
+      tinyContainer
+      showTitle
+      pageBack={{ label: '갤러리', to: '/gallery' }}
+    >
       {isLoading && <PostLoading />}
       {data && <PostDetail post={data} />}
       {error?.data?.code === 'FORBIDDEN' && <MemberOnlyContent name="게시글" />}
