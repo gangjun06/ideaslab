@@ -30,7 +30,7 @@ const HeaderSection = () => (
         <a
           rel="noopener noreferrer"
           href="#"
-          className="px-8 py-3 text-lg font-semibold rounded bg-primary-600 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
+          className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
         >
           가입하기
         </a>
@@ -78,7 +78,7 @@ const DescriptionSection = () => {
   const InnerContent = ({ name, description }: { name: string; description: string }) => (
     <div className="flex">
       <div className="flex-shrink-0">
-        <div className="flex items-center justify-center w-12 h-12 rounded-md bg-emerald-600 text-gray-50 dark:bg-emerald-400 dark:text-gray-900">
+        <div className="flex items-center justify-center w-12 h-12 rounded-md bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900">
           <CheckIcon width={24} height={24} />
         </div>
       </div>
@@ -138,7 +138,7 @@ const DescriptionSection = () => {
 const WhyJoinSection = () => {
   const InnerContent = ({ description }: { description: string }) => (
     <div className="flex">
-      <CheckIcon width={24} height={24} className="text-emerald-700 dark:text-emerald-400" />
+      <CheckIcon width={24} height={24} className="text-primary-700 dark:text-primary-400" />
       <div className="ml-3">
         <dd className="text-gray-600 dark:text-gray-400">{description}</dd>
       </div>
@@ -168,7 +168,7 @@ const InviteSection = () => (
         자, 이제 함께 할 준비가 되었나요?
       </h1>
       <div className="flex flex-col">
-        <button className="px-8 py-3 text-lg font-semibold rounded bg-primary-600 text-gray-50 dark:bg-primary-400 dark:text-gray-900">
+        <button className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900">
           가입하기
         </button>
       </div>
