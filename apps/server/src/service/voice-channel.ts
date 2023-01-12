@@ -102,8 +102,8 @@ export const voiceChannelVisible = async (channel: VoiceChannel, toggle: boolean
 
   // Turn On
   if (toggle) {
-    channel.setName(`[비공개] ${channel.name}`)
-    channel.permissionOverwrites.cache.get(userRole)?.edit({
+    await channel.setName(`[비공개] ${channel.name}`)
+    await channel.permissionOverwrites.cache.get(userRole)?.edit({
       ViewChannel: false,
       Connect: false,
       Speak: false,

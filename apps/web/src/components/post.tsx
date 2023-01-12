@@ -16,9 +16,9 @@ import { appRouter } from '@ideaslab/server/app'
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
-import { fullTimeFormat, relativeTimeFormat } from '~/utils'
+import { relativeTimeFormat } from '~/utils'
 
-import { Button, ButtonLink, Dialog } from './common'
+import { Button, ButtonLink, Dialog, TimeDynamic } from './common'
 
 export const PostDetailModalWrapper = ({
   baseUrl = '',
@@ -192,12 +192,11 @@ export const PostDetail = ({
             />
             <div className="flex flex-col justify-center">
               <div className="text-title-color">{post.author.name}</div>
-              <time
+              <TimeDynamic
                 className="text-description-color text-sm"
-                dateTime={post.createdAt.toISOString()}
-              >
-                {fullTimeFormat(post.createdAt)}
-              </time>
+                date={post.createdAt}
+                formatType="full"
+              />
             </div>
           </a>
         </Link>
@@ -207,7 +206,7 @@ export const PostDetail = ({
             {post.category.name}
           </div>
           {post.tags.length > 0 && (
-            <div className="w-1.5 h-1.5 rounded-full bg-gray-600 dark:bg-gray-300"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-300"></div>
           )}
           {post.tags.map(({ name, id }) => (
             <div className="tag" key={id}>
@@ -330,17 +329,17 @@ const Comment = ({
           <div className="ml-2 text-description-color text-ellipsis text-sm">{parent.content}</div>
         </div>
       )}
-      <footer className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-2">
         <div className="flex items-center">
-          <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+          <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
             <Image width={24} height={24} className="mr-2 rounded-full" src={avatar} alt="" />
             <div className="ml-1.5">{username}</div>
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            <time dateTime={time.toISOString()}>{relativeTimeFormat(time)}</time>
-          </p>
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            <TimeDynamic date={time} formatType="relative" />
+          </div>
         </div>
-      </footer>
+      </div>
       <p className="text-gray-500 dark:text-gray-400">{content}</p>
     </article>
   )

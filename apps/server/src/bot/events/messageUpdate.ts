@@ -1,28 +1,40 @@
-import { ChannelType } from 'discord.js'
+import { ChannelType, MessageType } from 'discord.js'
 
 import { dbClient } from '@ideaslab/db'
 
 import { Event } from '~/bot/base/event'
 import { ignoreError } from '~/utils'
 
-export default new Event('messageUpdate', async (client, message) => {
-  if (message.channel.type !== ChannelType.PublicThread) return
-  if (!message.channel.parentId) return
-  if (message.channel.parent?.type !== ChannelType.GuildForum) return
+import { currentGuildChannel } from '../base/client'
 
-  if (!message.content) return
+export default new Event('messageUpdate', async (client, message, newEventMessage) => {
+  let newMessage = newEventMessage
+  if (!newEventMessage.author) {
+    const res = await currentGuildChannel(newEventMessage.id)
+    if (!res || !res.isTextBased()) return
+    newMessage = await res.messages.fetch(res.id)
+  }
+
+  if (newMessage.channel.type !== ChannelType.PublicThread) return
+  if (!newMessage.channel.parentId) return
+  if (newMessage.channel.parent?.type !== ChannelType.GuildForum) return
+  if (newMessage.type !== MessageType.Default && message.type !== MessageType.Reply) return
+  if (newMessage.author?.bot) return
+
+  if (!newMessage.content?.length) return
 
   try {
     // Update Comment
     await dbClient.comment.update({
       where: {
-        discordId: message.id,
+        discordId: newMessage.id,
       },
       data: {
-        content: message.content,
+        content: newMessage.content,
       },
     })
-  } catch {
+  } catch (e) {
+    console.error(e)
     // Update Gallery Post
     await ignoreError(
       dbClient.post.update({
@@ -30,7 +42,7 @@ export default new Event('messageUpdate', async (client, message) => {
           discordId: message.channel.id,
         },
         data: {
-          content: message.content,
+          content: newMessage.content,
         },
       }),
     )

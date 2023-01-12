@@ -121,11 +121,11 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
               )}
               <div className="flex justify-around w-full mt-4">
                 <div className="flex-col text-center">
-                  <div className="text-lg font-bold text-title-color">작성글</div>
+                  <div className="text-lg font-semibold text-title-color">작성글</div>
                   <div className="text-md text-subtitle-color">{profile?._count.posts}</div>
                 </div>
                 <div className="flex-col text-center">
-                  <div className="text-xl font-bold text-title-color">가입일</div>
+                  <div className="text-lg font-semibold text-title-color">가입일</div>
                   <div className="text-md text-subtitle-color">
                     {dateShortFormat(profile?.createdAt)}
                   </div>
@@ -135,7 +135,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
           )}
         </div>
         <div className="w-full">
-          <PostDetailModalWrapper baseUrl={`/@${router.query.id?.slice(1)}`}>
+          <PostDetailModalWrapper baseUrl={`/@${profileHandle}`}>
             {({ showDetail }) => (
               <InfiniteScroll
                 className="h-full w-full"

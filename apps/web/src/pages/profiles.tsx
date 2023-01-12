@@ -140,11 +140,11 @@ const ProfilesPage = () => {
 
                       <div className="flex justify-around w-full mt-2.5 flex-grow-0">
                         <div className="flex-col text-center">
-                          <div className="text-md text-title-color">작성글</div>
+                          <div className="font-semibold text-title-color">작성글</div>
                           <div className="text-subtitle-color text-sm">{profile._count.posts}</div>
                         </div>
                         <div className="flex-col text-center">
-                          <div className="text-md font-bold text-title-color">가입일</div>
+                          <div className="font-semibold text-title-color">가입일</div>
                           <div className="text-subtitle-color text-sm">
                             {relativeTimeFormat(profile.createdAt)}
                           </div>

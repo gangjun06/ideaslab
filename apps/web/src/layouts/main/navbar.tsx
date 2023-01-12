@@ -66,7 +66,7 @@ export const Navbar = () => {
   return (
     <Disclosure
       as="nav"
-      className="shadow bg-white dark:bg-gray-800 z-10 fixed top-0 w-full flex flex-col"
+      className="shadow bg-white/70 dark:bg-gray-800/70 z-10 fixed top-0 w-full flex flex-col backdrop-blur-lg"
     >
       <div className="flex items-center" style={{ height: 'var(--nav-height)' }}>
         <div className="px-4 container max-w-4xl mx-auto flex justify-between items-center">
@@ -89,7 +89,10 @@ export const Navbar = () => {
             )}
             <ThemeChanger />
             <Disclosure.Button
-              className={buttonClassNames({ forIcon: true, variant: 'default' }, 'block md:hidden')}
+              className={buttonClassNames(
+                { forIcon: true, variant: 'default' },
+                'block md:hidden bg-opacity-0 backdrop-blur-md',
+              )}
             >
               <span className="sr-only">메뉴 열기</span>
               <Bars3Icon width={18} height={18} />
@@ -98,7 +101,7 @@ export const Navbar = () => {
         </div>
       </div>
       <Transition type="size">
-        <Disclosure.Panel className="flex flex-col px-4 container max-w-4xl mx-auto pb-4">
+        <Disclosure.Panel className="flex-col px-4 container max-w-4xl mx-auto pb-4 flex md:hidden">
           <NavItems isMobile={true} />
         </Disclosure.Panel>
       </Transition>

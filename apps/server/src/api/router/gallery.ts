@@ -92,6 +92,9 @@ export const galleryRouter = router({
         ...(ctx.session.id
           ? {
               comments: {
+                orderBy: {
+                  createdAt: 'asc',
+                },
                 select: {
                   discordId: true,
                   content: true,

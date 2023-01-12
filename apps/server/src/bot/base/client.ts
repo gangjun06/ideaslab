@@ -1,4 +1,4 @@
-import { Client, ClientEvents, ClientOptions, Collection } from 'discord.js'
+import { Client, ClientEvents, ClientOptions, Collection, Partials } from 'discord.js'
 import { config as dotenvConfig } from 'dotenv'
 
 import config from '~/config'
@@ -57,7 +57,18 @@ export default class BotClient extends Client {
 }
 
 export const initClient = async () => {
-  client = new BotClient()
+  client = new BotClient({
+    intents: [
+      'Guilds',
+      'GuildVoiceStates',
+      'GuildMessages',
+      'MessageContent',
+      'GuildWebhooks',
+      'GuildIntegrations',
+      'GuildMembers',
+    ],
+    partials: [Partials.Message],
+  })
 }
 
 export const currentGuild = async () => {
@@ -73,6 +84,15 @@ export const currentGuildMember = async (memberId: string) => {
   const cached = guild.members.cache.get(memberId)
   if (!cached) {
     return guild.members.fetch(memberId)
+  }
+  return cached
+}
+
+export const currentGuildChannel = async (channelId: string) => {
+  const guild = await currentGuild()
+  const cached = guild.channels.cache.get(channelId)
+  if (!cached) {
+    return guild.channels.fetch(channelId)
   }
   return cached
 }

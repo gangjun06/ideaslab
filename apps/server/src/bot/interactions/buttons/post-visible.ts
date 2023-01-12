@@ -54,11 +54,15 @@ export default new Button(['post-visible'], async (client, interaction) => {
 
   await interaction.editReply({
     embeds: [
-      new Embed(client, 'success').setTitle(
-        `공개설정이 성공적으로 ${
-          post.visible === DefaultVisible.MemberOnly ? '공개' : '맴버 공개'
-        }로 변경되었어요.`,
-      ),
+      new Embed(client, 'success')
+        .setTitle(
+          `공개설정이 성공적으로 \`${
+            post.visible === DefaultVisible.MemberOnly ? '공개' : '맴버 공개'
+          }\`로 변경되었어요.`,
+        )
+        .setDescription(
+          '맴버 공개: 아이디어스 랩 맴버만 게시글을 확인할 수 있어요.\n공개: 모든 사람이 아이디어스 랩 웹사이트를 통해 게시글을 확인할 수 있어요.',
+        ),
     ],
   })
 })
