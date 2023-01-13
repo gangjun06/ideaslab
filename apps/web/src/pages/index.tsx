@@ -10,7 +10,7 @@ import { MainLayout } from '../layouts'
 
 const Home: NextPage = () => {
   return (
-    <MainLayout title="아티스트들을 위한 디스코드 커뮤니티">
+    <MainLayout title="창작자들을 위한 디스코드 커뮤니티" guard="guestOnly">
       <HomePage />
     </MainLayout>
   )

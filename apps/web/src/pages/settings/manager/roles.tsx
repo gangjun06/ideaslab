@@ -47,15 +47,14 @@ const RoleSetting: NextPage = () => {
   useEffect(() => {
     if (form.getValues().roles?.length > 0) return
     if (!roles) return
-    form.setValue(
-      'roles',
-      roles?.map(({ defaultOrder, discordRole, name, id }) => ({
+    form.reset({
+      roles: roles.map(({ defaultOrder, discordRole, name, id }) => ({
         id,
         defaultOrder,
         discordRole,
         name,
       })),
-    )
+    })
   }, [form, roles])
 
   const {

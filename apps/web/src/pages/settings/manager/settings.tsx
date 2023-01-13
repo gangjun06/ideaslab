@@ -41,10 +41,9 @@ const SettingsPage: NextPage = () => {
   useEffect(() => {
     if (form.getValues()?.settings?.length > 0) return
     if (!settings) return
-    form.setValue(
-      'settings',
-      settings.map(({ key, value }) => ({ key, value })),
-    )
+    form.reset({
+      settings: settings.map(({ key, value }) => ({ key, value })),
+    })
   }, [form, settings])
 
   const {
@@ -84,7 +83,6 @@ const SettingsPage: NextPage = () => {
 const FieldArray = ({
   control,
   register,
-  error,
   settings,
 }: {
   settings: typeof appRouter.admin.loadSettings['_def']['_output_out']
@@ -92,7 +90,7 @@ const FieldArray = ({
   register: UseFormRegister<z.TypeOf<typeof adminSaveSettingsValidator>>
   error: string
 }) => {
-  const { fields, append, move, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: 'settings',
   })

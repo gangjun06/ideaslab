@@ -1,54 +1,63 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import Typed from 'react-typed'
 
 import MainImage from '~/assets/main-image.svg'
 import { trpc } from '~/lib/trpc'
 
-const HeaderSection = () => (
-  <div className="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between gap-x-8 mt-12">
-    <div className="flex flex-col justify-center p-6 text-center rounded-sm lg:text-left w-full flex-1">
-      <h1 className="text-4xl font-bold sm:text-6xl">
-        <Typed
-          strings={[
-            '당신의 <span class="title-highlight">아이디어가</span><br /> 현실로 이루길',
-            '<span class="title-highlight">아이디어스</span>랩',
-          ]}
-          smartBackspace
-          typeSpeed={40}
-          backSpeed={50}
-        />
-      </h1>
-      <div className="mt-6 mb-8 text-lg sm:mb-12 text-subtitle-color">
-        <p className="inline title-highlight">아이디어스랩</p>
-        은 창작자의 아이디어가 현실로 이루어지도록 도와주는 디스코드 서버입니다.
-        <br />
-        여러 분야의 창작자와 작업, 아이디어 논의, 프로젝트 진행 등을 할 수 있어요
-        <br />
-      </div>
-      <div className="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
-        <a
-          rel="noopener noreferrer"
-          href="#"
-          className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
-        >
-          가입하기
-        </a>
-        <a
-          rel="noopener noreferrer"
-          href="#"
-          className="px-8 py-3 text-lg font-semibold border rounded border-gray-800 dark:border-gray-100"
-        >
-          둘러보기
-        </a>
-      </div>
-    </div>
-    <div className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 flex-1">
-      <Image src={MainImage} alt="" className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112" />
-    </div>
-  </div>
-)
+const HeaderSection = () => {
+  return (
+    <div className="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between gap-x-8 mt-12">
+      <div className="flex flex-col justify-center p-2 text-center rounded-sm lg:px-0 xl:px-6 lg:text-left w-full flex-1">
+        <div className="block sm:hidden mb-6 -mt-8">
+          <Image src="/logo-once.gif" width={150} height={150} className="rounded-full" alt="" />
+        </div>
+        <h1 className="text-4xl font-bold sm:text-6xl">
+          <Typed
+            strings={[
+              '당신의 <span class="title-highlight">아이디어가</span><br /> 현실로 이루길',
+              '<span class="title-highlight">아이디어스</span>랩',
+            ]}
+            smartBackspace
+            typeSpeed={40}
+            backSpeed={50}
+          />
+        </h1>
+        <div className="mt-6 mb-8 text-lg sm:mb-12 text-subtitle-color">
+          <p className="inline title-highlight">아이디어스랩</p>
+          은 창작자의 아이디어가
+          <br className="block sm:hidden" /> 현실로 이루어지도록 도와주는
+          <br className="block sm:hidden" />
+          디스코드 서버입니다.
+          <br />
+          여러 분야의 창작자와 작업, 아이디어 논의, 프로젝트 진행 등을 할 수 있어요
+          <br />
+        </div>
+        <div className="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
+          <a
+            rel="noopener noreferrer"
+            href="#"
+            className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
+          >
+            가입하기
+          </a>
 
+          <Link href="/settings/profile" passHref>
+            <a className="px-8 py-3 text-lg font-semibold border rounded border-gray-800 dark:border-gray-100">
+              둘러보기
+            </a>
+          </Link>
+        </div>
+      </div>
+      <div className="hidden items-center justify-center  sm:flex p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 flex-1">
+        <Image src={MainImage} alt="" className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112" />
+      </div>
+    </div>
+  )
+}
+
+// eslint-disable-next-line unused-imports/no-unused-vars
 const StatSection = () => {
   const { data: stat } = trpc.info.stat.useQuery(undefined, { trpc: { ssr: true } })
 
@@ -62,11 +71,15 @@ const StatSection = () => {
           <p className="text-sm sm:text-base">창작자들</p>
         </div>
         <div className="flex flex-col justify-start m-2 lg:m-6">
-          <p className="text-4xl font-bold leading-none lg:text-6xl">N</p>
+          <p className="text-4xl font-bold leading-none lg:text-6xl">
+            {stat ? `${stat.voiceChatUser}` : '불러오는중'}
+          </p>
           <p className="text-sm sm:text-base">현재 음성채팅방 사용자</p>
         </div>
         <div className="flex flex-col justify-start m-2 lg:m-6">
-          <p className="text-4xl font-bold leading-none lg:text-6xl">M</p>
+          <p className="text-4xl font-bold leading-none lg:text-6xl">
+            {stat ? `${stat.articleCount}` : '불러오는중'}
+          </p>
           <p className="text-sm sm:text-base">등록된 게시글</p>
         </div>
       </div>
@@ -164,7 +177,7 @@ const WhyJoinSection = () => {
 const InviteSection = () => (
   <section className="py-6">
     <div className="container mx-auto flex flex-col lg:flex-row	items-center justify-center lg:justify-between p-4 space-y-8 lg:space-y-0 md:p-10 md:px-24 xl:px-48">
-      <h1 className="text-5xl font-bold leading-none text-center">
+      <h1 className="text-4xl font-bold leading-none text-center">
         자, 이제 함께 할 준비가 되었나요?
       </h1>
       <div className="flex flex-col">
@@ -180,7 +193,7 @@ export const HomePage = () => {
   return (
     <>
       <HeaderSection />
-      <StatSection />
+      {/* <StatSection /> */}
       <div className="bg-gray-100 dark:bg-gray-800 dark:text-gray-100">
         <DescriptionSection />
         <WhyJoinSection />

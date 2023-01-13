@@ -1,6 +1,7 @@
 import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import {
   ArchiveBoxIcon,
   ChatBubbleLeftRightIcon,
@@ -14,6 +15,7 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { appRouter } from '@ideaslab/server/app'
 
 import { useDisclosure } from '~/hooks/useDisclosure'
+import { useResponsiveSize } from '~/hooks/useWindowe'
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
 import { relativeTimeFormat } from '~/utils'
@@ -27,16 +29,22 @@ export const PostDetailModalWrapper = ({
   children: ({ showDetail }: { showDetail: (id: number) => void }) => ReactNode
   baseUrl?: string
 }) => {
+  const router = useRouter()
   const [showDetailModal, handleShowDetailModal] = useDisclosure()
   const [id, setId] = useState<number | null>(null)
+  const responsiveSize = useResponsiveSize()
 
   const showDetail = useCallback(
     (id: number) => {
+      if (responsiveSize === 'xs') {
+        router.push(`/gallery/${id}`)
+        return
+      }
       setId(id)
       window.history.pushState(null, '', `/gallery/${id}`)
       handleShowDetailModal.open()
     },
-    [handleShowDetailModal],
+    [handleShowDetailModal, responsiveSize, router],
   )
 
   const onClose = useCallback(() => {

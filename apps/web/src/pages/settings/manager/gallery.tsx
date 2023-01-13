@@ -52,15 +52,14 @@ const GallerySetting: NextPage = () => {
   useEffect(() => {
     if (form.getValues().categories?.length > 0) return
     if (!settings) return
-    form.setValue(
-      'categories',
-      settings?.categories.map(({ defaultOrder, discordChannel, name, id }) => ({
+    form.reset({
+      categories: settings.categories.map(({ defaultOrder, discordChannel, name, id }) => ({
         defaultOrder,
         discordChannel,
         name,
         id,
       })),
-    )
+    })
   }, [form, settings])
 
   const {

@@ -8,6 +8,7 @@ import {
   TagIcon,
   UserCircleIcon,
   UserGroupIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 
@@ -91,18 +92,23 @@ export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
         <div className="ml-4 flex flex-row justify-between w-full items-center">
           <div className="flex flex-col">
             <div
-              className="flex items-center gap-3 text-xl font-bold text-title-color"
+              className="flex flex-col sm:flex-row sm:items-center gap-x-3 text-lg font-bold text-title-color"
               role="presentation"
             >
               <div className="">{`${profile?.isAdmin ? ' [관리자]' : ''} ${profile?.name}`}</div>
-              <div className="mb-1 font-normal text-gray-400">/</div>
-              <div>{curPage?.name}</div>
+              <div className="flex gap-x-3 sm:items-center">
+                <div className="mb-1 font-normal text-gray-400">/</div>
+                <div>{curPage?.name}</div>
+              </div>
             </div>
-            <div className="text-description-color">{curPage?.description}</div>
+            <div className="text-description-color text-sm">{curPage?.description}</div>
           </div>
           {profile?.handleDisplay && (
             <Link href={`/@${profile?.handleDisplay}`} passHref>
-              <ButtonLink>프로필 보기</ButtonLink>
+              <ButtonLink>
+                <div className="sr-only sm:not-sr-only">프로필 보기</div>
+                <UserIcon className="block sm:hidden" width={20} height={20} />
+              </ButtonLink>
             </Link>
           )}
         </div>

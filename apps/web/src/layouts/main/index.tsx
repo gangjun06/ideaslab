@@ -83,7 +83,7 @@ export const MainLayout = ({
   }, [authConfirm?.token, loginWithToken, router])
 
   useEffect(() => {
-    if (guard === 'guestOnly' && profile.data) router.push('/')
+    if (guard === 'guestOnly' && profile.data) router.push('/user-home')
   }, [guard, profile.data, router])
 
   const titleComponent = useMemo(() => {

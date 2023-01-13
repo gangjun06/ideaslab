@@ -28,8 +28,8 @@ const SelectContent = <T extends number | string>(
         <div ref={ref} className="relative">
           <FormBlock {...props} customLabel={Listbox.Label} name={name}>
             <Listbox.Button className="relative w-full cursor-default rounded-lg border text-subtitle-color border-base-color bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left sm:text-sm">
-              <span className="bl0ck truncate">
-                {options.find((o) => o.value === value)?.label ?? '항목을 선택하세요...'}
+              <span className="block truncate">
+                {options.find((o) => o.value === value)?.label ?? '항목을 선택하세요.'}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronDownIcon

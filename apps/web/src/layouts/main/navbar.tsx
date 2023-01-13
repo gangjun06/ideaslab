@@ -73,7 +73,7 @@ export const Navbar = () => {
           <Link href="/" passHref>
             <a className="flex items-center gap-x-3">
               <Image width={32} height={32} alt="" src="/favicon-196.png" />
-              <span className="font-bold text-xl">아이디어스랩</span>
+              <span className="font-bold text-lg sm:text-xl">아이디어스랩</span>
             </a>
           </Link>
           <div className={'hidden lg:flex gap-x-4 items-center'} id="main-menu">
