@@ -3,9 +3,8 @@ import { TooltipProvider } from 'react-tooltip'
 
 import { trpc } from '~/lib/trpc'
 
-import '../styles/globals.scss'
 import 'react-tooltip/dist/react-tooltip.css'
-import '../styles/tooltip.scss'
+import '../styles/globals.scss'
 
 function App({ Component, pageProps }: AppProps) {
   return (

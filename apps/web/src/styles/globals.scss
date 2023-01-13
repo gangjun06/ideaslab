@@ -155,3 +155,11 @@ input[type='number']::-webkit-outer-spin-button {
 .goBack:hover > .arrow {
   @apply -translate-x-1;
 }
+
+.tooltip {
+	@apply bg-white rounded-lg border border-base-color text-subtitle-color backdrop-blur-xl dark:bg-gray-800;
+}
+
+hr {
+  @apply border-gray-300 dark:border-gray-600 border-dashed;
+}

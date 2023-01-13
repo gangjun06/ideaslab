@@ -77,23 +77,19 @@ const CustomTooltip = (data: CalendarTooltipProps) => {
 }
 
 const VoiceChat = () => {
-  const [start, setStart] = useState<string>('2023-1')
+  const [year, setYear] = useState<number>(new Date().getFullYear())
   const responsiveSize = useResponsiveSize()
 
-  const { startYear, startMonth } = useMemo(() => {
-    const splited = start.split('-')
-    return { startYear: parseInt(splited[0]), startMonth: parseInt(splited[1]) }
-  }, [start])
-
   const { data, isLoading } = trpc.statistics.voiceLog.useQuery({
-    startYear,
-    startMonth,
-    endYear: 2023,
+    startYear: year,
+    startMonth: 1,
+    endYear: year,
     endMonth: 12,
   })
 
   const formatedData = useMemo(() => {
     const date = new Date()
+    date.setHours(0, 0, 0, 0)
     const isLeapYear =
       (date.getFullYear() % 4 == 0 && date.getFullYear() % 100 != 0) ||
       date.getFullYear() % 400 == 0
@@ -110,18 +106,27 @@ const VoiceChat = () => {
     const list = []
     const dayList = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     for (let i = 0; i < 12; i++) {
-      const date = new Date()
-      date.setMonth(i + 1)
-      const monthList = []
+      date.setMonth(i)
+      date.setDate(1)
+
+      const monthList: (null | { dateStr: string; sum: number })[] = []
+      monthList.push(...new Array(date.getDay()).fill(null))
+
       for (let j = 0; j < dayList[i]; j++) {
-        const item = dataMap[`${i}${j}`]
-        if (item) monthList.push(item)
-        else monthList.push(0)
+        const item = dataMap[`${i}${j + 1}`]
+        const dateStr = Intl.DateTimeFormat('ko', {
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+        }).format(new Date(`${year}-${i + 1}-${j + 1}`))
+
+        if (item) monthList.push({ dateStr, sum: item })
+        else monthList.push({ dateStr, sum: 0 })
       }
       list.push(monthList)
     }
     return list
-  }, [data])
+  }, [data, year])
 
   return (
     <>
@@ -136,19 +141,18 @@ const VoiceChat = () => {
       <div className="card p-4">
         <div className="flex justify-between items-center">
           <div className="text-lg text-title-color">통화방 사용 통계</div>
-          <Select
-            options={[
-              { label: '2023년 1월', value: '2023-1' },
-              { label: '2023년 2월', value: '2023-2' },
-            ]}
-            value={start}
-            onChange={(value) => {
-              setStart(value as string)
-            }}
-          />
+          <div className="w-32">
+            <Select
+              options={[{ label: '2023년', value: 2023 }]}
+              value={year}
+              onChange={(value) => {
+                setYear(value as number)
+              }}
+            />
+          </div>
         </div>
         <div className="mt-2">
-          <Tooltip id="calendar-tooltip" className="modern-tooltip" />
+          <Tooltip id="calendar-tooltip" className="tooltip" />
           <div className="grid grid-cols-3 sm:grid-cols-4 grid-flow-row gap-5 w-full px-4">
             {formatedData.map((monthData, month) => (
               <div key={month} className="flex flex-col gap-y-1 items-center justify-center w-full">
@@ -171,28 +175,31 @@ const VoiceChat = () => {
                         ))}
                       </>
                     )}
-                    {monthData.map((sum, day) => (
-                      <TooltipWrapper
-                        tooltipId="calendar-tooltip"
-                        html={`<b>${month + 1}월 ${day + 1}일</b>${
-                          sum > 0 ? ` ${formatMinutes(sum)}` : ''
-                        }`}
-                        key={day}
-                      >
-                        <div
-                          className={classNames('rounded-sm h-4 w-4', {
-                            'bg-gray-200 dark:bg-gray-700': sum < 1,
-                            'bg-primary-100 dark:bg-primary-900': sum >= 1 && sum < 10,
-                            'bg-primary-200 dark:bg-primary-800': sum >= 10 && sum < 30,
-                            'bg-primary-300 dark:bg-primary-700': sum >= 30 && sum < 60,
-                            'bg-primary-400 dark:bg-primary-600': sum >= 60 && sum < 120,
-                            'bg-primary-500 dark:bg-primary-500': sum >= 120 && sum < 180,
-                            'bg-primary-600 dark:bg-primary-400': sum >= 180 && sum < 300,
-                            'bg-primary-700 dark:bg-primary-300': sum >= 300,
-                          })}
-                        />
-                      </TooltipWrapper>
-                    ))}
+                    {monthData.map((data, index) => {
+                      if (data === null)
+                        return <div key={index} className="rounded-sm h-4 w-4"></div>
+                      const { sum, dateStr } = data
+                      return (
+                        <TooltipWrapper
+                          tooltipId="calendar-tooltip"
+                          html={`<b>${dateStr}</b>${sum > 0 ? ` ${formatMinutes(sum)}` : ''}`}
+                          key={index}
+                        >
+                          <div
+                            className={classNames('rounded-sm h-4 w-4', {
+                              'bg-gray-200 dark:bg-gray-700': sum < 1,
+                              'bg-primary-100 dark:bg-primary-900': sum >= 1 && sum < 10,
+                              'bg-primary-200 dark:bg-primary-800': sum >= 10 && sum < 30,
+                              'bg-primary-300 dark:bg-primary-700': sum >= 30 && sum < 60,
+                              'bg-primary-400 dark:bg-primary-600': sum >= 60 && sum < 120,
+                              'bg-primary-500 dark:bg-primary-500': sum >= 120 && sum < 180,
+                              'bg-primary-600 dark:bg-primary-400': sum >= 180 && sum < 300,
+                              'bg-primary-700 dark:bg-primary-300': sum >= 300,
+                            })}
+                          />
+                        </TooltipWrapper>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
