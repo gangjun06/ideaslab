@@ -4,7 +4,13 @@ import { TooltipProvider } from 'react-tooltip'
 import { trpc } from '~/lib/trpc'
 
 import 'react-tooltip/dist/react-tooltip.css'
+import 'swiper/css'
 import '../styles/globals.scss'
+import 'swiper/css'
+
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
 
 function App({ Component, pageProps }: AppProps) {
   return (

@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import { ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -62,6 +62,85 @@ export const PostDetailModalWrapper = ({
   )
 }
 
+export const PostView2 = ({
+  post,
+  onClick,
+}: {
+  post: Unarray<typeof appRouter.gallery.posts['_def']['_output_out']>
+  onClick?: () => void
+}) => {
+  const image = useMemo(() => {
+    if (post.attachments.length < 1) return null
+    if (!(post.attachments[0] as any)?.contentType?.includes('image')) return null
+    return post.attachments[0] as {
+      url: string
+      width: number
+      height: number
+      contentType: string
+      spoiler: boolean
+    }
+  }, [post])
+
+  return (
+    <div
+      className={classNames(
+        'bg-white dark:bg-gray-700/50 border-base-color rounded-lg galleryUploadCard relative flex flex-col px-4 py-4 drop-shadow-sm border',
+      )}
+      key={post.id}
+      onClick={(e) => {
+        if (
+          (e.target as HTMLElement).classList.contains('no-click') ||
+          (e.target as HTMLElement).parentElement?.classList.contains('no-click')
+        )
+          return
+        if (typeof onClick === 'function') onClick()
+      }}
+    >
+      <Link href={`/@${post.author.handle}`} passHref>
+        <a className="flex gap-x-2 items-center mb-2 no-click">
+          <Image
+            src={post.author.avatar}
+            width={40}
+            height={40}
+            className="rounded-full no-click"
+            alt=""
+          />
+          <div className="flex flex-col justify-center no-click">
+            <div className={classNames('text-title-color')}>{post.author.name}</div>
+            <div className="text-description-color text-sm">
+              {relativeTimeFormat(post.createdAt)}
+            </div>
+          </div>
+        </a>
+      </Link>
+      <div className="text-title-color">{post.title}</div>
+
+      <div
+        className={classNames(
+          'w-full mt-4 relative h-48 rounded-lg',
+          image ? '' : 'border border-base-color ',
+        )}
+      >
+        {image ? (
+          <Image src={image.url} alt="" className="rounded-lg" layout="fill" objectFit="cover" />
+        ) : (
+          <>
+            <div className="p-3 h-full break-words text-ellipsis line-clamp-[7]">
+              {post.content}
+            </div>
+            <div className="absolute top-0 left-0 w-full h-full pt-32">
+              <div className="bg-gradient-to-t from-gray-100 dark:from-gray-800 to-transparent h-full w-full" />
+            </div>
+          </>
+        )}
+        <div className="absolute left-0 bottom-0 p-2 z-10">
+          <div className={'tag small'}>{post.category.name}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const PostView = ({
   post,
   onClick,
@@ -70,13 +149,22 @@ export const PostView = ({
   onClick?: () => void
 }) => {
   const image = useMemo(() => {
-    if (post.attachments.length === 0) return null
-    return post.attachments[0] as { url: string; width: number; height: number }
+    if (post.attachments.length < 1) return null
+    if (!(post.attachments[0] as any)?.contentType?.includes('image')) return null
+    return post.attachments[0] as {
+      url: string
+      width: number
+      height: number
+      contentType: string
+      spoiler: boolean
+    }
   }, [post])
 
   return (
     <div
-      className="bg-white dark:bg-gray-700/50 border-base-color rounded-lg galleryUploadCard relative flex flex-col px-4 py-4 drop-shadow-sm border"
+      className={classNames(
+        'bg-white dark:bg-gray-700/50 border-base-color rounded-lg galleryUploadCard relative flex flex-col px-4 py-4 drop-shadow-sm border',
+      )}
       key={post.id}
       onClick={(e) => {
         if (
@@ -102,13 +190,13 @@ export const PostView = ({
         <a className="flex gap-x-2 items-center mb-2 no-click">
           <Image
             src={post.author.avatar}
-            width={48}
-            height={48}
+            width={40}
+            height={40}
             className="rounded-full no-click"
             alt=""
           />
           <div className="flex flex-col justify-center no-click">
-            <div className="text-title-color">{post.author.name}</div>
+            <div className={classNames('text-title-color')}>{post.author.name}</div>
             <div className="text-description-color text-sm">
               {relativeTimeFormat(post.createdAt)}
             </div>
@@ -121,7 +209,7 @@ export const PostView = ({
       </div>
 
       <div className="flex">
-        <div className="tag">{post.category.name}</div>
+        <div className={classNames('tag')}>{post.category.name}</div>
       </div>
     </div>
   )

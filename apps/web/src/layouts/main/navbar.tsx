@@ -47,7 +47,12 @@ export const Navbar = () => {
 
   const NavItems = ({ isMobile }: { isMobile: boolean }) => (
     <>
-      <NavItem name="홈" href="/" isActive={pathname === '/'} isMobile={isMobile} />
+      <NavItem
+        name="홈"
+        href={profile ? '/user-home' : '/'}
+        isActive={pathname === '/'}
+        isMobile={isMobile}
+      />
       <NavItem
         name="프로필"
         href="/profiles"

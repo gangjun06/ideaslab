@@ -37,7 +37,7 @@ const HeaderSection = () => {
         <div className="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
           <a
             rel="noopener noreferrer"
-            href="#"
+            href={process.env.NEXT_PUBLIC_DISCORD_INVITE_URL}
             className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
           >
             가입하기
@@ -181,9 +181,12 @@ const InviteSection = () => (
         자, 이제 함께 할 준비가 되었나요?
       </h1>
       <div className="flex flex-col">
-        <button className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900">
+        <a
+          className="px-8 py-3 text-lg font-semibold rounded bg-primary-500 text-gray-50 dark:bg-primary-400 dark:text-gray-900"
+          href={process.env.NEXT_PUBLIC_DISCORD_INVITE_URL}
+        >
           가입하기
-        </button>
+        </a>
       </div>
     </div>
   </section>

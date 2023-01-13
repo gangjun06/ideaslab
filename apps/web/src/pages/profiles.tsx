@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import {
   BarsArrowDownIcon,
   DocumentDuplicateIcon,
@@ -9,9 +7,9 @@ import {
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
+import { ProfileView } from '~/components/profile'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
-import { relativeTimeFormat } from '~/utils'
 
 const LIMIT = 50
 
@@ -94,66 +92,7 @@ const ProfilesPage = () => {
               .fill({})
               .map((_, index) => <div key={index} className={`h-48 bg-pulse rounded w-full`} />)
           : profiles?.pages.map((page) =>
-              page.map((profile) => (
-                <div
-                  key={profile.discordId}
-                  className="bg-white dark:bg-gray-700/50 border-base-color rounded-lg relative flex flex-col px-4 py-4 border drop-shadow-sm"
-                >
-                  <Link href={`/@${profile.handleDisplay}`} passHref>
-                    <a className="flex flex-col mb-2 no-click h-full" onClick={() => {}}>
-                      <div className="flex flex-col h-full flex-grow">
-                        <div className="flex gap-x-2 items-center">
-                          <Image
-                            src={profile.avatar}
-                            width={48}
-                            height={48}
-                            className="rounded-full"
-                            alt={`${profile.name}의 프로필 사진`}
-                          />
-                          <div className="flex flex-col">
-                            <div className="text-title-color">{profile.name}</div>
-                            <div className="text-description-color text-sm">
-                              {`@${profile.handleDisplay}`}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-description-color mt-2 text-sm">
-                          {profile.introduce}
-                        </div>
-                        <div className="flex gap-x-2 mt-2">
-                          {profile.roles?.map((item, index) => (
-                            <div key={index} className="tag small">
-                              {item.name}
-                            </div>
-                          ))}
-                        </div>
-                        {profile.links.length > 0 && (
-                          <div className="mt-2">
-                            {profile.links.map((link: any, index) => (
-                              <a key={index} href={link?.url ?? ''} className="title-highlight">
-                                {link?.name}
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex justify-around w-full mt-2.5 flex-grow-0">
-                        <div className="flex-col text-center">
-                          <div className="font-semibold text-title-color">작성글</div>
-                          <div className="text-subtitle-color text-sm">{profile._count.posts}</div>
-                        </div>
-                        <div className="flex-col text-center">
-                          <div className="font-semibold text-title-color">가입일</div>
-                          <div className="text-subtitle-color text-sm">
-                            {relativeTimeFormat(profile.createdAt)}
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </Link>
-                </div>
-              )),
+              page.map((profile) => <ProfileView key={profile.discordId} data={profile} />),
             )}
       </InfiniteScroll>
     </MainLayout>

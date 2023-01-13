@@ -54,6 +54,8 @@ export const galleryRouter = router({
         visible: ctx.session.id ? undefined : DefaultVisible.Public,
       },
     })
+
+    // {post.content.length > 300 ? post.content.slice(0, 300) + ' ...' : post.content}
     return result
   }),
   postDetail: publicProcedure.input(detailValidator).query(async ({ ctx, input: { id } }) => {

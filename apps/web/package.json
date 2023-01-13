@@ -44,11 +44,13 @@
     "react-use-cookie": "^1.4.0",
     "sass": "^1.57.1",
     "superjson": "^1.12.0",
+    "swiper": "^8.4.5",
     "swr": "^1.3.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
     "@ideaslab/validator": "*",
+    "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.8",
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",

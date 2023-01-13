@@ -49,6 +49,8 @@
 
 :root {
   --nav-height: 76px;
+  // swiper
+  --swiper-navigation-size: 24px !important;
 }
 
 * {
@@ -63,6 +65,7 @@ body,
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
     Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   height: 100%;
+  overflow-x: hidden;
 }
 
 html.dark {
@@ -137,15 +140,15 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 #main {
-  min-height: calc(100vh  - 100px);
+  min-height: calc(100vh - 100px);
 }
 .center-card-wrapper {
-  height: calc(100vh  - 100px - 32px);
+  height: calc(100vh - 100px - 32px);
 }
 
 @media (min-width: 640px) {
   #main {
-    min-height: calc(100vh  - 80px);
+    min-height: calc(100vh - 80px);
   }
   .center-card-wrapper {
     height: calc(100vh - 80px - 32px);
@@ -157,9 +160,17 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .tooltip {
-	@apply bg-white rounded-lg border border-base-color text-subtitle-color backdrop-blur-xl dark:bg-gray-800;
+  @apply bg-white rounded-lg border border-base-color text-subtitle-color backdrop-blur-xl dark:bg-gray-800;
 }
 
 hr {
   @apply border-gray-300 dark:border-gray-600 border-dashed;
+}
+
+.mySwiper {
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply text-primary-500 bg-white/60 dark:bg-gray-800/60  backdrop-blur-lg shadow-sm;
+    @apply w-12 h-12 border border-base-color rounded-full;
+  }
 }

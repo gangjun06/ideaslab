@@ -1,12 +1,8 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 
 import { HomePage } from '~/components/pages/Home'
 
 import { MainLayout } from '../layouts'
-
-// const HomePage = dynamic(() => import('../components/pages/Home').then((d) => d.HomePage), {
-//   ssr: false,
-// })
 
 const Home: NextPage = () => {
   return (
@@ -14,6 +10,20 @@ const Home: NextPage = () => {
       <HomePage />
     </MainLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (req.cookies['ideas-lab/session']) {
+    return {
+      redirect: {
+        statusCode: 307,
+        destination: '/user-home',
+      },
+    }
+  }
+  return {
+    props: {},
+  }
 }
 
 export default Home
