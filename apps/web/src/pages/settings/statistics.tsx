@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import type { NextPage } from 'next'
 import { LightBulbIcon } from '@heroicons/react/24/outline'
-import { CalendarTooltipProps } from '@nivo/calendar'
 import classNames from 'classnames'
 import { Tooltip, TooltipWrapper } from 'react-tooltip'
 
@@ -9,6 +8,7 @@ import { Select } from '~/components/form'
 import { useResponsiveSize } from '~/hooks/useWindowe'
 import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
+import { fullTimeFormat } from '~/utils'
 
 const StatisticsPage: NextPage = () => {
   return (
@@ -29,7 +29,7 @@ const ValueCard = ({
   footer,
 }: {
   name: string
-  value: string
+  value: ReactNode
   className?: string
   footer?: string
 }) => (
@@ -43,17 +43,23 @@ const ValueCard = ({
 )
 
 const GuildActivity = () => {
+  const { data } = trpc.statistics.basic.useQuery()
+
   return (
     <div className="grid grid-flow-row grid-cols-2 gap-4">
       <ValueCard
         className="border-t-blue-500 dark:border-t-blue-600 border-t-4"
         name="아이디어스 랩 가입일"
-        value="2022. 01. 23. (D+N일)"
+        value={data?.joinAt ? fullTimeFormat(data.joinAt) : '불러오는 중'}
       />
       <ValueCard
         className="border-t-primary-500 dark:border-t-primary-600 border-t-4"
         name="아이디어스 랩과 함께한지"
-        value="N일"
+        value={
+          data?.joinAt
+            ? `${Math.floor((new Date().getTime() - data.joinAt.getTime()) / (1000 * 3600 * 24))}일`
+            : '불러오는 중'
+        }
       />
     </div>
   )
@@ -67,20 +73,11 @@ const formatMinutes = (minutes: number) => {
   return `${hours}시간 ${minutesLeft}분`
 }
 
-const CustomTooltip = (data: CalendarTooltipProps) => {
-  if (data.value === undefined) return null
-  return (
-    <span style={{ color: data.color, backgroundColor: 'black', padding: '10px' }}>
-      {data.day} : {data.value}
-    </span>
-  )
-}
-
 const VoiceChat = () => {
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const responsiveSize = useResponsiveSize()
 
-  const { data, isLoading } = trpc.statistics.voiceLog.useQuery({
+  const { data } = trpc.statistics.voiceLog.useQuery({
     startYear: year,
     startMonth: 1,
     endYear: year,
@@ -95,7 +92,7 @@ const VoiceChat = () => {
       date.getFullYear() % 400 == 0
 
     const dataMap: Record<string, number> =
-      data?.reduce(
+      data?.list?.reduce(
         (prev, { sum, time }) => ({
           ...prev,
           [`${time.getMonth()}${time.getDate()}`]: Math.floor(sum / 60),
@@ -135,8 +132,14 @@ const VoiceChat = () => {
         이후의 기록만 표시됩니다.
       </div>
       <div className="grid grid-flow-row grid-cols-2 gap-4">
-        <ValueCard name="총 통화방 사용시간" value="N시간 M분" />
-        <ValueCard name="오늘 통화방 사용시간" value="N시간 M분" />
+        <ValueCard
+          name="총 통화방 사용시간"
+          value={data?.all ? formatMinutes(Math.floor(data.all / 60)) : '불러오는 중'}
+        />
+        <ValueCard
+          name="오늘 통화방 사용시간"
+          value={data?.today ? formatMinutes(Math.floor(data.today / 60)) : '불러오는 중'}
+        />
       </div>
       <div className="card p-4">
         <div className="flex justify-between items-center">
