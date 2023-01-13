@@ -121,4 +121,11 @@ export const detailValidator = z.object({
   id: z.number(),
 })
 
+export const statisticsVoiceLogValidator = z.object({
+  startYear: z.number(),
+  startMonth: z.number(),
+  endYear: z.number(),
+  endMonth: z.number(),
+})
+
 z.setErrorMap(customErrorMap)

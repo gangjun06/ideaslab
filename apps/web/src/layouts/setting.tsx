@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
-  CogIcon,
+  ChartBarIcon,
   RectangleStackIcon,
   TagIcon,
   UserCircleIcon,
@@ -38,13 +38,13 @@ const navList: NavType[] = [
         url: '/settings/profile',
         name: '프로필',
         icon: UserCircleIcon,
-        description: '개인 프로필을 설정합니다',
+        description: '개인 프로필 및 각종 설정을 할 수 있어요.',
       },
       {
-        url: '/settings/account',
-        name: '계정',
-        icon: CogIcon,
-        description: '계정을 관리합니다',
+        url: '/settings/statistics',
+        name: '통계',
+        icon: ChartBarIcon,
+        description: '지금까지의 아이디어스 랩 활동 기록을 확인할 수 있어요.',
       },
     ],
   },

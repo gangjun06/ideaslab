@@ -1,4 +1,4 @@
-import { dbClient } from '@ideaslab/db'
+import { dbClient, Prisma } from '@ideaslab/db'
 
 import config from '~/config'
 import { redis } from '~/lib/redis'
@@ -91,6 +91,40 @@ export const getCurrentVoiceLog = async (userId: string) => {
   if (allSum[0]) all = allSum[0]._sum.value
 
   return { current, today, all }
+}
+
+export const allVoiceLogByDate = async (
+  userId: string,
+  {
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+  }: { startYear: number; startMonth: number; endYear: number; endMonth: number },
+) => {
+  const monthFirst = new Date()
+  monthFirst.setFullYear(startYear)
+  monthFirst.setMonth(startMonth - 1)
+  monthFirst.setDate(1)
+  monthFirst.setHours(0, 0, 0, 0)
+  const monthSecond = new Date()
+  monthSecond.setFullYear(endYear)
+  monthSecond.setMonth(endMonth)
+  monthFirst.setDate(1)
+  monthFirst.setHours(0, 0, 0, 0)
+
+  const result = (await dbClient.$queryRaw(
+    Prisma.sql`
+    SELECT CAST(SUM(value) as int4), CAST(time as date)
+    FROM "VoiceLog"
+    WHERE "userDiscordId"=${userId}
+      AND "time" >= ${monthFirst}
+      AND "time" <= ${monthSecond}
+    GROUP BY CAST(time as date)
+    ORDER BY time`,
+  )) as { sum: number; time: Date }[]
+
+  return result
 }
 
 export const formatSeconds = (seconds: number) => {
