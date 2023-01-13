@@ -107,8 +107,8 @@ export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col divide-y md:divide-y-0 md:grid grid-flow-col gap-x-12">
-        <div className="md:col-span-3 flex flex-col gap-x-1 gap-y-2 tracking-wide pb-4 md:pb-0">
+      <div className="flex flex-col divide-y md:divide-y-0 md:flex-row gap-x-12">
+        <div className="md:w-[28%] w-full flex flex-col gap-x-1 gap-y-2 tracking-wide pb-4 md:pb-0">
           {navList
             .filter(({ adminOnly }) => !adminOnly || profile?.isAdmin)
             .map(({ title, fields }) => (
@@ -134,7 +134,7 @@ export const SettingLayout = ({ children, ...mainLayoutProps }: Props) => {
               </div>
             ))}
         </div>
-        <div className="pt-4 md:pt-0 md:col-span-9 flex flex-col gap-y-4">{children}</div>
+        <div className="pt-4 md:pt-0 md:w-full flex flex-col gap-y-4">{children}</div>
       </div>
     </MainLayout>
   )

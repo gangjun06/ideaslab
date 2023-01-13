@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import type { NextPage } from 'next'
 import { LightBulbIcon } from '@heroicons/react/24/outline'
-import { CalendarDatum, CalendarTooltipProps, ResponsiveCalendar } from '@nivo/calendar'
+import { CalendarTooltipProps } from '@nivo/calendar'
 import classNames from 'classnames'
+import { Tooltip, TooltipWrapper } from 'react-tooltip'
 
 import { Select } from '~/components/form'
+import { useResponsiveSize } from '~/hooks/useWindowe'
 import { SettingLayout } from '~/layouts'
 import { trpc } from '~/lib/trpc'
 
@@ -76,6 +78,7 @@ const CustomTooltip = (data: CalendarTooltipProps) => {
 
 const VoiceChat = () => {
   const [start, setStart] = useState<string>('2023-1')
+  const responsiveSize = useResponsiveSize()
 
   const { startYear, startMonth } = useMemo(() => {
     const splited = start.split('-')
@@ -89,16 +92,35 @@ const VoiceChat = () => {
     endMonth: 12,
   })
 
-  const datum: CalendarDatum[] = useMemo(() => {
-    return (
-      data?.map(({ sum, time }) => ({
-        day: `${time.getFullYear()}-${String(time.getMonth() + 1).padStart(
-          2,
-          '0',
-        )}-${time.getDate()}`,
-        value: Math.floor(sum / 60),
-      })) ?? []
-    )
+  const formatedData = useMemo(() => {
+    const date = new Date()
+    const isLeapYear =
+      (date.getFullYear() % 4 == 0 && date.getFullYear() % 100 != 0) ||
+      date.getFullYear() % 400 == 0
+
+    const dataMap: Record<string, number> =
+      data?.reduce(
+        (prev, { sum, time }) => ({
+          ...prev,
+          [`${time.getMonth()}${time.getDate()}`]: Math.floor(sum / 60),
+        }),
+        {},
+      ) ?? {}
+
+    const list = []
+    const dayList = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    for (let i = 0; i < 12; i++) {
+      const date = new Date()
+      date.setMonth(i + 1)
+      const monthList = []
+      for (let j = 0; j < dayList[i]; j++) {
+        const item = dataMap[`${i}${j}`]
+        if (item) monthList.push(item)
+        else monthList.push(0)
+      }
+      list.push(monthList)
+    }
+    return list
   }, [data])
 
   return (
@@ -125,40 +147,57 @@ const VoiceChat = () => {
             }}
           />
         </div>
-        <div className="mt-2 h-44">
-          <ResponsiveCalendar
-            data={datum}
-            tooltip={CustomTooltip}
-            from="2023-01-01"
-            to="2023-12-31"
-            emptyColor="#eeeeee"
-            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
-            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-            yearLegend={() => ''}
-            monthBorderWidth={2}
-            yearSpacing={30}
-            maxValue={300}
-            monthBorderColor="#ffffff"
-            dayBorderColor="#ffffff"
-            valueFormat={(value) => formatMinutes(value)}
-            monthLegend={(_year, _month, date) =>
-              Intl.DateTimeFormat('ko', { month: 'long' }).format(date)
-            }
-            legendFormat={(value) => formatMinutes(value)}
-            legends={[
-              {
-                anchor: 'bottom',
-                direction: 'row',
-                translateY: 0,
-                itemCount: 4,
-                itemWidth: 30,
-                itemHeight: 36,
-                itemsSpacing: 70,
-                itemDirection: 'right-to-left',
-                data: [{ id: 60, label: '1시간' }],
-              },
-            ]}
-          />
+        <div className="mt-2">
+          <Tooltip id="calendar-tooltip" className="modern-tooltip" />
+          <div className="grid grid-cols-3 sm:grid-cols-4 grid-flow-row gap-5 w-full px-4">
+            {formatedData.map((monthData, month) => (
+              <div key={month} className="flex flex-col gap-y-1 items-center justify-center w-full">
+                <div
+                  className={classNames('text-subtitle-color text-sm', month % 6 === 0 && 'ml-3')}
+                >
+                  {month + 1}월
+                </div>
+                <div className="flex flex-row gap-x-1 items-center justify-center">
+                  <div
+                    className="grid grid-flow-col gap-1"
+                    style={{ gridTemplateRows: 'repeat(7, minmax(0, 1fr))' }}
+                  >
+                    {(responsiveSize === 'xs' ? month % 3 === 0 : month % 4 === 0) && (
+                      <>
+                        {['', '월', '', '수', '', '금', ''].map((item, index) => (
+                          <div className="h-4 text-sm text-description-color pr-1" key={index}>
+                            {item}
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    {monthData.map((sum, day) => (
+                      <TooltipWrapper
+                        tooltipId="calendar-tooltip"
+                        html={`<b>${month + 1}월 ${day + 1}일</b>${
+                          sum > 0 ? ` ${formatMinutes(sum)}` : ''
+                        }`}
+                        key={day}
+                      >
+                        <div
+                          className={classNames('rounded-sm h-4 w-4', {
+                            'bg-gray-200 dark:bg-gray-700': sum < 1,
+                            'bg-primary-100 dark:bg-primary-900': sum >= 1 && sum < 10,
+                            'bg-primary-200 dark:bg-primary-800': sum >= 10 && sum < 30,
+                            'bg-primary-300 dark:bg-primary-700': sum >= 30 && sum < 60,
+                            'bg-primary-400 dark:bg-primary-600': sum >= 60 && sum < 120,
+                            'bg-primary-500 dark:bg-primary-500': sum >= 120 && sum < 180,
+                            'bg-primary-600 dark:bg-primary-400': sum >= 180 && sum < 300,
+                            'bg-primary-700 dark:bg-primary-300': sum >= 300,
+                          })}
+                        />
+                      </TooltipWrapper>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
