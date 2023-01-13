@@ -3,8 +3,6 @@ import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import superjson from 'superjson'
 
-import { AppRouter } from '@ideaslab/server/app'
-
 const getBaseUrl = (isServer: boolean) => {
   if (isServer) {
     return `${process.env.BACKEND_URL}`

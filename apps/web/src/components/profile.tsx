@@ -1,8 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { AppRouter } from '@ideaslab/server/app'
-
 import { Unarray } from '~/types/utils'
 import { relativeTimeFormat } from '~/utils'
 

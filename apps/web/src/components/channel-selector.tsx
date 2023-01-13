@@ -4,7 +4,7 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { ChannelType } from 'discord-api-types/v10'
 
-import { appRouter } from '@ideaslab/server/app'
+import type { appRouter } from '@ideaslab/server/app'
 
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
