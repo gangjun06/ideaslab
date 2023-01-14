@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import superjson from 'superjson'
@@ -16,8 +15,8 @@ type ConfigType = ReturnType<Parameters<typeof createTRPCNext>[0]['config']>
 
 export const trpc = createTRPCNext<AppRouter>({
   config({ ctx }) {
-    const config: Pick<ConfigType, 'queryClient'> = {
-      queryClient: new QueryClient({
+    const config: Pick<ConfigType, 'queryClientConfig'> = {
+      queryClientConfig: {
         defaultOptions: {
           queries: {
             refetchOnReconnect: false,
@@ -36,16 +35,7 @@ export const trpc = createTRPCNext<AppRouter>({
             // },
           },
         },
-        // logger: {
-        //   log: console.log,
-        //   warn: console.warn,
-        //   error(...args) {
-        //     if (args[0]?.data?.code === 'FORBIDDEN' || args[0]?.data?.code === 'UNAUTHORIZED')
-        //       return
-        //     console.error(...args)
-        //   },
-        // },
-      }),
+      },
     }
     // Client request
     if (typeof window !== 'undefined') {

@@ -3,8 +3,6 @@ import { MemberLoginSection } from '~/components/login'
 
 import { MainLayout } from '../layouts'
 
-const list = ['아이디어스랩 맴버', '맴버가 아니에요']
-
 const LoginPage = () => {
   return (
     <MainLayout title="로그인" showTitle tinyContainer guard="guestOnly">
