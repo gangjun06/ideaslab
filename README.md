@@ -55,7 +55,7 @@
 
 #### 웹
 
-- 아이디어스랩 소개 웹페이지
+- 아이디어스 랩 소개 웹페이지
 - 회원가입 설문지
 - 디스코드 - 웹사이트 연동
 - 갤러리 및 사용자 프로필 웹페이지
@@ -72,6 +72,13 @@
 [아이디어스 랩 디스코드](https://discord.gg/XepQjgpbum)에 가입하셔서 바로 사용하실 수 있습니다.
 
 ### 개발서버
+
+<details>
+  <summary>데이터베이스 설정</summary>
+  Postgresql과 함께 시간대별 기록을 효율적으로 하기 위해 Timescale DB를 사용합니다. <br/> 
+  서버를 세팅하기 전, 먼저 서버에 먼저 설치해주세요.
+  <a href="https://docs.timescale.com/">https://docs.timescale.com</a>
+</details>
 
 ```bash
 # 먼저 각 폴더의 .env를 수정해주세요.
@@ -94,6 +101,9 @@ docker-compose -f docker-compose.dev.yml down
 ```bash
 # Build server with docker
 docker build . -f ./Dockerfile.server -t <tag_name>
+
+# Build server with turbo
+turbo run build --filter=server
 
 # Build web with turbo
 turbo run build --filter=web
@@ -142,3 +152,12 @@ packages/ # apps에서 사용하는 패키지들
 본 프로젝트는 AGPL 라이선스를 따르고 있습니다.
 
 자세한 내용은 [LICENSE](./LICENSE) 를 참고하세요.
+
+### 사용/참고한 리소스 및 라이브러리
+
+- UI 디자인
+  - [Flowbite](https://flowbite.com">)
+  - [MambaUI](https://mambaui.com")
+  - [TailwindUI](https://tailwindui.com)
+- 서버
+  - [Discord.JS 템플릿](https://github.com/filename24/djs-template)
