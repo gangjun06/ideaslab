@@ -8,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 import { Button, ButtonLink, PageBack } from '~/components/common'
 import { useLoadUserData } from '~/hooks/useAuth'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 import { parseJWT } from '~/utils'
 
 import { Footer } from './footer'

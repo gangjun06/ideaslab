@@ -13,7 +13,7 @@ import { Button, GripVerticalIcon } from '~/components/common'
 import { Form, FormBlock, FormFieldBuilder, Input } from '~/components/form'
 import { useForm } from '~/hooks/useForm'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const GallerySetting: NextPage = () => {
   const gallerySetting = trpc.admin.gallerySetting.useMutation({

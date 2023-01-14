@@ -5,8 +5,8 @@ import classNames from 'classnames'
 
 import type { AppRouter } from '@ideaslab/server'
 
-import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
+import { trpc } from '~/utils'
 
 export type ChannelSelectorProps = {
   value?: string | null

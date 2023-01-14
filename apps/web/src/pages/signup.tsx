@@ -19,7 +19,7 @@ import { Textarea } from '~/components/form/textarea'
 import { useUser } from '~/hooks/useAuth'
 import { useForm } from '~/hooks/useForm'
 import { useCurrentTheme } from '~/hooks/useTheme'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 import { MainLayout } from '../layouts'
 

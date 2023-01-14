@@ -14,7 +14,7 @@ import { Textarea } from '~/components/form/textarea'
 import { RoleSelector } from '~/components/role-selector'
 import { useForm } from '~/hooks/useForm'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const SettingsPage: NextPage = () => {
   const { data: settings } = trpc.admin.loadSettings.useQuery(undefined, { trpc: { ssr: false } })

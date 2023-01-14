@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
@@ -10,8 +9,7 @@ import { MemberOnlyContent } from '~/components/login'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
-import { dateShortFormat } from '~/utils'
+import { dateShortFormat, trpc } from '~/utils'
 
 const LIMIT = 50
 
@@ -39,7 +37,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
 }
 
 const MemberDetailPage = ({ profileHandle }: Props) => {
-  const router = useRouter()
   const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
 
   const {

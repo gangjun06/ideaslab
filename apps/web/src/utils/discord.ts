@@ -1,4 +1,4 @@
-export declare enum ChannelType {
+export enum ChannelType {
   /**
    * A text channel within a guild
    */

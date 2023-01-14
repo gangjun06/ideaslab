@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostDetailModalWrapper, PostView2 } from '~/components/post'
 import { ProfileView } from '~/components/profile'
 import { useUser } from '~/hooks'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 import { MainLayout } from '../layouts'
 

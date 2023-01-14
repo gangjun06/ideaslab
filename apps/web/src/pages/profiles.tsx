@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { ProfileView } from '~/components/profile'
 import { MainLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const LIMIT = 50
 

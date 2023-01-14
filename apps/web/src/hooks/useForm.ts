@@ -47,9 +47,11 @@ export const useForm = <TSchema extends z.ZodType<any, any, any>>(
   const { errors } = form.formState
   const registerFormValue = useCallback(
     (name: string, options: UseFormRegisterOption<z.infer<TSchema>, any>) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const error: FieldErrorsImpl<DeepRequired<z.TypeOf<TSchema>>>[string] = name
         .split('.')
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         .reduce((acc, cur) => (acc ? acc[isNaN(cur as any) ? cur : parseInt(cur)] : null), errors)
       return {
@@ -83,9 +85,6 @@ export const useForm = <TSchema extends z.ZodType<any, any, any>>(
           } else if (data.kind === 'max') {
             inputProps.max = data.value
             inputProps.maxLength = data.value
-            // } else if (data.kind === 'min') {
-            //   inputProps.min = data.value
-            //   inputProps.minLength = data.value
           }
         })
       }

@@ -4,7 +4,7 @@ import { Menu } from '@headlessui/react'
 import classNames from 'classnames'
 
 import { useUser } from '~/hooks/useAuth'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 import { Transition } from './transition'
 

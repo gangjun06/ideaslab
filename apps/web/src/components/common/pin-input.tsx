@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, React.PropsWithoutRef<JSX.IntrinsicEl
 
 Input.displayName = 'PinInput'
 
-export const PinInput = ({ name, onEnterAll, error }: Props) => {
+export const PinInput = ({ name, onEnterAll }: Props) => {
   const length = 6
   return (
     <div className="flex flex-row gap-2 w-full items-center justify-center">

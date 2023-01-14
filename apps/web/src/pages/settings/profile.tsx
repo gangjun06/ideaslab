@@ -12,7 +12,7 @@ import { Button, GripVerticalIcon } from '~/components/common'
 import { Form, FormBlock, FormFieldBuilder, Input, Select, Textarea } from '~/components/form'
 import { useForm, UseFormRegister, useUser } from '~/hooks'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const ProfileSetting: NextPage = () => {
   const profile = useUser()

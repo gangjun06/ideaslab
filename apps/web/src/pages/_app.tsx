@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 import { TooltipProvider } from 'react-tooltip'
 
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 import 'react-tooltip/dist/react-tooltip.css'
 import 'swiper/css'

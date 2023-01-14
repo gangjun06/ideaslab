@@ -1,7 +1,7 @@
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
 import { MainLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const InfoPage = () => {
   const { data: info } = trpc.info.serviceInfo.useQuery(undefined, {

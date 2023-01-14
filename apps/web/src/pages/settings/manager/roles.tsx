@@ -13,7 +13,7 @@ import { Form, FormBlock, FormFieldBuilder, Input } from '~/components/form'
 import { RoleSelector } from '~/components/role-selector'
 import { useForm } from '~/hooks/useForm'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const RoleSetting: NextPage = () => {
   const rolesSetting = trpc.admin.saveRoles.useMutation({

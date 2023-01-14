@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { CheckIcon } from '@heroicons/react/24/outline'
+import CheckIcon from '@heroicons/react/24/outline/CheckIcon'
 import Typed from 'react-typed'
 
 import MainImage from '~/assets/main-image.svg'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const HeaderSection = () => {
   return (
@@ -137,9 +137,11 @@ const DescriptionSection = () => {
           </div>
         </div>
         <div aria-hidden="true" className="mt-10 lg:mt-0">
-          <img
+          <Image
             src="https://media.discordapp.net/attachments/1022121230289096744/1053273035081269258/jo-szczepanska-9OKGEVJiTKk-unsplash.jpg?width=500&height=800"
             alt=""
+            width={500}
+            height={800}
             className="mx-auto rounded-lg shadow-lg dark:bg-gray-500"
           />
         </div>

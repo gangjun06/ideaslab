@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { MemberOnlyContent } from '~/components/login'
 import { PostDetail, PostLoading } from '~/components/post'
 import { MainLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const GalleryDetailPage: NextPage = () => {
   const { query } = useRouter()

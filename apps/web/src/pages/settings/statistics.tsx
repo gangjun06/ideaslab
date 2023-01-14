@@ -7,7 +7,7 @@ import { Tooltip, TooltipWrapper } from 'react-tooltip'
 import { Select } from '~/components/form'
 import { useResponsiveSize } from '~/hooks/useWindowe'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 import { fullTimeFormat } from '~/utils'
 
 const StatisticsPage: NextPage = () => {

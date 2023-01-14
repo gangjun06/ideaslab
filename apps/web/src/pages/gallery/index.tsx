@@ -7,7 +7,7 @@ import Masonry from 'react-masonry-css'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 const LIMIT = 50
 

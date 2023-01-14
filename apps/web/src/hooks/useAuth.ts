@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 
 import type { AppRouter } from '@ideaslab/server'
 
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 export const tokenAtom = atomWithStorage<null | string>('auth-token', null)
 

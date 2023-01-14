@@ -7,7 +7,7 @@ import ForbiddenImage from '~/assets/forbidden.svg'
 import { Button, Dialog, PinInput } from '~/components/common'
 import { ButtonLink } from '~/components/common'
 import { useDisclosure } from '~/hooks'
-import { trpc } from '~/lib/trpc'
+import { trpc } from '~/utils'
 
 export const MemberLoginSection = () => {
   const loginWithPinMutation = trpc.auth.loginWithPin.useMutation({

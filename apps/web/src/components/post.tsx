@@ -16,8 +16,8 @@ import type { AppRouter } from '@ideaslab/server'
 
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { useResponsiveSize } from '~/hooks/useWindowe'
-import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
+import { trpc } from '~/utils'
 import { relativeTimeFormat } from '~/utils'
 
 import { Button, ButtonLink, Dialog, TimeDynamic } from './common'
