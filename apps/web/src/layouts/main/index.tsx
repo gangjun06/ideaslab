@@ -84,6 +84,7 @@ export const MainLayout = ({
 
   useEffect(() => {
     if (guard === 'guestOnly' && profile.data) router.push('/user-home')
+    if (guard === 'unverifyOnly' && profile.data?.isVerified) router.push('/user-home')
   }, [guard, profile.data, router])
 
   const titleComponent = useMemo(() => {
@@ -128,7 +129,7 @@ export const MainLayout = ({
       return <></>
     }
 
-    if (guard === 'authOnly' && !profile.data) {
+    if ((guard === 'authOnly' || guard === 'unverifyOnly') && !profile.data) {
       return (
         <>
           {titleComponent}

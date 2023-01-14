@@ -65,6 +65,7 @@ if (process.argv.includes('--register')) {
       res.setHeader('Access-Control-Allow-Methods', '*')
       res.setHeader('Access-Control-Allow-Headers', '*')
       res.setHeader('Access-Control-Max-Age', '86400')
+      res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie')
 
       // accepts OPTIONS
       if (req.method === 'OPTIONS') {

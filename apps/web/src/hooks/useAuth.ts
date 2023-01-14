@@ -34,6 +34,9 @@ export const useLoadUserData = () => {
     refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
+    trpc: {
+      ssr: false,
+    },
     onError: (res) => {
       console.log('error auth')
       if (res.data?.code !== 'UNAUTHORIZED')

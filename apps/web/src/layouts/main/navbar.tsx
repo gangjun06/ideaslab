@@ -50,7 +50,7 @@ export const Navbar = () => {
       <NavItem
         name="홈"
         href={profile ? '/user-home' : '/'}
-        isActive={pathname === '/'}
+        isActive={pathname === '/' || pathname === '/user-home'}
         isMobile={isMobile}
       />
       <NavItem

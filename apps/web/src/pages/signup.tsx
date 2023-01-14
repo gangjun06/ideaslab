@@ -25,7 +25,7 @@ import { MainLayout } from '../layouts'
 
 const Signup: NextPage = () => {
   return (
-    <MainLayout title="회원가입 하기" showTitle tinyContainer>
+    <MainLayout title="회원가입 하기" showTitle tinyContainer guard="unverifyOnly">
       <StepWrapper>
         <StepContent>{StepList}</StepContent>
         <div className="card px-4 py-4 mt-8 flex flex-col justify-between sm:min-h-[700px]">
@@ -162,16 +162,16 @@ const Rule = ({ prev, next }: StepContentProps) => {
 }
 
 const Complete = ({ next: _ }: StepContentProps) => (
-  <div className="mx-auto px-4 text-center md:px-10 lg:px-32 xl:max-w-3xl h-full flex-1 flex items-center justify-center">
+  <div className="mx-auto px-4 sm:px-4 py-8 text-center md:px-10 lg:px-32 xl:max-w-3xl h-full flex-1 flex items-center justify-center">
     <div className="flex flex-col items-center">
-      <h1 className="text-4xl font-bold sm:text-5xl">
+      <h1 className="text-2xl sm:text-4xl font-bold md:text-5xl">
         <div className="mb-1.5">
           <span className="title-highlight">아이디어스랩</span>에
         </div>
         가입하신것을 환영합니다!
       </h1>
-      <p className="px-8 mt-8 mb-12 text-lg">
-        이제 디스코드로 돌아가 즐거운 아이디어스 랩 활동을 시작하세요.
+      <p className="sm:px-2 mt-8 text-lg break-words">
+        디스코드로 돌아가 즐거운 아이디어스 랩 활동을 시작하세요.
       </p>
     </div>
   </div>

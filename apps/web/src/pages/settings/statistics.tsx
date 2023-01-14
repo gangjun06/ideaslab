@@ -77,7 +77,7 @@ const VoiceChat = () => {
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const responsiveSize = useResponsiveSize()
 
-  const { data } = trpc.statistics.voiceLog.useQuery({
+  const { data, isLoading } = trpc.statistics.voiceLog.useQuery({
     startYear: year,
     startMonth: 1,
     endYear: year,
@@ -134,11 +134,23 @@ const VoiceChat = () => {
       <div className="grid grid-flow-row grid-cols-2 gap-4">
         <ValueCard
           name="총 통화방 사용시간"
-          value={data?.all ? formatMinutes(Math.floor(data.all / 60)) : '불러오는 중'}
+          value={
+            isLoading
+              ? '불러오는 중'
+              : data?.all
+              ? formatMinutes(Math.floor(data.all / 60))
+              : '사용기록이 없습니다'
+          }
         />
         <ValueCard
           name="오늘 통화방 사용시간"
-          value={data?.today ? formatMinutes(Math.floor(data.today / 60)) : '불러오는 중'}
+          value={
+            isLoading
+              ? '불러오는 중'
+              : data?.today === 0
+              ? formatMinutes(Math.floor(data.today / 60))
+              : '사용기록이 없습니다'
+          }
         />
       </div>
       <div className="card p-4">
