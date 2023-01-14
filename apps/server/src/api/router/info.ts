@@ -24,8 +24,10 @@ type Role = {
 
 export const infoRouter = router({
   stat: publicProcedure.query(async () => {
-    const guild = await currentGuild()
-    const articleCount = await dbClient.post.count()
+    const [guild, articleCount] = await Promise.all([
+      await currentGuild(),
+      await dbClient.post.count(),
+    ])
 
     return {
       memberCount: guild.memberCount,

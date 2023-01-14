@@ -55,8 +55,10 @@ export const galleryRouter = router({
       },
     })
 
-    // {post.content.length > 300 ? post.content.slice(0, 300) + ' ...' : post.content}
-    return result
+    return result.map((post) => ({
+      ...post,
+      content: post.content.length > 300 ? post.content.slice(0, 305) + '...' : post.content,
+    }))
   }),
   postDetail: publicProcedure.input(detailValidator).query(async ({ ctx, input: { id } }) => {
     const res = await dbClient.post.findUnique({

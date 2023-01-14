@@ -58,7 +58,7 @@ export const MainLayout = ({
 
   useEffect(() => {
     const { token } = router.query
-    if (typeof token === 'string') {
+    if (!isLoading && !profile && typeof token === 'string') {
       const parsed = parseJWT<{ name: string; avatar: string; isAdmin: boolean }>(token)
       if (!parsed) return
 
@@ -68,7 +68,7 @@ export const MainLayout = ({
 
       setAuthConfirm({ ...parsed, token })
     }
-  }, [router.query])
+  }, [isLoading, profile, router.query])
 
   const login = useCallback(async () => {
     if (authConfirm?.token) {

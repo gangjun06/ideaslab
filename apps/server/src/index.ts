@@ -37,6 +37,19 @@ if (process.argv.includes('--register')) {
   const trpcHandler = createHTTPHandler({
     router: appRouter,
     createContext,
+    responseMeta({ errors }) {
+      if (errors.length > 0) {
+        return {}
+      }
+
+      const ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
+      return {
+        headers: {
+          'cache-control': `private, s-maxage=2, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
+        },
+      }
+    },
   })
 
   http
@@ -44,13 +57,19 @@ if (process.argv.includes('--register')) {
       // act on the req/res objects
 
       // enable CORS
-      res.setHeader('Access-Control-Allow-Origin', '*')
+      res.setHeader(
+        'Access-Control-Allow-Origin',
+        process.env.NODE_ENV === 'development' ? '*' : config.webURL,
+      )
       res.setHeader('Access-Control-Request-Method', '*')
-      res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET')
+      res.setHeader('Access-Control-Allow-Methods', '*')
       res.setHeader('Access-Control-Allow-Headers', '*')
+      res.setHeader('Access-Control-Max-Age', '86400')
 
       // accepts OPTIONS
       if (req.method === 'OPTIONS') {
+        res.setHeader('Cache-Control', 'public, max-age=86400')
+        res.setHeader('Vary', 'Access-Control-Request-Headers, Access-Control-Request-Method')
         res.writeHead(200)
         return res.end()
       }

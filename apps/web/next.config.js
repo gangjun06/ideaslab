@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = withBundleAnalyzer({
   // reactStrictMode: true,
   images: {
-    domains: ['cdn.discordapp.com'],
+    domains: ['cdn.discordapp.com', 'media.discordapp.net'],
   },
   // pageExtensions: ["page.tsx", "api.ts", "ts"],
 })

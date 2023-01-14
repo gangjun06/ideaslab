@@ -204,8 +204,8 @@ export const PostView = ({
         </a>
       </Link>
       <div className="text-title-color">{post.title}</div>
-      <div className="text-description-color text-sm mb-2">
-        {post.content.length > 300 ? post.content.slice(0, 300) + ' ...' : post.content}
+      <div className="text-description-color text-sm mb-2 break-words text-ellipsis">
+        {post.content}
       </div>
 
       <div className="flex">
