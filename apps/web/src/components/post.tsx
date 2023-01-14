@@ -12,7 +12,7 @@ import classNames from 'classnames'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
-import type { appRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { useResponsiveSize } from '~/hooks/useWindowe'
@@ -66,7 +66,7 @@ export const PostView2 = ({
   post,
   onClick,
 }: {
-  post: Unarray<typeof appRouter.gallery.posts['_def']['_output_out']>
+  post: Unarray<AppRouter['gallery']['posts']['_def']['_output_out']>
   onClick?: () => void
 }) => {
   const image = useMemo(() => {
@@ -145,7 +145,7 @@ export const PostView = ({
   post,
   onClick,
 }: {
-  post: Unarray<typeof appRouter.gallery.posts['_def']['_output_out']>
+  post: Unarray<AppRouter['gallery']['posts']['_def']['_output_out']>
   onClick?: () => void
 }) => {
   const image = useMemo(() => {
@@ -269,7 +269,7 @@ export const PostDetail = ({
   post,
   forDialog = false,
 }: {
-  post?: Unarray<typeof appRouter.gallery.postDetail['_def']['_output_out']>
+  post?: Unarray<AppRouter['gallery']['postDetail']['_def']['_output_out']>
   forDialog?: boolean
 }) => {
   if (!post) return <></>

@@ -3,15 +3,16 @@
 	"version": "1.0.0",
 	"license": "AGPL",
 	"files": [
-		"src",
-		"scripts"
+		"dist/src/**"
 	],
+	"types": "dist/src/index.d.ts",
 	"scripts": {
-		"start": "node ./dist",
 		"dev": "yarn generate && concurrently \"node ./scripts/esbuild.dev.js\" \"nodemon --watch .dev/index.js .dev/index.js\"",
-		"register": "yarn generate && nodemon --ext ts -r tsconfig-paths/register --loader ts-node/esm --experimental-specifier-resolution node src --register",
-		"generate": "node scripts/generator.js",
 		"build": "yarn generate && node ./scripts/esbuild.js",
+		"build:types": "tsc --emitDeclarationOnly && tsc-alias",
+		"start": "node ./dist",
+		"register": "node ./dist --register",
+		"generate": "node scripts/generator.js",
 		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
 	},
 	"dependencies": {

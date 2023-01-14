@@ -2,7 +2,7 @@ import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import toast from 'react-hot-toast'
 
-import type { appRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { trpc } from '~/lib/trpc'
 
@@ -24,7 +24,7 @@ export const tokenDataAtom = atom((get) => {
   }
 })
 
-type UserData = typeof appRouter.auth.profile['_def']['_output_out'] | null
+type UserData = AppRouter['auth']['profile']['_def']['_output_out'] | null
 export const userDataAtom = atom<UserData>(null)
 
 export const useLoadUserData = () => {

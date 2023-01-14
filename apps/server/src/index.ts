@@ -12,6 +12,8 @@ import config from './config'
 
 import 'dotenv/config'
 
+export type { AppRouter } from '~/api/router/_app'
+
 const logger = new Logger('main')
 
 logger.log('Starting up...')

@@ -2,12 +2,12 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import { ChannelType } from 'discord-api-types/v10'
 
-import type { appRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { trpc } from '~/lib/trpc'
 import { Unarray } from '~/types/utils'
+import { ChannelType } from '~/utils/discord'
 
 export type ChannelSelectorProps = {
   value?: string | null
@@ -26,7 +26,7 @@ export type ChannelSelectorProps = {
   error?: string
 }
 
-type Channel = Unarray<typeof appRouter.info.channels['_def']['_output_out']>
+type Channel = Unarray<AppRouter['info']['channels']['_def']['_output_out']>
 
 export const ChannelSelector = ({
   onBlur,

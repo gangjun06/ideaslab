@@ -1,47 +1,29 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "ES2021"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "composite": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "baseUrl": "src",
-    "paths": {
-      "~/*": [
-        "*"
-      ],
-      "@ideaslab/server/app": [
-        "../../server/src/api/router/_app"
-      ]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-  ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ],
-  "references": [
-    {
-      "path": "../server"
-    }
-  ]
+	"extends": "@ideaslab/tsconfig/nextjs.json",
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx"
+	],
+	"compilerOptions": {
+		"composite": true,
+		"baseUrl": "src",
+		"paths": {
+			"~/*": [
+				"*"
+			],
+			"@ideaslab/server/app": [
+				"../../server/src/api/router/_app"
+			]
+		}
+	},
+	"exclude": [
+		"node_modules",
+		".next"
+	],
+	"references": [
+		{
+			"path": "../server"
+		}
+	]
 }

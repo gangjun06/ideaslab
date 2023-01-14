@@ -7,6 +7,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
   ],
+  ignorePatterns: ['dist', '.dev', 'node_modules', '*.config.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 13,

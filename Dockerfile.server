@@ -18,7 +18,7 @@ COPY apps/server ./apps/server/
 
 RUN yarn build
 
-FROM node:16-alpine AS Server
+FROM node:16-alpine3.17 AS Server
 
 WORKDIR /app
 
