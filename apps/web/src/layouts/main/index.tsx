@@ -33,7 +33,7 @@ type JWTToken = {
 
 const CenterCard = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="w-full flex items-center justify-center text-center center-card-wrapper">
+    <div className="w-full flex items-center justify-center text-center absolute top-0 left-0 h-full">
       <div className="flex justify-center items-center flex-col card px-16 py-12">{children}</div>
     </div>
   )

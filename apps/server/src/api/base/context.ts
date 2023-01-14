@@ -11,7 +11,7 @@ export const sessionOptions: IronSessionOptions = {
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production' ? true : false,
     httpOnly: false,
-    domain: config.webURL.replace(/https?:\/\//, '').replace(/:\d+$/, ''),
+    domain: config.cookieDomain,
     maxAge: 2147483647 - 60,
   },
 }

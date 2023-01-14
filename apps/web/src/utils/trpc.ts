@@ -30,9 +30,6 @@ export const trpc = createTRPCNext<AppRouter>({
               if (failureCount < 2) return true
               return false
             },
-            // onError: (err) => {
-            //   console.log()
-            // },
           },
         },
       },
@@ -44,6 +41,12 @@ export const trpc = createTRPCNext<AppRouter>({
         links: [
           httpBatchLink({
             url: getBaseUrl(false),
+            fetch(url, options) {
+              return fetch(url, {
+                ...options,
+                credentials: 'include',
+              })
+            },
           }),
         ],
         ...config,
@@ -55,6 +58,12 @@ export const trpc = createTRPCNext<AppRouter>({
       links: [
         httpBatchLink({
           url: `${getBaseUrl(true)}`,
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            })
+          },
           headers() {
             if (ctx?.req) {
               const { connection: _connection, ...headers } = ctx.req.headers

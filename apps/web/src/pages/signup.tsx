@@ -211,6 +211,8 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
       handle: userData?.userId,
       name: userData?.name,
       roles: [],
+      defaultVisible: 'Public',
+      profileVisible: 'Public',
     },
   })
 

@@ -142,16 +142,10 @@ input[type='number']::-webkit-outer-spin-button {
 #main {
   min-height: calc(100vh - 100px);
 }
-.center-card-wrapper {
-  height: calc(100vh - 100px - 32px);
-}
 
 @media (min-width: 640px) {
   #main {
     min-height: calc(100vh - 80px);
-  }
-  .center-card-wrapper {
-    height: calc(100vh - 80px - 32px);
   }
 }
 

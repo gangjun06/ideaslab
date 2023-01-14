@@ -143,7 +143,11 @@ export const authRouter = router({
     const member = await currentGuildMember(ctx.session.id)
 
     if (member.displayName !== input.name) {
-      member.setNickname(input.name)
+      await member.setNickname(input.name)
+    }
+    const role = await getSetting('userRole')
+    if (role) {
+      await member.roles.add(role)
     }
 
     await dbClient.user.create({
@@ -170,7 +174,11 @@ export const authRouter = router({
     if (welcomeChannel && welcomeChannel.type === ChannelType.GuildText) {
       const embed = new Embed(client, 'info')
         .setTitle('새로운 유저가 서버에 참여했어요!')
-        .setDescription(welcomeMessage ?? '')
+        .setDescription(
+          welcomeMessage
+            ?.replace('<mention>', `<@${member.id}>`)
+            .replace('<name>', member.displayName) ?? '',
+        )
         .addFields({
           name: '자기소개',
           value: `${input.introduce}${input.links.length > 0 ? '\n\n' : ''}${input.links.map(
