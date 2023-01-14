@@ -16,7 +16,8 @@ RUN yarn install
 
 COPY apps/server ./apps/server/
 
-RUN yarn build
+ARG DB_ENGINE=musl
+RUN yarn build --filter=server
 
 FROM node:16-alpine3.17 AS Server
 

@@ -58,7 +58,7 @@ export const MainLayout = ({
 
   useEffect(() => {
     const { token } = router.query
-    if (!isLoading && !profile && typeof token === 'string') {
+    if (!isLoading && !profile.data && typeof token === 'string') {
       const parsed = parseJWT<{ name: string; avatar: string; isAdmin: boolean }>(token)
       if (!parsed) return
 
