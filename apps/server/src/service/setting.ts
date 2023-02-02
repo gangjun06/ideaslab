@@ -19,6 +19,8 @@ const SettingList = {
   voiceRoomCreateChannel: SettingValueType.Channel,
   voiceRoomCategory: SettingValueType.Category,
   userRole: SettingValueType.Role,
+  notVerifiedChannel: SettingValueType.Channel,
+  notVerifiedRole: SettingValueType.Role,
   achieveForumEatTag: SettingValueType.Tag,
   achieveForumWorkTag: SettingValueType.Tag,
   privacyPolicy: SettingValueType.LongText,
@@ -96,6 +98,14 @@ export const settingDetails: {
   },
   achieveForumWorkTag: {
     description: '',
+    cache: true,
+  },
+  notVerifiedRole: {
+    description: '일정 시간동안 인증안된 유저가 지급받는 역할',
+    cache: true,
+  },
+  notVerifiedChannel: {
+    description: '인증안된 유저가 안내받는 채널',
     cache: true,
   },
 }

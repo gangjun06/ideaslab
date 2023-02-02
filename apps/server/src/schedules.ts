@@ -1,5 +1,6 @@
 import { scheduleJob } from 'node-schedule'
 
+import { alertToNotVerifiedUser } from './service/auth'
 import { saveMessageCounts } from './service/message-log'
 
 /*
@@ -18,5 +19,10 @@ export const setupSchedule = () => {
   // At 1 minutes past the hour
   scheduleJob('1 * * * *', async () => {
     await saveMessageCounts()
+  })
+
+  // Every 10 minutes
+  scheduleJob('*/10 * * * *', async () => {
+    await alertToNotVerifiedUser()
   })
 }

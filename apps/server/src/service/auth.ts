@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
 
+import { currentGuild, currentGuildChannel } from '~/bot/base/client'
 import config from '~/config'
 import { redis } from '~/lib/redis'
+
+import { getSetting } from './setting'
 
 const loginTokenExpire = 60 * 30 // 10 minutes
 
@@ -96,5 +99,46 @@ export const verifyAuthToken = (token: string) => {
     return { id: userId, isAdmin }
   } catch (error) {
     return null
+  }
+}
+
+const timeoutMillisecond = 1000 * 60 * 20 // 20 Minutes
+
+export const notVerifiedUsers = async () => {
+  const userRole = await getSetting('userRole')
+  const notVerifiedRole = await getSetting('notVerifiedRole')
+  const now = new Date()
+
+  if (!userRole || !notVerifiedRole) return []
+
+  const guild = await currentGuild()
+
+  const filtered = guild.members.cache.filter(
+    (user) =>
+      !user.roles.cache.get(userRole) &&
+      !user.roles.cache.get(notVerifiedRole) &&
+      user.joinedTimestamp &&
+      user.joinedTimestamp - now.getUTCMilliseconds() > timeoutMillisecond,
+  )
+  return [...filtered.values()]
+}
+
+export const alertToNotVerifiedUser = async () => {
+  const list = await notVerifiedUsers()
+  if (list.length < 1) return
+
+  const notVerifiedChannel = await getSetting('notVerifiedRole')
+  const notVerifiedRole = await getSetting('notVerifiedRole')
+
+  if (!notVerifiedChannel || !notVerifiedRole) return
+
+  const channel = await currentGuildChannel(notVerifiedChannel)
+  if (!channel || !channel.isTextBased()) return
+
+  for (const item of list) {
+    await item.roles.add(notVerifiedRole)
+    await channel.send({
+      content: `<@${item.user.id}> 님, 아직 아이디어스랩 인증을 마치지 않으셨군요.\n아이디어스랩을 이용하려면 가입을 마무리 해주세요.`,
+    })
   }
 }
