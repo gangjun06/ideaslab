@@ -128,4 +128,10 @@ export const statisticsVoiceLogValidator = z.object({
   endMonth: z.number(),
 })
 
+export const statisticsFocusVoiceLogValidator = z.object({
+  focusDate: z
+    .string()
+    .regex(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/, 'yyyy-MM-dd 형식으로 입력해주세요.'),
+})
+
 z.setErrorMap(customErrorMap)

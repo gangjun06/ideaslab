@@ -54,7 +54,7 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
 
   // Member Leave
   if (before.member && before.channelId && after.channelId === null) {
-    eventMemberLeave(before.member.id)
+    eventMemberLeave(before.member.id, before.channel?.name ?? '')
 
     if (before.channelId === voiceRoomCreateChannel) {
       return

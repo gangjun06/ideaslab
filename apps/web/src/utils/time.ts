@@ -41,3 +41,8 @@ export const fullTimeFormat = (date: Date) => {
 export const dateShortFormat = (date: Date) => {
   return dtfDateShort.format(date)
 }
+
+const dtfTimeShort = new Intl.DateTimeFormat('ko', { hour: 'numeric', minute: 'numeric' })
+export const timeShortFormat = (date: Date) => {
+  return dtfTimeShort.format(date)
+}

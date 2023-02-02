@@ -10,7 +10,7 @@ export const eventMemberJoin = async (userId: string) => {
   await redis.set(redisVoiceKey(userId), Date.now(), 'EX', voiceKeyExpire)
 }
 
-export const eventMemberLeave = async (userId: string) => {
+export const eventMemberLeave = async (userId: string, channelName: string) => {
   const date = await redis.getdel(redisVoiceKey(userId))
   if (!date) return
   const dateInt = parseInt(date)
@@ -30,11 +30,12 @@ export const eventMemberLeave = async (userId: string) => {
     const todayDuration = Math.floor((todayDate.getTime() - dateInt) / 1000)
     await dbClient.voiceLog.createMany({
       data: [
-        { time, userDiscordId: userId, value: duration - todayDuration },
+        { time, userDiscordId: userId, value: duration - todayDuration, channelName },
         {
           time: todayDate,
           userDiscordId: userId,
           value: todayDuration,
+          channelName,
         },
       ],
     })
@@ -42,8 +43,26 @@ export const eventMemberLeave = async (userId: string) => {
   }
 
   await dbClient.voiceLog.create({
-    data: { time, userDiscordId: userId, value: duration },
+    data: { time, userDiscordId: userId, value: duration, channelName },
   })
+}
+
+export const getVoiceLogDetail = async (userId: string, date: string) => {
+  const dayStart = new Date(date)
+  dayStart.setHours(0, 0, 0, 0)
+  const dayEnd = new Date(date)
+  dayEnd.setHours(23, 59, 59, 9999)
+
+  const detailList = await dbClient.voiceLog.findMany({
+    where: {
+      time: {
+        gte: dayStart,
+        lte: dayEnd,
+      },
+      userDiscordId: userId,
+    },
+  })
+  return detailList
 }
 
 export const getCurrentVoiceLog = async (userId: string) => {

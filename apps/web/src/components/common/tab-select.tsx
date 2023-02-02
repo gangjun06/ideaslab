@@ -32,7 +32,7 @@ export const Tab = ({ list, children }: TabProps) => {
           </HTab>
         ))}
       </HTab.List>
-      <HTab.Panels as="div" className="mt-8">
+      <HTab.Panels as="div" className="mt-4">
         {children}
       </HTab.Panels>
     </HTab.Group>

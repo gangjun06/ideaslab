@@ -1,23 +1,28 @@
 import { ReactNode, useMemo, useState } from 'react'
 import type { NextPage } from 'next'
-import { LightBulbIcon } from '@heroicons/react/24/outline'
+import { InformationCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { Tooltip, TooltipWrapper } from 'react-tooltip'
 
+import { Tab } from '~/components/common'
 import { Select } from '~/components/form'
 import { useResponsiveSize } from '~/hooks/useWindowe'
 import { SettingLayout } from '~/layouts'
-import { trpc } from '~/utils'
+import { timeShortFormat, trpc } from '~/utils'
 import { fullTimeFormat } from '~/utils'
 
 const StatisticsPage: NextPage = () => {
   return (
     <SettingLayout title="통계" guard="authOnly">
-      <div className="space-y-4">
-        <GuildActivity />
-        <hr />
-        <VoiceChat />
-      </div>
+      <Tab list={['기본 통계', '통화방 통계']}>
+        <Tab.Panel className="space-y-4">
+          <GuildActivity />
+          <hr />
+        </Tab.Panel>
+        <Tab.Panel className="space-y-4">
+          <VoiceChat />
+        </Tab.Panel>
+      </Tab>
     </SettingLayout>
   )
 }
@@ -73,7 +78,18 @@ const formatMinutes = (minutes: number) => {
   return `${hours}시간 ${minutesLeft}분`
 }
 
+export const formatSeconds = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secondsLeft = seconds % 60
+  if (hours === 0 && minutes === 0) return `${secondsLeft}초`
+  if (hours === 0) return `${minutes}분 ${secondsLeft}초`
+  return `${hours}시간 ${minutes}분 ${secondsLeft}초`
+}
+
 const VoiceChat = () => {
+  const [focusDate, setFocusDate] = useState<string | null>() // yyyy-MM-dd
+
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const responsiveSize = useResponsiveSize()
 
@@ -83,6 +99,13 @@ const VoiceChat = () => {
     endYear: year,
     endMonth: 12,
   })
+
+  const { data: focusData, isLoading: isLoadingFocusData } = trpc.statistics.focusVoiceLog.useQuery(
+    {
+      focusDate: focusDate ?? '',
+    },
+    { enabled: !!focusDate },
+  )
 
   const formatedData = useMemo(() => {
     const date = new Date()
@@ -106,7 +129,7 @@ const VoiceChat = () => {
       date.setMonth(i)
       date.setDate(1)
 
-      const monthList: (null | { dateStr: string; sum: number })[] = []
+      const monthList: (null | { dateStr: string; date: string; sum: number })[] = []
       monthList.push(...new Array(date.getDay()).fill(null))
 
       for (let j = 0; j < dayList[i]; j++) {
@@ -116,9 +139,12 @@ const VoiceChat = () => {
           day: 'numeric',
           weekday: 'long',
         }).format(new Date(`${year}-${i + 1}-${j + 1}`))
+        const date = `${year}-${(i + 1).toString().padStart(2, '0')}-${(j + 1)
+          .toString()
+          .padStart(2, '0')}`
 
-        if (item) monthList.push({ dateStr, sum: item })
-        else monthList.push({ dateStr, sum: 0 })
+        if (item) monthList.push({ dateStr, sum: item, date })
+        else monthList.push({ dateStr, sum: 0, date })
       }
       list.push(monthList)
     }
@@ -127,10 +153,11 @@ const VoiceChat = () => {
 
   return (
     <>
-      <div className="flex card px-4 py-2 border-l-yellow-500 dark:border-l-yellow-600 border-l-4">
-        <LightBulbIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 1월 14일
-        이후의 기록만 표시됩니다.
+      <div className="flex card px-4 py-2 border-l-yellow-500 dark:border-l-yellow-600 border-l-4 gap-x-1.5">
+        <InformationCircleIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 1월
+        14일 이후의 기록만 표시됩니다.
       </div>
+
       <div className="grid grid-flow-row grid-cols-2 gap-4">
         <ValueCard
           name="총 통화방 사용시간"
@@ -152,6 +179,9 @@ const VoiceChat = () => {
               : '사용기록이 없습니다'
           }
         />
+      </div>
+      <div className="flex card px-4 py-2 border-l-green-500 dark:border-l-green-600 border-l-4 gap-x-1.5">
+        <LightBulbIcon width={24} height={24} /> 각 날짜를 클릭하여 상세 정보를 확인할 수 있어요
       </div>
       <div className="card p-4">
         <div className="flex justify-between items-center">
@@ -193,7 +223,7 @@ const VoiceChat = () => {
                     {monthData.map((data, index) => {
                       if (data === null)
                         return <div key={index} className="rounded-sm h-4 w-4"></div>
-                      const { sum, dateStr } = data
+                      const { sum, dateStr, date } = data
                       return (
                         <TooltipWrapper
                           tooltipId="calendar-tooltip"
@@ -201,6 +231,7 @@ const VoiceChat = () => {
                           key={index}
                         >
                           <div
+                            onClick={() => setFocusDate(date)}
                             className={classNames('rounded-sm h-4 w-4', {
                               'bg-gray-200 dark:bg-gray-700': sum < 1,
                               'bg-primary-100 dark:bg-primary-900': sum >= 1 && sum < 10,
@@ -222,6 +253,33 @@ const VoiceChat = () => {
           </div>
         </div>
       </div>
+      {focusDate && (
+        <div className="card p-4">
+          <div className="flex justify-between items-center">
+            <div className="text-lg text-title-color">{`${focusDate} 통화방 사용기록`}</div>
+          </div>
+          <div className="mt-2 text-description-color">
+            {isLoadingFocusData || !focusData ? (
+              <div>불러오는 중</div>
+            ) : focusData.length < 1 ? (
+              '해당 날짜에 사용한 기록이 존재하지 않습니다'
+            ) : (
+              <div>
+                {focusData.map(({ channelName, time, value }) => (
+                  <div key={`${time.getUTCMilliseconds()}${value}`} className="card px-2 py-1">
+                    <div className="text-subtitle-color">
+                      {channelName || '채널명을 찾지 못하였어요'}
+                    </div>
+                    <div className="text-sm">{`참여일: ${timeShortFormat(
+                      time,
+                    )}, 참여시간: ${formatSeconds(value)}`}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }
