@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 
 export * from './button'
+export * from './calendar'
 export * from './dialog'
 export * from './icons'
 export * from './page-back'
