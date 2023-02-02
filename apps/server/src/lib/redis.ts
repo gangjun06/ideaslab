@@ -10,6 +10,8 @@ declare global {
   var redis: Redis | undefined
 }
 
+console.log('REDIS CONNECT', config)
+
 export const redis = global.redis || new Redis(config.redisURL)
 
 if (process.env.NODE_ENV !== 'production') global.redis = redis

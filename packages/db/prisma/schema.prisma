@@ -34,6 +34,7 @@ model User {
   VoiceLog    VoiceLog[]
   Comment     Comment[]
   Achievement Achievement[]
+  MessageLog  MessageLog[]
 }
 
 model Achievement {
@@ -119,8 +120,19 @@ model Like {
 
 model VoiceLog {
   time          DateTime @default(now()) @db.Timestamptz()
+  channelName   String   @default("")
   value         Int
   userDiscordId String
+  user          User     @relation(fields: [userDiscordId], references: [discordId])
+
+  @@unique([userDiscordId, time])
+  @@index([time(sort: Desc)])
+}
+
+model MessageLog {
+  time          DateTime @default(now()) @db.Timestamptz()
+  userDiscordId String
+  count         Int
   user          User     @relation(fields: [userDiscordId], references: [discordId])
 
   @@unique([userDiscordId, time])

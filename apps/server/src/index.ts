@@ -1,3 +1,6 @@
+// eslint-disable-next-line simple-import-sort/imports
+import 'dotenv/config'
+
 // import 'module-alias/register'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 import http from 'http'
@@ -9,8 +12,7 @@ import { Logger } from '~/utils/logger'
 
 import { appRouter } from './api/router/_app'
 import config from './config'
-
-import 'dotenv/config'
+import { setupSchedule } from './schedules'
 
 export type { AppRouter } from '~/api/router/_app'
 
@@ -51,6 +53,8 @@ if (process.argv.includes('--register')) {
       }
     },
   })
+
+  setupSchedule()
 
   http
     .createServer((req, res) => {
