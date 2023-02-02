@@ -29,9 +29,11 @@ export async function createContext({
   res,
 }: NodeHTTPCreateContextFnOptions<IncomingMessage, ServerResponse<IncomingMessage>>) {
   const session = await getIronSession(req, res, sessionOptions)
+  const hasSession = req.headers.cookie?.includes('ideas-lab/session')
 
   return {
     session,
+    hasSession,
   }
 }
 

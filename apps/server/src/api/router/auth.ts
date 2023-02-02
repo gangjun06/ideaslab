@@ -125,6 +125,7 @@ export const authRouter = router({
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+          'Accept-Encoding': 'gzip,deflate,compress',
         },
       },
     )
@@ -146,9 +147,10 @@ export const authRouter = router({
       await member.setNickname(input.name)
     }
     const role = await getSetting('userRole')
-    if (role) {
-      await member.roles.add(role)
-    }
+    const notVerifiedRole = await getSetting('notVerifiedRole')
+    if (role) await member.roles.add(role)
+    if (notVerifiedRole && member.roles.cache.get(notVerifiedRole))
+      await member.roles.remove(notVerifiedRole)
 
     await dbClient.user.create({
       data: {

@@ -54,4 +54,4 @@ services:
     depends_on:
       - cache
     environment:
-      - DB_ENGINE=arm64
+      - DB_ENGINE=arm64-openssl

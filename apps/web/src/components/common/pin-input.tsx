@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, React.PropsWithoutRef<JSX.IntrinsicEl
     return (
       <input
         ref={ref}
-        type="text"
+        type="number"
         className="block default-ring border border-base-color w-10 h-10 rounded-lg dark:bg-gray-800 dark:text-gray-200 font-bold text-lg text-center"
         {...props}
       />
@@ -43,6 +43,7 @@ export const PinInput = ({ name, onEnterAll }: Props) => {
                 if (value.length < 1) return
                 result += value
               }
+              evt.currentTarget.blur()
               onEnterAll(result)
             }
 

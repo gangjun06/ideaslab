@@ -10,6 +10,9 @@ const checkAuth = (type: 'admin' | 'logined' | 'verified' | 'unverified') =>
       ctx.session.isAdmin === undefined ||
       ctx.session.verified === undefined
     ) {
+      if (ctx.hasSession) {
+        ctx.session.destroy()
+      }
       throw new TRPCError({
         code: 'UNAUTHORIZED',
         cause: {
