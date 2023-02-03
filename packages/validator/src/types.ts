@@ -134,4 +134,8 @@ export const statisticsFocusVoiceLogValidator = z.object({
     .regex(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/, 'yyyy-MM-dd 형식으로 입력해주세요.'),
 })
 
+export const statisticsMessageLogValidator = z.object({
+  year: z.number().min(2022).max(2050),
+})
+
 z.setErrorMap(customErrorMap)

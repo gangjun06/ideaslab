@@ -50,9 +50,77 @@ export const saveMessageCounts = async () => {
       })
     }
 
+    console.log(createManyData)
+
     await dbClient.messageLog.createMany({ data: createManyData })
     await redis.del(redisMessageLogKey(targetDate))
   } catch (e) {
     logger.error('Failed to scan messages', e)
   }
+}
+
+export const messageLogSummary = async (userId: string) => {
+  let today: number | null = null
+  let all: number | null = null
+
+  const todayDate = new Date()
+  todayDate.setHours(0, 0, 0, 0)
+
+  const tomorrowDate = new Date(todayDate)
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+
+  const todaySum = await dbClient.messageLog.groupBy({
+    by: ['userDiscordId'],
+    _sum: {
+      count: true,
+    },
+    where: {
+      time: {
+        gte: todayDate,
+        lte: tomorrowDate,
+      },
+      userDiscordId: userId,
+    },
+  })
+
+  const allSum = await dbClient.messageLog.groupBy({
+    by: ['userDiscordId'],
+    _sum: {
+      count: true,
+    },
+    where: {
+      userDiscordId: userId,
+    },
+  })
+
+  if (todaySum[0]) today = todaySum[0]._sum.count
+  if (allSum[0]) all = allSum[0]._sum.count
+
+  return { today, all }
+}
+
+export const allMessageLogByYear = async (userId: string, year: number) => {
+  const monthFirst = new Date()
+  monthFirst.setFullYear(year)
+  monthFirst.setMonth(0)
+  monthFirst.setDate(1)
+  monthFirst.setHours(0, 0, 0, 0)
+  const monthSecond = new Date()
+  monthSecond.setFullYear(year)
+  monthSecond.setMonth(12)
+  monthFirst.setDate(1)
+  monthFirst.setHours(0, 0, 0, 0)
+
+  const result = (await dbClient.$queryRaw(
+    Prisma.sql`
+    SELECT CAST(SUM(count) as int4) AS count, CAST(time as date)
+    FROM "MessageLog"
+    WHERE "userDiscordId"=${userId}
+      AND "time" >= ${monthFirst}
+      AND "time" <= ${monthSecond}
+    GROUP BY CAST(time as date)
+    ORDER BY time`,
+  )) as { count: number; time: Date }[]
+
+  return result
 }

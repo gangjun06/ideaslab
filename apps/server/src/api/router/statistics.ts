@@ -1,8 +1,13 @@
-import { statisticsFocusVoiceLogValidator, statisticsVoiceLogValidator } from '@ideaslab/validator'
+import {
+  statisticsFocusVoiceLogValidator,
+  statisticsMessageLogValidator,
+  statisticsVoiceLogValidator,
+} from '@ideaslab/validator'
 
 import { verifiedProcedure } from '~/api/base/auth-middleware'
 import { router } from '~/api/base/trpc'
 import { currentGuildMember } from '~/bot/base/client'
+import { allMessageLogByYear, messageLogSummary } from '~/service/message-log'
 import { allVoiceLogByDate, getCurrentVoiceLog, getVoiceLogDetail } from '~/service/voice-log'
 
 export const statisticsRouter = router({
@@ -25,6 +30,14 @@ export const statisticsRouter = router({
     const { all, today } = await getCurrentVoiceLog(ctx.session.id)
     return { list: result, all, today }
   }),
+  messageLog: verifiedProcedure
+    .input(statisticsMessageLogValidator)
+    .query(async ({ ctx, input }) => {
+      const { year } = input
+      const result = await allMessageLogByYear(ctx.session.id, year)
+      const { all, today } = await messageLogSummary(ctx.session.id)
+      return { list: result, all, today }
+    }),
   focusVoiceLog: verifiedProcedure
     .input(statisticsFocusVoiceLogValidator)
     .query(async ({ ctx, input }) => {

@@ -28,7 +28,7 @@ export const Calendar = ({ data, onClick, tooltip: tooltipFunc, year }: Props) =
       data.reduce(
         (prev, { value, date }) => ({
           ...prev,
-          [`${date.getMonth()}${date.getDate()}`]: Math.floor(value / 60),
+          [`${date.getMonth()}${date.getDate()}`]: value,
         }),
         {},
       ) ?? {}

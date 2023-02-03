@@ -12,10 +12,15 @@ import { fullTimeFormat } from '~/utils'
 const StatisticsPage: NextPage = () => {
   return (
     <SettingLayout title="통계" guard="authOnly">
+      <div className="flex card px-4 py-2 border-l-yellow-500 dark:border-l-yellow-600 border-l-4 gap-x-1.5">
+        <InformationCircleIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 1월
+        14일 이후의 기록만 표시됩니다.
+      </div>
       <Tab list={['기본 통계', '통화방 통계']}>
         <Tab.Panel className="space-y-4">
           <GuildActivity />
           <hr />
+          <MessageLog />
         </Tab.Panel>
         <Tab.Panel className="space-y-4">
           <VoiceChat />
@@ -85,6 +90,67 @@ export const formatSeconds = (seconds: number) => {
   return `${hours}시간 ${minutes}분 ${secondsLeft}초`
 }
 
+const MessageLog = () => {
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+
+  const { data, isLoading } = trpc.statistics.messageLog.useQuery({
+    year,
+  })
+
+  const calendarData = useMemo(() => {
+    return (
+      data?.list.map((item) => ({
+        value: item.count,
+        date: item.time,
+      })) ?? []
+    )
+  }, [data?.list])
+
+  return (
+    <>
+      <div className="grid grid-flow-row grid-cols-2 gap-4">
+        <ValueCard
+          name="총 전송한 메시지 수"
+          value={
+            isLoading ? '불러오는 중' : data?.all ? `${data?.all}개` : '전송한 메시지가 없습니다.'
+          }
+        />
+        <ValueCard
+          name="오늘 전송한 메시지 수"
+          value={
+            isLoading
+              ? '불러오는 중'
+              : data?.today && data?.today !== 0
+              ? `${data?.all}개`
+              : '전송한 메시지가 없습니다.'
+          }
+        />
+      </div>
+      <div className="card p-4">
+        <div className="flex justify-between items-center">
+          <div className="text-lg text-title-color">메시지 작성 통계</div>
+          <div className="w-32">
+            <Select
+              options={[{ label: '2023년', value: 2023 }]}
+              value={year}
+              onChange={(value) => {
+                setYear(value as number)
+              }}
+            />
+          </div>
+        </div>
+        <div className="mt-2">
+          <Calendar
+            year={year}
+            data={calendarData}
+            tooltip={(value) => (value ? `${value}개` : null)}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
 const VoiceChat = () => {
   const [focusDate, setFocusDate] = useState<string | null>() // yyyy-MM-dd
 
@@ -107,7 +173,7 @@ const VoiceChat = () => {
   const calendarData = useMemo(() => {
     return (
       data?.list.map((item) => ({
-        value: item.sum,
+        value: Math.floor(item.sum / 60),
         date: item.time,
       })) ?? []
     )
@@ -115,11 +181,6 @@ const VoiceChat = () => {
 
   return (
     <>
-      <div className="flex card px-4 py-2 border-l-yellow-500 dark:border-l-yellow-600 border-l-4 gap-x-1.5">
-        <InformationCircleIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 1월
-        14일 이후의 기록만 표시됩니다.
-      </div>
-
       <div className="grid grid-flow-row grid-cols-2 gap-4">
         <ValueCard
           name="총 통화방 사용시간"
