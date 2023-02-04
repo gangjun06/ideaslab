@@ -21,7 +21,7 @@ export class Button {
   public type: InteractionType.Button = InteractionType.Button
   constructor(
     public customId: string | string[],
-    public execute: BaseInteractionFunction<ButtonInteraction<'cached'>>,
+    public execute: BaseInteractionFunction<ButtonInteraction>,
   ) {}
 }
 

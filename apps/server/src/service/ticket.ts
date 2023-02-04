@@ -92,13 +92,13 @@ const confirmMessageContent = (status: 'canceled' | 'success' | 'wait' | 'time-o
     row.addComponents(button0, button1)
   }
 
-  if (status === 'success') {
-    const button3 = new ButtonBuilder()
-      .setStyle(ButtonStyle.Primary)
-      .setLabel('티켓 닫기')
-      .setCustomId('close-support')
-    row.addComponents(button3)
-  }
+  // if (status === 'success') {
+  //   const button3 = new ButtonBuilder()
+  //     .setStyle(ButtonStyle.Primary)
+  //     .setLabel('티켓 닫기')
+  //     .setCustomId('close-support-user')
+  //   row.addComponents(button3)
+  // }
 
   const button2 = new ButtonBuilder()
     .setStyle(ButtonStyle.Secondary)
@@ -186,7 +186,9 @@ export const ticketEventFromDM = async (message: Message) => {
   if (channel?.type !== ChannelType.PublicThread) return
 
   await channel.send({
-    content: `> ${isAnon ? '익명' : member.displayName ?? '??'}: ${message.content}`,
+    content: `> ${isAnon ? '익명' : `${member.displayName} (<@${member.id}>)` ?? '??'}: ${
+      message.content
+    }`,
   })
 
   await message.react('✅')
@@ -214,34 +216,36 @@ export const ticketEventFromThread = async (message: Message) => {
 export const ticketClose = async (from: 'user' | 'manager', id: string) => {
   if (from === 'user') {
     const data = await redis.getdel(redisTicketKey('userId', id))
-    if (!data) return
+    if (!data) return false
     const { threadId } = JSON.parse(data) as TicketRedisValueByUserId
     await redis.del(redisTicketKey('channelId', threadId))
 
     const channel = await currentGuildChannel(threadId)
 
-    if (!channel) return
-    if (channel.type !== ChannelType.PublicThread) return
+    if (!channel) return false
+    if (channel.type !== ChannelType.PublicThread) return false
 
     channel.setArchived(true)
 
     await channel.send({
       content: '대화가 종료되었습니다.',
     })
-    return
+    return true
   }
 
   const data = await redis.getdel(redisTicketKey('channelId', id))
-  if (!data) return
+  if (!data) return false
   const { userId } = JSON.parse(data) as TicketRedisValueByChannelId
   await redis.del(redisTicketKey('userId', userId))
 
   const { dmChannel } = await currentGuildMember(userId)
 
-  if (!dmChannel) return
-  if (!dmChannel.isDMBased()) return
+  if (!dmChannel) return false
+  if (!dmChannel.isDMBased()) return false
 
   await dmChannel.send({
     content: '대화가 종료되었습니다.',
   })
+
+  return true
 }
