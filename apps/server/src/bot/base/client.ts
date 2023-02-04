@@ -63,11 +63,12 @@ export const initClient = async () => {
       'GuildVoiceStates',
       'GuildMessages',
       'MessageContent',
+      'DirectMessages',
       'GuildWebhooks',
       'GuildIntegrations',
       'GuildMembers',
     ],
-    partials: [Partials.Message],
+    partials: [Partials.Message, Partials.Channel],
   })
 }
 

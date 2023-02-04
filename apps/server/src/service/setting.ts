@@ -28,6 +28,7 @@ const SettingList = {
   serviceInfo: SettingValueType.LongText,
   welcomeChannel: SettingValueType.Channel,
   welcomeMessage: SettingValueType.LongText,
+  ticketChannel: SettingValueType.Channel,
 } as const
 
 type SettingKeys = keyof typeof SettingList
@@ -106,6 +107,10 @@ export const settingDetails: {
   },
   notVerifiedChannel: {
     description: '인증안된 유저가 안내받는 채널',
+    cache: true,
+  },
+  ticketChannel: {
+    description: '티켓이 만들어질 채널을 설정해요.',
     cache: true,
   },
 }

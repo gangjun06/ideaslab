@@ -50,8 +50,6 @@ export const saveMessageCounts = async () => {
       })
     }
 
-    console.log(createManyData)
-
     await dbClient.messageLog.createMany({ data: createManyData })
     await redis.del(redisMessageLogKey(targetDate))
   } catch (e) {
