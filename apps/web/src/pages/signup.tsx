@@ -190,8 +190,8 @@ const SignupForm = ({ prev, next }: StepContentProps) => {
     onSuccess: () => {
       toast.success('성공적으로 회원가입을 완료하였어요.')
     },
-    onError: () => {
-      toast.error('가입중 문제가 발생하였어요.')
+    onError: (err) => {
+      toast.error(`가입중 문제가 발생하였어요.\n${err.message}`)
     },
   })
 

@@ -144,7 +144,7 @@ export const authRouter = router({
     const member = await currentGuildMember(ctx.session.id)
 
     if (member.displayName !== input.name) {
-      await member.setNickname(input.name)
+      await ignoreError(member.setNickname(input.name))
     }
     const role = await getSetting('userRole')
     const notVerifiedRole = await getSetting('notVerifiedRole')

@@ -34,7 +34,7 @@ export default new Button(['voice-visible-setting'], async (client, interaction)
   await voiceChannelVisible(interaction.channel, !isPrivate)
 
   if (!isPrivate) {
-    await voiceChannelAllow(interaction.channel, [interaction.member.id])
+    await voiceChannelAllow(interaction.channel, [interaction.user.id])
   }
 
   await interaction.channel?.send({

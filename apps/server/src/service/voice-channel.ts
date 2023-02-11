@@ -187,9 +187,9 @@ export const voiceChannelOwnerCheck = async (interaction: BaseInteraction) => {
   return true
 }
 
-export const voiceChannelClaim = async (channel: VoiceChannel, member: GuildMember) => {
+export const voiceChannelClaim = async (channel: VoiceChannel, memberId: string) => {
   const currentOwner = await redis.get(redisVoiceOwnerKey(channel.id))
   if (currentOwner && channel.members.get(currentOwner)) return false
-  await redis.set(redisVoiceOwnerKey(channel.id), member.id, 'EX', redisVoiceOwnerExpire)
+  await redis.set(redisVoiceOwnerKey(channel.id), memberId, 'EX', redisVoiceOwnerExpire)
   return true
 }

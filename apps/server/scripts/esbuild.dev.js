@@ -4,6 +4,7 @@ const chalk = require('chalk')
 const { build } = require('esbuild')
 const { copyFileSync, readdirSync, existsSync, mkdirSync } = require('fs')
 const { join } = require('path')
+const { exec } = require('child_process')
 
 const cwd = process.cwd()
 
@@ -41,6 +42,7 @@ build({
     onRebuild(error, result) {
       if (error) console.error('watch build failed:', error)
       else console.log(chalk.blueBright(`🚀 watch build succeeded:`), result)
+      exec('yarn run build:types')
     },
   },
   minify: false,

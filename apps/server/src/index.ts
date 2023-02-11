@@ -27,7 +27,7 @@ initClient()
 
 if (process.argv.includes('--register')) {
   logger.info('Registering slash commands...')
-  client.command.slashCommandSetup(process.env.TEST_GUILD_ID ?? '').then(() => {
+  client.command.slashCommandSetup(config.guildId ?? '').then(() => {
     exit(1)
   })
   process.stdin.resume()

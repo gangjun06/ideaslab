@@ -13,7 +13,7 @@
 				"*"
 			],
 			"@ideaslab/server/app": [
-				"../../server/src/api/router/_app"
+				"../../server/dist/src/api/router/_app"
 			]
 		}
 	},
