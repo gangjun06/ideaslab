@@ -168,3 +168,15 @@ hr {
     @apply w-12 h-12 border border-base-color rounded-full;
   }
 }
+
+// Hide arrow from input[type="number"]
+.no-spin::-webkit-inner-spin-button,
+.no-spin::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+.no-spin {
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}

@@ -12,7 +12,7 @@ const Input = forwardRef<HTMLInputElement, React.PropsWithoutRef<JSX.IntrinsicEl
       <input
         ref={ref}
         type="number"
-        className="block default-ring border border-base-color w-10 h-10 rounded-lg dark:bg-gray-800 dark:text-gray-200 font-bold text-lg text-center"
+        className="block default-ring border border-base-color w-10 h-10 rounded-lg dark:bg-gray-800 dark:text-gray-200 font-bold text-lg text-center no-spin"
         {...props}
       />
     )
