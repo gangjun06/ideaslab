@@ -162,9 +162,12 @@ hr {
 }
 
 .mySwiper {
+  .swiper-scrollbar {
+    display: none;
+  }
   .swiper-button-prev,
   .swiper-button-next {
-    @apply text-primary-500 bg-white/60 dark:bg-gray-800/60  backdrop-blur-lg shadow-sm;
+    @apply text-black bg-white/60 dark:bg-gray-800/60  backdrop-blur-lg shadow-sm;
     @apply w-12 h-12 border border-base-color rounded-full;
   }
 }
@@ -180,3 +183,37 @@ hr {
   appearance: textfield !important;
   -moz-appearance: textfield !important;
 }
+
+.swiper-slide {
+  max-height: 60rem;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  justify-content: center;
+  font-size: 1.5rem;
+  height: auto !important;
+
+  img {
+    user-select: none;
+  }
+}
+
+// .thumb-swiper .swiper-slide {
+//   max-height: 10rem;
+// }
+
+// .thumb-swiper {
+//   height: 20%;
+//   box-sizing: border-box;
+//   padding: 10px 0;
+// }
+
+// .thumb-swiper .swiper-slide {
+//   width: 20%;
+//   height: 100%;
+//   opacity: 0.4;
+// }
+
+// .thumb-swiper .swiper-slide-thumb-active {
+//   opacity: 1;
+// }

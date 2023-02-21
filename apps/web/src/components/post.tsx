@@ -11,6 +11,8 @@ import {
 import classNames from 'classnames'
 import toast from 'react-hot-toast'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 import type { AppRouter } from '@ideaslab/server/app'
 
@@ -311,10 +313,45 @@ export const PostDetail = ({
             </div>
           ))}
         </div>
-        <ReactMarkdown className="max-w-none markdown">
+        <ReactMarkdown className="max-w-none markdown break-all">
           {post.content.replace(/\n/g, '\n\n')}
         </ReactMarkdown>
-        <div className="mt-4 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <Swiper
+            modules={[FreeMode, Navigation, A11y, Thumbs]}
+            // thumbs={{ swiper: thumbsSwiper }}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            // onSlideChange={(swiper) => onSlideChanage(swiper.activeIndex)}
+            className="max-h-[30%] mySwiper"
+          >
+            {post.attachments.map((image, index) => {
+              if ((image as any)?.contentType?.startsWith('image/')) {
+                return (
+                  <SwiperSlide key={index}>
+                    <Image
+                      key={index}
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      src={image?.url ?? ''}
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      width={image?.width ?? 0}
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      height={image?.height ?? 0}
+                      alt="첨부한 이미지"
+                    />
+                  </SwiperSlide>
+                )
+              }
+            })}
+          </Swiper>
+        </div>
+        {/* <div className="mt-4 flex flex-col items-center justify-center gap-3 px-24">
           {post.attachments.map((image, index) => {
             if ((image as any)?.contentType?.startsWith('image/')) {
               return (
@@ -334,7 +371,7 @@ export const PostDetail = ({
               )
             }
           })}
-        </div>
+        </div> */}
         <div className="flex gap-x-2 mt-4 w-full items-center justify-center flex-wrap">
           <Button
             variant="subtle"
