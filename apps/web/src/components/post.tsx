@@ -326,7 +326,8 @@ export const PostDetail = ({
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
             // onSlideChange={(swiper) => onSlideChanage(swiper.activeIndex)}
-            className="max-h-[30%] mySwiper"
+            className="max-h-[30%] mySwiper gallery-slide"
+            centeredSlides
           >
             {post.attachments.map((image, index) => {
               if ((image as any)?.contentType?.startsWith('image/')) {
