@@ -278,7 +278,11 @@ export const PostDetail = ({
   return (
     <>
       {forDialog && <Dialog.Title title={post.title ?? '이미지 상세보기'} />}
-      <div className={classNames('text-base-color overflow-y-auto custom-scroll flex-1')}>
+      <div
+        className={classNames(
+          'text-base-color overflow-y-auto custom-scroll flex-1 h-full hide-scroll',
+        )}
+      >
         <Link href={`/@${post.author.handle}`} passHref>
           <a className="flex gap-x-2 items-center">
             <Image

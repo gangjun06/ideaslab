@@ -40,7 +40,7 @@ const DialogContent = ({
   size?: 'full' | 'auto'
 }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center overflow-y-auto sm:p-5">
+    <div className="fixed inset-0 flex items-center justify-center overflow-y-hidden sm:p-5">
       <div
         className={classNames(
           'flex items-center justify-center text-center h-full min-h-full w-full',
@@ -55,7 +55,7 @@ const DialogContent = ({
               size === 'auto' && 'rounded-xl',
             )}
           >
-            <div className="px-8 py-8">{children}</div>
+            <div className="px-8 py-8 h-full overflow-y-hidden">{children}</div>
           </HDialog.Panel>
         </TransitionChild>
       </div>
