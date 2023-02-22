@@ -102,9 +102,25 @@ export const verifyAuthToken = (token: string) => {
   }
 }
 
-const timeoutMillisecond = 1000 * 60 * 20 // 20 Minutes
+// const timeoutMillisecond = 1000 * 60 * 20 // 20 Minutes
+const timeoutMillisecond = 1000 // 20 Minutes
 
 export const notVerifiedUsers = async () => {
+  const notVerifiedRole = await getSetting('notVerifiedRole')
+
+  if (!notVerifiedRole) return []
+
+  const guild = await currentGuild()
+
+  await guild.members.fetch({})
+
+  const filtered = guild.members.cache.filter((user) => {
+    return !user.user.bot && user.roles.cache.has(notVerifiedRole)
+  })
+  return [...filtered.values()]
+}
+
+export const notVerifiedAlertUsers = async () => {
   const userRole = await getSetting('userRole')
   const notVerifiedRole = await getSetting('notVerifiedRole')
   const now = new Date()
@@ -113,21 +129,23 @@ export const notVerifiedUsers = async () => {
 
   const guild = await currentGuild()
 
-  const filtered = guild.members.cache.filter(
-    (user) =>
-      !user.roles.cache.get(userRole) &&
-      !user.roles.cache.get(notVerifiedRole) &&
+  const filtered = guild.members.cache.filter((user) => {
+    return (
+      !user.user.bot &&
+      !user.roles.cache.has(userRole) &&
+      !user.roles.cache.has(notVerifiedRole) &&
       user.joinedTimestamp &&
-      user.joinedTimestamp - now.getUTCMilliseconds() > timeoutMillisecond,
-  )
+      user.joinedTimestamp - now.getUTCMilliseconds() > timeoutMillisecond
+    )
+  })
   return [...filtered.values()]
 }
 
 export const alertToNotVerifiedUser = async () => {
-  const list = await notVerifiedUsers()
+  const list = await notVerifiedAlertUsers()
   if (list.length < 1) return
 
-  const notVerifiedChannel = await getSetting('notVerifiedRole')
+  const notVerifiedChannel = await getSetting('notVerifiedChannel')
   const notVerifiedRole = await getSetting('notVerifiedRole')
 
   if (!notVerifiedChannel || !notVerifiedRole) return

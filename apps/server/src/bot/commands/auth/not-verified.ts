@@ -16,7 +16,12 @@ export default new SlashCommand(
     const list = await notVerifiedUsers()
 
     const text = list
-      .map((member) => `${member.displayName} | ${member.id} | <t:${member.joinedTimestamp}:F>`)
+      .map(
+        (member) =>
+          `${member.displayName} | ${member.id} | <t:${Math.ceil(
+            (member?.joinedTimestamp ?? 0) / 1000,
+          )}:R>`,
+      )
       .join('\n')
 
     const embed = new Embed(client, 'info')
