@@ -166,7 +166,7 @@ hr {
   }
   .swiper-button-prev,
   .swiper-button-next {
-    @apply text-black bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg shadow-sm;
+    @apply text-black dark:text-white bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg shadow-sm;
     @apply w-12 h-12 border border-base-color rounded-full transform -translate-y-6 m-0;
   }
 }

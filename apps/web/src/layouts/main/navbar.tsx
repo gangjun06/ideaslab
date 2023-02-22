@@ -81,7 +81,7 @@ export const Navbar = () => {
               <span className="font-bold text-lg sm:text-xl">아이디어스랩</span>
             </a>
           </Link>
-          <div className={'hidden lg:flex gap-x-4 items-center'} id="main-menu">
+          <div className={'hidden md:flex gap-x-4 items-center'} id="main-menu">
             <NavItems isMobile={false} />
           </div>
           <div className="flex gap-x-2 items-center ">
