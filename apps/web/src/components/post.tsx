@@ -99,7 +99,7 @@ export const PostView2 = ({
       }}
     >
       <Link href={`/@${post.author.handle}`} passHref>
-        <a className="flex gap-x-2 items-center mb-2 no-click">
+        <a className="flex gap-x-2 items-center mb-2 no-click w-fit">
           <Image
             src={post.author.avatar}
             width={40}
@@ -189,7 +189,7 @@ export const PostView = ({
         </div>
       )}
       <Link href={`/@${post.author.handle}`} passHref>
-        <a className="flex gap-x-2 items-center mb-2 no-click">
+        <a className="flex gap-x-2 items-center mb-2 no-click w-fit">
           <Image
             src={post.author.avatar}
             width={40}

@@ -131,7 +131,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
             </div>
           )}
         </div>
-        <div className="w-full">
+        <div className="w-full overflow-x-hidden">
           <PostDetailModalWrapper baseUrl={`/@${profileHandle}`}>
             {({ showDetail }) => (
               <InfiniteScroll
@@ -156,7 +156,9 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
                       ))
                     : posts?.pages.map((page) =>
                         page.map((post) => (
-                          <PostView key={post.id} post={post} onClick={() => showDetail(post.id)} />
+                          <div className="shrink" key={post.id}>
+                            <PostView post={post} onClick={() => showDetail(post.id)} />
+                          </div>
                         )),
                       )}
                 </Masonry>

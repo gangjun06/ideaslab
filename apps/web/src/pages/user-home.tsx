@@ -86,11 +86,17 @@ const UserHome: NextPage = () => {
               href="/gallery"
             >
               {isLoadingPosts && (
-                <SwiperSlide>
-                  <div className="bg-pulse rounded w-full h-80"></div>
-                  <div className="bg-pulse rounded w-full h-80"></div>
-                  <div className="bg-pulse rounded w-full h-80"></div>
-                </SwiperSlide>
+                <>
+                  <SwiperSlide>
+                    <div className="bg-pulse rounded w-full h-80"></div>
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <div className="bg-pulse rounded w-full h-80"></div>
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <div className="bg-pulse rounded w-full h-80"></div>
+                  </SwiperSlide>
+                </>
               )}
               {posts?.map((item) => (
                 <SwiperSlide key={item.id}>
@@ -107,11 +113,17 @@ const UserHome: NextPage = () => {
           href="/profiles"
         >
           {isLoadingProfiles && (
-            <SwiperSlide>
-              <div className="bg-pulse rounded w-full h-44"></div>
-              <div className="bg-pulse rounded w-full h-44"></div>
-              <div className="bg-pulse rounded w-full h-44"></div>
-            </SwiperSlide>
+            <>
+              <SwiperSlide>
+                <div className="bg-pulse rounded w-full h-44"></div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-pulse rounded w-full h-44"></div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-pulse rounded w-full h-44"></div>
+              </SwiperSlide>
+            </>
           )}
           {profiles?.map((profile) => (
             <SwiperSlide key={profile.discordId}>

@@ -39,7 +39,9 @@ export const PinInput = ({ name, onEnterAll }: Props) => {
               if (i !== length - 1) return
               let result = ''
               for (let i = 0; i < length; i++) {
-                const value = (document.getElementById(`${name}-${i}`) as HTMLInputElement)?.value
+                const element = document.getElementById(`${name}-${i}`) as HTMLInputElement
+                const value = element?.value
+                element.value = ''
                 if (value.length < 1) return
                 result += value
               }

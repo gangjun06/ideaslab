@@ -171,15 +171,16 @@ export const authRouter = router({
 
     const welcomeChannelId = await getSetting('welcomeChannel')
     const welcomeChannel = welcomeChannelId ? client.channels.cache.get(welcomeChannelId) : null
-    const welcomeMessage = await getSetting('welcomeMessage')
+    const welcomeMessage =
+      (await getSetting('welcomeMessage')) ?? '<mention>님, 아이디어스 랩에 오신것을 환영합니다'
 
     if (welcomeChannel && welcomeChannel.type === ChannelType.GuildText) {
       const embed = new Embed(client, 'info')
         .setTitle('새로운 유저가 서버에 참여했어요!')
         .setDescription(
           welcomeMessage
-            ?.replace('<mention>', `<@${member.id}>`)
-            .replace('<name>', member.displayName) ?? '',
+            .replace('<mention>', `<@${member.id}>`)
+            .replace('<name>', member.displayName),
         )
         .addFields({
           name: '자기소개',
