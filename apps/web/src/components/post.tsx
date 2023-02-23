@@ -22,6 +22,7 @@ import { Unarray } from '~/types/utils'
 import { trpc } from '~/utils'
 import { relativeTimeFormat } from '~/utils'
 
+import { AudioPlayer } from './audio-player'
 import { Button, ButtonLink, Dialog, TimeDynamic } from './common'
 
 export const PostDetailModalWrapper = ({
@@ -323,13 +324,11 @@ export const PostDetail = ({
         <div className="relative">
           <Swiper
             modules={[FreeMode, Navigation, A11y, Thumbs]}
-            // thumbs={{ swiper: thumbsSwiper }}
             spaceBetween={50}
             slidesPerView={1}
             navigation
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
-            // onSlideChange={(swiper) => onSlideChanage(swiper.activeIndex)}
             className="max-h-[30%] mySwiper gallery-slide"
             centeredSlides
           >
@@ -356,6 +355,13 @@ export const PostDetail = ({
             })}
           </Swiper>
         </div>
+        {post.attachments.map((content, index) => {
+          if ((content as any)?.contentType?.startsWith('audio/mpeg')) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
+          }
+        })}
         {/* <div className="mt-4 flex flex-col items-center justify-center gap-3 px-24">
           {post.attachments.map((image, index) => {
             if ((image as any)?.contentType?.startsWith('image/')) {

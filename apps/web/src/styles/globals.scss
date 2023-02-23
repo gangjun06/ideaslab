@@ -206,3 +206,76 @@ hr {
     user-select: none;
   }
 }
+
+// input[type='range'].player {
+//   -webkit-appearance: none !important;
+//   appearance: none !important;
+//   height: 7px;
+//   @apply bg-slate-600 rounded-lg;
+// }
+// input[type='range']::-webkit-slider-thumb.player {
+//   -webkit-appearance: none !important;
+//   @apply bg-primary-600 dark:bg-primary-400;
+//   height: 10px;
+//   width: 10px;
+// }
+
+/* ---  Refference: https://codepen.io/dev_loop/pen/vYYxvbz --- */
+
+$range-handle-size: 20px !default;
+$range-track-height: 4px !default;
+
+.player {
+  -webkit-appearance: none;
+  appearance: none;
+  height: $range-track-height;
+  border-radius: 5px;
+  @apply bg-slate-800/30 dark:bg-white/30;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  // Range Handle
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: $range-handle-size;
+    height: $range-handle-size;
+    border-radius: 50%;
+    @apply bg-slate-600 dark:bg-white;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    &:hover {
+      @apply bg-slate-700 dark:bg-slate-500;
+      transform: scale(1.2);
+    }
+  }
+  &::-moz-range-thumb {
+    width: $range-handle-size;
+    height: $range-handle-size;
+    border: 0;
+    border-radius: 50%;
+    @apply bg-slate-600 dark:bg-white;
+    cursor: pointer;
+    transition: background 0.15s ease-in-out;
+    &:hover {
+      @apply bg-slate-700 dark:bg-slate-300;
+    }
+  }
+
+  background: linear-gradient(
+    90deg,
+    rgb(52, 211, 153) var(--player-range-progress),
+    rgb(30 41 59 / 0.3) var(--player-range-progress)
+  );
+
+  .dark {
+    background: linear-gradient(
+      90deg,
+      rgb(5, 150, 105) var(--player-range-progress),
+      rgba(255, 255, 255, 0.2) var(--player-range-progress)
+    );
+  }
+}
+
+/* --- */
