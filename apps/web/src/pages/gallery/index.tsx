@@ -66,7 +66,7 @@ const GalleryPage = () => {
           </button>
         ))}
       </div>
-      <PostDetailModalWrapper>
+      <PostDetailModalWrapper baseUrl="/gallery">
         {({ showDetail }) => (
           <InfiniteScroll
             className="h-full w-11/12 mx-auto"

@@ -78,7 +78,7 @@ const UserHome: NextPage = () => {
           아이디어스 랩에 오신것을 환영해요.
         </h1>
 
-        <PostDetailModalWrapper>
+        <PostDetailModalWrapper baseUrl="/user-home">
           {({ showDetail }) => (
             <Block
               title="최근 업로드된 게시글"

@@ -74,8 +74,11 @@ export const PostView2 = ({
 }) => {
   const image = useMemo(() => {
     if (post.attachments.length < 1) return null
-    if (!(post.attachments[0] as any)?.contentType?.includes('image')) return null
-    return post.attachments[0] as {
+    const item = (post.attachments as any[])?.find(({ contentType }) =>
+      contentType.includes('image'),
+    )
+    if (!item) return
+    return item as {
       url: string
       width: number
       height: number
@@ -153,8 +156,11 @@ export const PostView = ({
 }) => {
   const image = useMemo(() => {
     if (post.attachments.length < 1) return null
-    if (!(post.attachments[0] as any)?.contentType?.includes('image')) return null
-    return post.attachments[0] as {
+    const item = (post.attachments as any[])?.find(({ contentType }) =>
+      contentType.includes('image'),
+    )
+    if (!item) return
+    return item as {
       url: string
       width: number
       height: number
@@ -321,47 +327,72 @@ export const PostDetail = ({
         <ReactMarkdown className="max-w-none markdown break-all">
           {post.content.replace(/\n/g, '\n\n')}
         </ReactMarkdown>
-        <div className="relative">
-          <Swiper
-            modules={[FreeMode, Navigation, A11y, Thumbs]}
-            spaceBetween={50}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            className="max-h-[30%] mySwiper gallery-slide"
-            centeredSlides
-          >
-            {post.attachments.map((image, index) => {
-              if ((image as any)?.contentType?.startsWith('image/')) {
-                return (
-                  <SwiperSlide key={index}>
-                    <Image
-                      key={index}
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      src={image?.url ?? ''}
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      width={image?.width ?? 0}
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      height={image?.height ?? 0}
-                      alt="첨부한 이미지"
-                    />
-                  </SwiperSlide>
-                )
-              }
-            })}
-          </Swiper>
+        <div className="space-y-4">
+          <div className="relative rounded">
+            <Swiper
+              modules={[FreeMode, Navigation, A11y, Thumbs]}
+              spaceBetween={50}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+              className="max-h-[30%] mySwiper gallery-slide"
+              centeredSlides
+            >
+              {post.attachments.map((image, index) => {
+                if ((image as any)?.contentType?.startsWith('image/')) {
+                  return (
+                    <SwiperSlide key={index}>
+                      <Image
+                        className="rounded"
+                        key={index}
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        src={image?.url ?? ''}
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        width={image?.width ?? 0}
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        height={image?.height ?? 0}
+                        alt="첨부한 이미지"
+                      />
+                    </SwiperSlide>
+                  )
+                }
+              })}
+            </Swiper>
+          </div>
+          {post.attachments.map((content, index) => {
+            if ((content as any)?.contentType?.startsWith('video/mp4')) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              return <video src={content.url} key={index} controls className="rounded" />
+              // return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
+            }
+          })}
+          {post.attachments.map((content, index) => {
+            if ((content as any)?.contentType?.startsWith('audio/mpeg')) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
+            }
+          })}
+          {post.attachments.map((content, index) => {
+            const type: string = (content as any)?.contentType
+            if (
+              !type.startsWith('image/') &&
+              !type.startsWith('video/mp4') &&
+              !type.startsWith('audio/mpeg')
+            ) {
+              return (
+                <div className="card" key={index}>
+                  <div className="text-title-color mb-1">{(content as any)?.name ?? ''}</div>
+                </div>
+              )
+            }
+          })}
         </div>
-        {post.attachments.map((content, index) => {
-          if ((content as any)?.contentType?.startsWith('audio/mpeg')) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
-          }
-        })}
         {/* <div className="mt-4 flex flex-col items-center justify-center gap-3 px-24">
           {post.attachments.map((image, index) => {
             if ((image as any)?.contentType?.startsWith('image/')) {
