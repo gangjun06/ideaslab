@@ -29,20 +29,11 @@ model User {
   defaultVisible DefaultVisible @default(Public)
   roles          Role[]
 
-  likes       Like[]
-  posts       Post[]
-  VoiceLog    VoiceLog[]
-  Comment     Comment[]
-  Achievement Achievement[]
-  MessageLog  MessageLog[]
-}
-
-model Achievement {
-  id           Int    @id @default(autoincrement())
-  name         String
-  currentValue Int?
-  userId       String
-  User         User   @relation(fields: [userId], references: [discordId])
+  likes      Like[]
+  posts      Post[]
+  VoiceLog   VoiceLog[]
+  Comment    Comment[]
+  MessageLog MessageLog[]
 }
 
 model Category {

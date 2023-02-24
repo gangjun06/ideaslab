@@ -15,14 +15,11 @@ enum SettingValueType {
 }
 
 const SettingList = {
-  afkChannel: SettingValueType.Channel,
   voiceRoomCreateChannel: SettingValueType.Channel,
   voiceRoomCategory: SettingValueType.Category,
   userRole: SettingValueType.Role,
   notVerifiedChannel: SettingValueType.Channel,
   notVerifiedRole: SettingValueType.Role,
-  achieveForumEatTag: SettingValueType.Tag,
-  achieveForumWorkTag: SettingValueType.Tag,
   privacyPolicy: SettingValueType.LongText,
   serverRule: SettingValueType.LongText,
   serviceInfo: SettingValueType.LongText,
@@ -56,10 +53,6 @@ export const settingDetails: {
     cache: boolean
   }
 } = {
-  afkChannel: {
-    description: '잠수 채널을 설정합니다',
-    cache: true,
-  },
   welcomeChannel: {
     description: '새로운 유저가 입장했을때, 반겨줄 채널을 설정해요.',
     cache: true,
@@ -92,14 +85,6 @@ export const settingDetails: {
   serviceInfo: {
     description: '웹사이트 정보. 마크다운 문법 사용',
     cache: false,
-  },
-  achieveForumEatTag: {
-    description: '',
-    cache: true,
-  },
-  achieveForumWorkTag: {
-    description: '',
-    cache: true,
   },
   notVerifiedRole: {
     description: '일정 시간동안 인증안된 유저가 지급받는 역할',
