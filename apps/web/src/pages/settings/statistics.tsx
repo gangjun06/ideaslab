@@ -13,8 +13,8 @@ const StatisticsPage: NextPage = () => {
   return (
     <SettingLayout title="통계" guard="authOnly">
       <div className="flex card px-4 py-2 border-l-yellow-500 dark:border-l-yellow-600 border-l-4 gap-x-1.5">
-        <InformationCircleIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 1월
-        14일 이후의 기록만 표시됩니다.
+        <InformationCircleIcon width={24} height={24} /> 아이디어스 랩 웹사이트 공개일인 2023년 2월
+        24일 이후의 기록만 표시됩니다.
       </div>
       <Tab list={['기본 통계', '통화방 통계']}>
         <Tab.Panel className="space-y-4">
