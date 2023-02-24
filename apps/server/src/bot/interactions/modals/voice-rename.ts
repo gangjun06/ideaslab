@@ -1,7 +1,9 @@
 import { ChannelType } from 'discord.js'
 
 import { Modal } from '~/bot/base/interaction'
-import { voiceChannelState } from '~/service/voice-channel'
+import { redis } from '~/lib/redis'
+import { redisVoiceRenameRateExpire, voiceChannelState } from '~/service/voice-channel'
+import { redisVoiceRenameRateKey } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
 export default new Modal('modal.voice-rename', async (client, interaction) => {
@@ -37,6 +39,14 @@ export default new Modal('modal.voice-rename', async (client, interaction) => {
   }
 
   await interaction.deferUpdate({})
+
+  await redis.set(
+    redisVoiceRenameRateKey(interaction.channel.id),
+    '1',
+    'EX',
+    redisVoiceRenameRateExpire,
+  )
+
   await interaction.channel?.send({
     embeds: [
       new Embed(client, 'success').setTitle(`채널 이름이 \`${newName}\` 으로 변경되었어요.`),

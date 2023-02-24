@@ -27,6 +27,8 @@ export const visibleSettingMessageContent = ({
   let memberList = members.map((item) => item.displayName).join(', ')
   if (memberList.length < 1) {
     memberList = '추가된 맴버 목록이 존재하지 않습니다.'
+  } else if (!isPrivate) {
+    memberList = `~~${memberList}~~`
   }
 
   const embed = new Embed(client, 'info')
@@ -48,13 +50,13 @@ export const visibleSettingMessageContent = ({
 
   const addButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
-    .setDisabled(mode === 'add')
+    .setDisabled(mode === 'add' || !isPrivate)
     .setLabel('맴버 추가하기')
     .setCustomId('voice-visible-add')
 
   const removeButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
-    .setDisabled(mode === 'remove')
+    .setDisabled(mode === 'remove' || !isPrivate)
     .setLabel('맴버 제거하기')
     .setCustomId('voice-visible-remove')
 
@@ -99,9 +101,14 @@ export const visibleSettingMessageContent = ({
 export default new Button(['voice-visible'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
 
-  const { isPrivate, members } = await voiceChannelState(interaction.channel)
+  const { isPrivate, members, owner } = await voiceChannelState(interaction.channel)
+  const memberList = members.filter(({ id }) => id !== owner)
 
-  const { embed, components } = visibleSettingMessageContent({ client, isPrivate, members })
+  const { embed, components } = visibleSettingMessageContent({
+    client,
+    isPrivate,
+    members: memberList,
+  })
   await interaction.reply({
     embeds: [embed],
     ephemeral: true,

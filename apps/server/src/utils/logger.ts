@@ -21,9 +21,13 @@ const myFormat = printf(({ level, message, label, ms }) => {
   const _level = stripColor(level) as LogLevel
   const colorizer = colors[_level]
   const date = new Date()
-  const dateStr = `[${date.getFullYear()}-${date.getMonth()}-${
-    date.getDate() + 1
-  }-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}]`
+  const dateStr = `[${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date
+    .getHours()
+    .toString()
+    .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date
+    .getSeconds()
+    .toString()
+    .padStart(2, '0')}]`
   const labelStr = _level === 'chat' ? '' : `[${label}] `
   return `${chalk.grey(dateStr)} ${labelStr} ${level} ${colorizer(message)} ${chalk.magentaBright(
     ms,

@@ -19,6 +19,10 @@ import { getSetting } from './setting'
 const redisVoiceOwnerKey = (key: string) => `${config.redisPrefix}voice:${key}`
 const redisVoiceOwnerExpire = 60 * 60 * 24 * 14
 
+export const redisVoiceRenameRateKey = (key: string) =>
+  `${config.redisPrefix}voice-rename-rate:${key}`
+export const redisVoiceRenameRateExpire = 60 * 5
+
 export const voiceComponents = () => {
   const renameButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
@@ -92,7 +96,11 @@ export const voiceChannelState = async (channel: VoiceChannel) => {
       }),
   )
   if (!userRole) return { isPrivate: false, members, owner }
-  if (channel.permissionsLocked) return { isPrivate: false, members, owner }
+  if (
+    channel.permissionOverwrites.cache.get(userRole)?.allow.has('ViewChannel') ||
+    channel.permissionsLocked
+  )
+    return { isPrivate: false, members, owner }
   return { isPrivate: true, members, owner }
 }
 
@@ -102,18 +110,25 @@ export const voiceChannelVisible = async (channel: VoiceChannel, toggle: boolean
 
   // Turn On
   if (toggle) {
-    await channel.setName(`[비공개] ${channel.name}`)
-    await channel.permissionOverwrites.cache.get(userRole)?.edit({
-      ViewChannel: false,
-      Connect: false,
-      Speak: false,
-    })
+    try {
+      await channel.permissionOverwrites.cache.get(userRole)?.edit({
+        ViewChannel: false,
+        Connect: false,
+        Speak: false,
+      })
+    } catch (e) {
+      console.error(e)
+    }
 
     return
   }
 
   // Turn Off
-  channel.lockPermissions()
+  await channel.permissionOverwrites.cache.get(userRole)?.edit({
+    ViewChannel: true,
+    Connect: true,
+    Speak: true,
+  })
   await channel.setName(channel.name.replace(/^\[비공개\] /, ''))
 }
 

@@ -17,12 +17,16 @@ export default new Button(['voice-visible-setting'], async (client, interaction)
 
   await interaction.deferUpdate()
 
-  const { isPrivate, members } = await voiceChannelState(interaction.channel)
+  const { isPrivate, members, owner } = await voiceChannelState(interaction.channel)
+
+  const memberList = members.filter(({ id }) => id !== owner)
+
+  await voiceChannelVisible(interaction.channel, !isPrivate)
 
   const { embed, components } = visibleSettingMessageContent({
     client,
     isPrivate: !isPrivate,
-    members,
+    members: memberList,
   })
 
   try {
@@ -30,8 +34,6 @@ export default new Button(['voice-visible-setting'], async (client, interaction)
   } catch (e) {
     /* empty */
   }
-
-  await voiceChannelVisible(interaction.channel, !isPrivate)
 
   if (!isPrivate) {
     await voiceChannelAllow(interaction.channel, [interaction.user.id])

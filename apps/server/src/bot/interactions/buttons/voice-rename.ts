@@ -8,11 +8,24 @@ import {
 
 import { currentGuildMember } from '~/bot/base/client'
 import { Button } from '~/bot/base/interaction'
-import { voiceChannelOwnerCheck } from '~/service/voice-channel'
+import { redis } from '~/lib/redis'
+import { redisVoiceRenameRateKey, voiceChannelOwnerCheck } from '~/service/voice-channel'
+import { formatSeconds } from '~/service/voice-log'
 
 export default new Button(['voice-rename'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
   if (!(await voiceChannelOwnerCheck(interaction))) return
+
+  const timeLeft = await redis.pttl(redisVoiceRenameRateKey(interaction.channelId))
+  if (timeLeft > 0) {
+    await interaction.reply({
+      content: `5분마다 한번씩 이름을 변경할 수 있어요. (남은시간: ${formatSeconds(
+        Math.round(timeLeft / 1000),
+      )}) `,
+      ephemeral: true,
+    })
+    return
+  }
 
   const modal = new ModalBuilder().setCustomId('modal.voice-rename').setTitle('음성채널 이름 변경')
 
