@@ -99,7 +99,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
               </div>
               <div className="text-subtitle-color">{`@${profile?.handle}`}</div>
               <div className="text-description-color mt-2 text-sm">{profile?.introduce}</div>
-              <div className="flex gap-x-2 mt-2">
+              <div className="flex gap-2 mt-2 flex-wrap">
                 {profile?.roles?.map((item, index) => (
                   <div key={index} className="tag small">
                     {item.name}
@@ -108,7 +108,7 @@ const MemberDetailPage = ({ profileHandle }: Props) => {
               </div>
 
               {profile?.links.length > 0 && (
-                <div className="mt-2">
+                <div className="mt-2 flex gap-2 flex-wrap">
                   {profile?.links.map((link: any, index) => (
                     <a key={index} href={link?.url ?? ''} className="title-highlight">
                       {link?.name}

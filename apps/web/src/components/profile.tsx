@@ -31,7 +31,7 @@ export const ProfileView = ({
             </a>
           </Link>
           <div className="text-description-color mt-2 text-sm">{data.introduce}</div>
-          <div className="flex gap-x-2 mt-2">
+          <div className="flex gap-2 mt-2 flex-wrap">
             {data.roles?.map((item, index) => (
               <div key={index} className="tag small">
                 {item.name}
@@ -39,7 +39,7 @@ export const ProfileView = ({
             ))}
           </div>
           {data.links.length > 0 && (
-            <div className="mt-2">
+            <div className="mt-2 flex gap-2 flex-wrap">
               {data.links.map((link: any, index) => (
                 <a key={index} href={link?.url ?? ''} className="title-highlight">
                   {link?.name}
