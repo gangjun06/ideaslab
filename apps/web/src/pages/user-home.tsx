@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { ChevronRightIcon } from '@heroicons/react/24/outline'
-import { Navigation } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import classNames from 'classnames'
+import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react'
 
 import { PostDetailModalWrapper, PostView2 } from '~/components/post'
 import { ProfileView } from '~/components/profile'
@@ -36,8 +36,36 @@ const Block = ({
   children: ReactNode
   mt?: boolean
 }) => {
+  const ref = useRef<SwiperRef>(null)
+  const swiper = ref.current?.swiper
+
+  const [status, setStatus] = useState<'disablePrev' | 'normal' | 'disableNext'>('normal')
+
+  useEffect(() => {
+    if (!swiper) return
+    const event = () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const slidesPerView = breakpoints[swiper.currentBreakpoint]?.slidesPerView ?? 1
+      setStatus(
+        swiper.activeIndex === 0
+          ? 'disablePrev'
+          : swiper.activeIndex >= swiper.slides.length - slidesPerView
+          ? 'disableNext'
+          : 'normal',
+      )
+    }
+    swiper?.on('slideChange', event)
+    swiper?.on('breakpoint', event)
+    event()
+    return () => {
+      swiper?.off('slideChange', event)
+      swiper?.off('breakpoint', event)
+    }
+  }, [swiper])
+
   return (
-    <div className={mt ? 'mt-8' : ''}>
+    <div className={classNames(mt ? 'mt-8' : '', 'relative')}>
       <Link href={href} passHref>
         <a className="text-subtitle-color text-xl flex items-center">
           {title}
@@ -52,12 +80,39 @@ const Block = ({
           clickable: true,
         }}
         breakpoints={breakpoints}
-        modules={[Navigation]}
-        navigation
-        className="mySwiper"
+        className="mySwiper sm:p-0 overflow-visible sm:overflow-hidden"
+        ref={ref}
       >
         {children}
       </Swiper>
+      <button
+        onClick={() => swiper?.slidePrev()}
+        className={classNames(
+          'hidden sm:flex absolute -left-14 top-1/2 transform',
+          'text-black dark:text-white bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg shadow-sm',
+          'rounded-full border border-base-color',
+          'items-center justify-center w-12 h-12',
+          'disabled:opacity-50',
+        )}
+        disabled={status === 'disablePrev'}
+      >
+        <ChevronLeftIcon className="w-8 h-8" />
+        <p className="sr-only">prev</p>
+      </button>
+      <button
+        onClick={() => swiper?.slideNext()}
+        className={classNames(
+          'hidden sm:flex absolute -right-14 top-1/2 transform',
+          'text-black dark:text-white bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg shadow-sm',
+          'rounded-full border border-base-color',
+          'items-center justify-center w-12 h-12',
+          'disabled:opacity-50',
+        )}
+        disabled={status === 'disableNext'}
+      >
+        <ChevronRightIcon className="w-8 h-8" />
+        <p className="sr-only">next</p>
+      </button>
     </div>
   )
 }
@@ -73,7 +128,7 @@ const UserHome: NextPage = () => {
   return (
     <MainLayout title="창작자들을 위한 디스코드 커뮤니티" guard="authOnly">
       <div className="container max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-6">
+        <h1 className="text-4xl font-bold mb-6 break-keep">
           <span className="title-highlight">{user?.name}님,</span> <br />
           아이디어스 랩에 오신것을 환영해요.
         </h1>
