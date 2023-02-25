@@ -1,12 +1,8 @@
 import { useState } from 'react'
-import {
-  BarsArrowDownIcon,
-  DocumentDuplicateIcon,
-  Square2StackIcon,
-} from '@heroicons/react/24/outline'
-import classNames from 'classnames'
+import { DocumentDuplicateIcon, Square2StackIcon } from '@heroicons/react/24/outline'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
+import { TagFilter } from '~/components/common/tag-filter'
 import { ProfileView } from '~/components/profile'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/utils'
@@ -14,7 +10,7 @@ import { trpc } from '~/utils'
 const LIMIT = 50
 
 const ProfilesPage = () => {
-  const [selectedRoles, setSelectedRoles] = useState<number[]>([])
+  const [selectedRole, setSelectedRole] = useState<number | null>(null)
   const [order, setOrder] = useState<string>('recentActive')
   const {
     data: profiles,
@@ -22,7 +18,7 @@ const ProfilesPage = () => {
     fetchNextPage,
     hasNextPage,
   } = trpc.info.profiles.useInfiniteQuery(
-    { limit: LIMIT, orderBy: order as any, roles: selectedRoles },
+    { limit: LIMIT, orderBy: order as any, roles: selectedRole ? [selectedRole] : [] },
     {
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined
@@ -38,44 +34,37 @@ const ProfilesPage = () => {
       description="아이디어스랩 회원들의 프로필을 확인해요."
       guard="default"
     >
-      <div className="flex flex-wrap gap-x-2 justify-center items-center w-full max-w-4xl mx-auto">
-        <div
-          className={classNames('tag hover', order === 'recentActive' && 'primary')}
-          onClick={() => setOrder('recentActive')}
-        >
-          <DocumentDuplicateIcon width={24} height={24} />
-          최근 활동순
-        </div>
-        <div
-          className={classNames('tag hover', order === 'recentJoin' && 'primary')}
-          onClick={() => setOrder('recentJoin')}
-        >
-          <BarsArrowDownIcon width={24} height={24} />
-          최근 가입순
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-x-2 justify-center items-center w-full max-w-4xl mx-auto mt-3">
-        <div
-          className={classNames('tag hover', selectedRoles.length === 0 && 'primary')}
-          onClick={() => setSelectedRoles([])}
-        >
-          <Square2StackIcon width={24} height={24} />
-          전체
-        </div>
-        {roles?.map(({ name, id }) => (
-          <div
-            className={classNames('tag hover', selectedRoles.includes(id) && 'primary')}
-            key={id}
-            onClick={() =>
-              setSelectedRoles((prev) =>
-                prev.includes(id) ? prev.filter((item) => item !== id) : prev.concat(id),
-              )
-            }
-          >
-            {name}
-          </div>
-        ))}
-      </div>
+      <TagFilter
+        data={[
+          {
+            label: (
+              <>
+                <DocumentDuplicateIcon width={24} height={24} />
+                최근 활동순
+              </>
+            ),
+            value: 'recentActive',
+          },
+          {
+            label: (
+              <>
+                <Square2StackIcon width={24} height={24} />
+                최근 활동순
+              </>
+            ),
+            value: 'recentJoin',
+          },
+        ]}
+        onSelect={(value) => setOrder(value)}
+        selected={order}
+        useShowAll={false}
+      />
+      <TagFilter
+        className="mt-4"
+        data={roles?.map(({ name, id }) => ({ label: name, value: id }))}
+        onSelect={(value) => setSelectedRole(value)}
+        selected={selectedRole}
+      />
       <InfiniteScroll
         className="h-full w-11/12 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4"
         next={fetchNextPage}

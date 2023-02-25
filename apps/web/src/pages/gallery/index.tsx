@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Square2StackIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
+import { TagFilter } from '~/components/common/tag-filter'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
@@ -23,14 +23,14 @@ const breakpointColumns = {
 const GalleryPage = () => {
   const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
 
-  const [selectedCategories, setSelectedCategories] = useState<number | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const {
     data: posts,
     isLoading,
     fetchNextPage,
     hasNextPage,
   } = trpc.gallery.posts.useInfiniteQuery(
-    { limit: LIMIT, categoryIds: selectedCategories ? [selectedCategories] : undefined },
+    { limit: LIMIT, categoryIds: selectedCategory ? [selectedCategory] : undefined },
     {
       getNextPageParam: (lastPage) => {
         if (lastPage.length < LIMIT) return undefined
@@ -42,30 +42,11 @@ const GalleryPage = () => {
 
   return (
     <MainLayout title="갤러리" description="서로의 작품을 올리고 공유해요" guard="default">
-      <div className="flex flex-wrap gap-x-2 justify-center items-center w-full max-w-4xl mx-auto">
-        <button
-          className={classNames('tag hover', selectedCategories === null && 'primary')}
-          onClick={() => setSelectedCategories(null)}
-          aria-label="전체보기"
-          role="checkbox"
-          aria-checked={selectedCategories === null}
-        >
-          <Square2StackIcon width={24} height={24} />
-          전체
-        </button>
-        {categories?.map(({ name, id }) => (
-          <button
-            role="checkbox"
-            className={classNames('tag hover', selectedCategories === id && 'primary')}
-            aria-checked={selectedCategories === id}
-            key={id}
-            onClick={() => setSelectedCategories(id)}
-            aria-label={`필터 ${name}`}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
+      <TagFilter
+        data={categories?.map(({ id, name }) => ({ label: name, value: id })) ?? []}
+        onSelect={(value) => setSelectedCategory(value)}
+        selected={selectedCategory}
+      />
       <PostDetailModalWrapper baseUrl="/gallery">
         {({ showDetail }) => (
           <InfiniteScroll
