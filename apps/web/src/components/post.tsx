@@ -25,6 +25,15 @@ import { relativeTimeFormat } from '~/utils'
 import { AudioPlayer } from './audio-player'
 import { Button, ButtonLink, Dialog, TimeDynamic } from './common'
 
+type PostAttachment = {
+  url: string
+  width: number
+  height: number
+  contentType: string
+  spoiler: boolean
+  name: string
+}
+
 export const PostDetailModalWrapper = ({
   baseUrl = '',
   children,
@@ -78,13 +87,7 @@ export const PostView2 = ({
       contentType.includes('image'),
     )
     if (!item) return
-    return item as {
-      url: string
-      width: number
-      height: number
-      contentType: string
-      spoiler: boolean
-    }
+    return item as PostAttachment
   }, [post])
 
   return (
@@ -160,13 +163,7 @@ export const PostView = ({
       contentType.includes('image'),
     )
     if (!item) return
-    return item as {
-      url: string
-      width: number
-      height: number
-      contentType: string
-      spoiler: boolean
-    }
+    return item as PostAttachment
   }, [post])
 
   return (
@@ -281,6 +278,25 @@ export const PostDetail = ({
   post?: Unarray<AppRouter['gallery']['postDetail']['_def']['_output_out']>
   forDialog?: boolean
 }) => {
+  const attachments = useMemo(() => {
+    const result: Record<'image' | 'video' | 'audio' | 'etc', PostAttachment[]> = {
+      image: [],
+      video: [],
+      audio: [],
+      etc: [],
+    }
+
+    if (!post) return result
+
+    for (const item of post.attachments as PostAttachment[]) {
+      if (item.contentType.startsWith('image')) result.image.push(item)
+      else if (item.contentType.includes('video')) result.video.push(item)
+      else if (item.contentType.includes('audio')) result.audio.push(item)
+      else result.etc.push(item)
+    }
+    return result
+  }, [post])
+
   if (!post) return <></>
   return (
     <>
@@ -339,81 +355,33 @@ export const PostDetail = ({
               className="max-h-[30%] mySwiper gallery-slide"
               centeredSlides
             >
-              {post.attachments.map((image, index) => {
-                if ((image as any)?.contentType?.startsWith('image/')) {
-                  return (
-                    <SwiperSlide key={index}>
-                      <Image
-                        className="rounded"
-                        key={index}
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        src={image?.url ?? ''}
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        width={image?.width ?? 0}
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        height={image?.height ?? 0}
-                        alt="첨부한 이미지"
-                      />
-                    </SwiperSlide>
-                  )
-                }
-              })}
+              {attachments.image.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <Image
+                    className="rounded"
+                    key={index}
+                    src={image?.url ?? ''}
+                    width={image?.width ?? 0}
+                    height={image?.height ?? 0}
+                    alt="첨부한 이미지"
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
-          {post.attachments.map((content, index) => {
-            if ((content as any)?.contentType?.startsWith('video/mp4')) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              //@ts-ignore
-              return <video src={content.url} key={index} controls className="rounded" />
-              // return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
-            }
-          })}
-          {post.attachments.map((content, index) => {
-            if ((content as any)?.contentType?.startsWith('audio/mpeg')) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              //@ts-ignore
-              return <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
-            }
-          })}
-          {post.attachments.map((content, index) => {
-            const type: string = (content as any)?.contentType
-            if (
-              !type.startsWith('image/') &&
-              !type.startsWith('video/mp4') &&
-              !type.startsWith('audio/mpeg')
-            ) {
-              return (
-                <div className="card" key={index}>
-                  <div className="text-title-color mb-1">{(content as any)?.name ?? ''}</div>
-                </div>
-              )
-            }
-          })}
+          {attachments.video.map((content, index) => (
+            <video src={content.url} key={index} controls className="rounded" />
+          ))}
+          {attachments.audio.map((content, index) => (
+            <AudioPlayer key={index} url={content.url} title={content?.name ?? ''} />
+          ))}
+          {attachments.etc.map((content, index) => (
+            <div className="card px-4 py-4" key={index}>
+              <div className="text-title-color mb-1 py-2 px-2">{content.name ?? ''}</div>
+            </div>
+          ))}
         </div>
-        {/* <div className="mt-4 flex flex-col items-center justify-center gap-3 px-24">
-          {post.attachments.map((image, index) => {
-            if ((image as any)?.contentType?.startsWith('image/')) {
-              return (
-                <Image
-                  key={index}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  src={image?.url ?? ''}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  width={image?.width ?? 0}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  height={image?.height ?? 0}
-                  alt="첨부한 이미지"
-                />
-              )
-            }
-          })}
-        </div> */}
+
         <div className="flex gap-x-2 mt-4 w-full items-center justify-center flex-wrap">
           <Button
             variant="subtle"
@@ -422,19 +390,15 @@ export const PostDetail = ({
               toast.success('링크가 복사되었어요.')
             }}
           >
-            <>
-              <LinkIcon width={24} height={24} />
-              링크 복사
-            </>
+            <LinkIcon width={24} height={24} />
+            링크 복사
           </Button>
           <ButtonLink
             variant="subtle"
             href={`https://discord.com/channels/${process.env.NEXT_PUBLIC_GUILD_ID}/${post.discordId}`}
           >
-            <>
-              <ChatBubbleLeftRightIcon width={24} height={24} />
-              디스코드에서 보기
-            </>
+            <ChatBubbleLeftRightIcon width={24} height={24} />
+            디스코드에서 보기
           </ButtonLink>
         </div>
         {post.comments && (
