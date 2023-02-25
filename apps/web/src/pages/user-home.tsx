@@ -126,7 +126,7 @@ const UserHome: NextPage = () => {
             </>
           )}
           {profiles?.map((profile) => (
-            <SwiperSlide key={profile.discordId}>
+            <SwiperSlide key={profile.discordId} className="">
               <ProfileView key={profile.discordId} data={profile} />
             </SwiperSlide>
           ))}

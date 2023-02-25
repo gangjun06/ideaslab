@@ -20,7 +20,7 @@ export const TagFilter = <T extends Key, U extends boolean | undefined = true>({
   return (
     <div
       className={classNames(
-        'flex flex-wrap gap-2 justify-center items-center w-full max-w-4xl mx-auto',
+        'flex flex-wrap gap-2 justify-center items-center w-full max-w-3xl mx-auto',
         className,
       )}
     >
