@@ -1,17 +1,28 @@
-import { useState } from 'react'
 import { DocumentDuplicateIcon, Square2StackIcon } from '@heroicons/react/24/outline'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { TagFilter } from '~/components/common/tag-filter'
 import { ProfileView } from '~/components/profile'
+import { useQueryState } from '~/hooks/useQueryState'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/utils'
 
 const LIMIT = 50
 
 const ProfilesPage = () => {
-  const [selectedRole, setSelectedRole] = useState<number | null>(null)
-  const [order, setOrder] = useState<string>('recentActive')
+  const [order, setOrder] = useQueryState({
+    name: 'order',
+    defaultValue: 'recentActive',
+    type: 'string',
+  })
+
+  const [selectedRole, setSelectedRole] = useQueryState({
+    name: 'role',
+    defaultValue: null,
+    type: 'number',
+    nullable: true,
+  })
+
   const {
     data: profiles,
     isLoading,

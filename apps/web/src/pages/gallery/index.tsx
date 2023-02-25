@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
 import { TagFilter } from '~/components/common/tag-filter'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
+import { useQueryState } from '~/hooks/useQueryState'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/utils'
@@ -23,7 +23,13 @@ const breakpointColumns = {
 const GalleryPage = () => {
   const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
 
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [selectedCategory, setSelectedCategory] = useQueryState({
+    type: 'number',
+    name: 'category',
+    defaultValue: null,
+    nullable: true,
+  })
+
   const {
     data: posts,
     isLoading,
