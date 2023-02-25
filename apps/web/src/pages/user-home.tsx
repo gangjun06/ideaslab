@@ -123,6 +123,7 @@ const UserHome: NextPage = () => {
   const { data: posts, isLoading: isLoadingPosts } = trpc.gallery.posts.useQuery({ limit: LIMIT })
   const { data: profiles, isLoading: isLoadingProfiles } = trpc.info.profiles.useQuery({
     limit: LIMIT,
+    orderBy: 'recentJoin',
   })
 
   return (
