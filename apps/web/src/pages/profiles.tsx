@@ -1,8 +1,13 @@
-import { DocumentDuplicateIcon, Square2StackIcon } from '@heroicons/react/24/outline'
+import {
+  DocumentDuplicateIcon,
+  InformationCircleIcon,
+  Square2StackIcon,
+} from '@heroicons/react/24/outline'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { TagFilter } from '~/components/common/tag-filter'
 import { ProfileView } from '~/components/profile'
+import { useUser } from '~/hooks'
 import { useQueryState } from '~/hooks/useQueryState'
 import { MainLayout } from '~/layouts'
 import { trpc } from '~/utils'
@@ -10,6 +15,8 @@ import { trpc } from '~/utils'
 const LIMIT = 50
 
 const ProfilesPage = () => {
+  const user = useUser()
+
   const [order, setOrder] = useQueryState({
     name: 'order',
     defaultValue: 'recentActive',
@@ -76,6 +83,7 @@ const ProfilesPage = () => {
         onSelect={(value) => setSelectedRole(value)}
         selected={selectedRole}
       />
+
       <InfiniteScroll
         className="h-full w-11/12 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4"
         next={fetchNextPage}
@@ -87,13 +95,28 @@ const ProfilesPage = () => {
           </div>
         }
       >
-        {isLoading
-          ? new Array(40)
-              .fill({})
-              .map((_, index) => <div key={index} className={`h-48 bg-pulse rounded w-full`} />)
-          : profiles?.pages.map((page) =>
+        {isLoading ? (
+          new Array(40)
+            .fill({})
+            .map((_, index) => <div key={index} className={`h-48 bg-pulse rounded w-full`} />)
+        ) : (
+          <>
+            {profiles?.pages.map((page) =>
               page.map((profile) => <ProfileView key={profile.discordId} data={profile} />),
             )}
+            {!hasNextPage && !user && (
+              <div className="card p-5 text-description-color flex items-center text-center justify-center">
+                <div className="flex flex-col items-center">
+                  <InformationCircleIcon className="w-8 h-8 mb-4" />
+                  <p className="break-keep">
+                    프로필이 공개로 설정된 회원들의 목록이에요.
+                    <br /> 가입하고 모든 프로필을 확인하세요!
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </InfiniteScroll>
     </MainLayout>
   )

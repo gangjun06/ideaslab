@@ -1,9 +1,11 @@
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Masonry from 'react-masonry-css'
 
 import { TagFilter } from '~/components/common/tag-filter'
 import { PostDetailModalWrapper, PostView } from '~/components/post'
+import { useUser } from '~/hooks'
 import { useQueryState } from '~/hooks/useQueryState'
 import { useRandomArray } from '~/hooks/useRandom'
 import { MainLayout } from '~/layouts'
@@ -22,6 +24,7 @@ const breakpointColumns = {
 
 const GalleryPage = () => {
   const loadingItemList = useRandomArray(['h-40', 'h-48', 'h-56', 'h-64', 'h-72', 'h-80'], 40)
+  const user = useUser()
 
   const [selectedCategory, setSelectedCategory] = useQueryState({
     type: 'number',
@@ -84,6 +87,16 @@ const GalleryPage = () => {
                     )),
                   )}
             </Masonry>
+            {!hasNextPage && !user && (
+              <div className="card p-8 text-description-color flex items-center text-center justify-center mt-4">
+                <div className="flex flex-col items-center">
+                  <InformationCircleIcon className="w-8 h-8 mb-4" />
+                  <p className="break-all">
+                    공개로 설정된 게시글들의 목록이에요. 가입하고 모든 글들을 확인하세요!
+                  </p>
+                </div>
+              </div>
+            )}
           </InfiniteScroll>
         )}
       </PostDetailModalWrapper>
