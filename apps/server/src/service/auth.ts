@@ -102,8 +102,7 @@ export const verifyAuthToken = (token: string) => {
   }
 }
 
-// const timeoutMillisecond = 1000 * 60 * 20 // 20 Minutes
-const timeoutMillisecond = 1000 // 20 Minutes
+const timeoutMillisecond = 1000 * 60 * 20 // 20 Minutes
 
 export const notVerifiedUsers = async () => {
   const notVerifiedRole = await getSetting('notVerifiedRole')

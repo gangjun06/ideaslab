@@ -161,6 +161,7 @@ export const authRouter = router({
         handleDisplay: input.handle,
         introduce: input.introduce,
         registerFrom: input.registerFrom,
+        links: input.links,
         roles: { connect: input.roles.map((id) => ({ id })) },
         defaultVisible:
           input.defaultVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
@@ -242,7 +243,7 @@ export const authRouter = router({
           handleDisplay: input.handle,
           introduce: input.introduce,
           links: input.links,
-          roles: { connect: input.roles.map((id) => ({ id })) },
+          roles: { set: input.roles.map((id) => ({ id })) },
           defaultVisible:
             input.defaultVisible === 'Public' ? DefaultVisible.Public : DefaultVisible.MemberOnly,
           profileVisible:
