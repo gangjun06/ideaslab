@@ -16,7 +16,7 @@ const HeaderSection = () => {
         <h1 className="text-4xl font-bold sm:text-6xl">
           <Typed
             strings={[
-              '당신의 <span class="title-highlight">아이디어가</span><br /> 현실로 이루길',
+              '당신의 <span class="title-highlight">아이디어가</span><br /> 현실로 이루어지길',
               '<span class="title-highlight">아이디어스</span>랩',
             ]}
             smartBackspace
