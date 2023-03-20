@@ -195,6 +195,11 @@ export const ticketEventFromDM = async (message: Message) => {
 }
 
 export const ticketEventFromThread = async (message: Message) => {
+  if (!message.channel.isThread()) return
+  const ticketChannelId = await getSetting('ticketChannel')
+
+  if (message.channel.parent?.id !== ticketChannelId) return
+
   const ticketData: string | null = await redis.get(redisTicketKey('channelId', message.channelId))
   if (!ticketData) {
     message.reply('티켓이 존재하지 않습니다.')
