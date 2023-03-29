@@ -31,7 +31,6 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
   if (before.channelId === null && after.channelId && after.member && after.channel) {
     eventMemberJoin(after.member.id)
 
-    const voiceRoomCreateChannel = await getSetting('voiceRoomCreateChannel')
     if (after.channelId === voiceRoomCreateChannel) {
       await voiceChannelCreate(after.member)
       return
@@ -48,6 +47,12 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
     }
 
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
+
+    if (after.channelId === voiceRoomCreateChannel) {
+      await voiceChannelCreate(after.member)
+      return
+    }
+
     await sendAlert(after.channel as TextBasedChannel, 'join', after.member)
     return
   }
