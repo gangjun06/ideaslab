@@ -3,7 +3,7 @@ import { dbClient, Prisma } from '@ideaslab/db'
 import config from '~/config'
 import { redis } from '~/lib/redis'
 
-const redisVoiceKey = (userId: string) => `${config.redisPrefix}voice:${userId}`
+const redisVoiceKey = (userId: string) => `${config.redisPrefix}voice-log:${userId}`
 const voiceKeyExpire = 60 * 60 * 24 // 1 day
 
 export const eventMemberJoin = async (userId: string) => {

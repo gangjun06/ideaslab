@@ -87,7 +87,7 @@
 yarn install
 
 # Start dev server (http://localhost:8000)
-docker-compose -f -d docker-compose.dev.yml up --build --force-recreate
+docker-compose -f docker-compose.dev.yml up -d --build --force-recreate
 
 # Show Logs
 docker-compose -f docker-compose.dev.yml logs -f <main | nginx>

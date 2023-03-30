@@ -65,8 +65,12 @@ export const voiceChannelCreate = async (member: GuildMember) => {
   const embed = new Embed(client, 'info')
     .setTitle(name)
     .setDescription(
-      '음성채팅방에 오신것을 환영해요 :wave:\n아래의 버튼을 눌러 원하는 설정을 하실 수 있어요.\n만약 스크롤이 올라가 버튼을 찾기 힘들다면 /음성채널-설정을 이용하세요.',
+      '음성채팅방에 오신것을 환영해요 :wave:\n아래의 버튼을 눌러 원하는 설정을 하실 수 있어요.',
     )
+    .setFields({
+      name: '기타 도움말',
+      value: '`/음성채널-설정` 을 사용하여 설정할 수 있어요!',
+    })
     .setAuthor({ name: `채널 생성자: ${member.displayName}`, iconURL: member.displayAvatarURL() })
 
   const { row } = voiceComponents()

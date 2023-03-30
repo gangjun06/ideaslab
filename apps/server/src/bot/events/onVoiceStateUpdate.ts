@@ -48,6 +48,8 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
 
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
 
+    if (!after.member) return
+
     if (after.channelId === voiceRoomCreateChannel) {
       await voiceChannelCreate(after.member)
       return
