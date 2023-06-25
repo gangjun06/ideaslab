@@ -14,7 +14,21 @@ import { InteractionData, SlashCommandFunction } from '~/bot/types'
  */
 export class SlashCommand {
   public data: InteractionData
-  constructor(builder: SlashCommandBuilder, public execute: SlashCommandFunction) {
+  constructor(
+    builder: Omit<
+      SlashCommandBuilder,
+      | 'addBooleanOption'
+      | 'addUserOption'
+      | 'addChannelOption'
+      | 'addRoleOption'
+      | 'addAttachmentOption'
+      | 'addMentionableOption'
+      | 'addStringOption'
+      | 'addIntegerOption'
+      | 'addNumberOption'
+    >,
+    public execute: SlashCommandFunction,
+  ) {
     this.data = builder.toJSON()
   }
 }
