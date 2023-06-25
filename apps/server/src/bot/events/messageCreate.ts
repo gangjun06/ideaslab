@@ -6,6 +6,7 @@ import { Event } from '~/bot/base/event'
 import config from '~/config'
 import { getGalleryCategory } from '~/service/gallery'
 import { incrUserMessageCount } from '~/service/message-log'
+import { pointService } from '~/service/point'
 import { ticketEventFromDM, ticketEventFromThread } from '~/service/ticket'
 import { ignoreError } from '~/utils'
 
@@ -17,6 +18,22 @@ export default new Event('messageCreate', async (client, message) => {
     await ticketEventFromDM(message)
     return
   }
+
+  ;(async () => {
+    try {
+      if (message.channel.type === ChannelType.GuildText) {
+        await pointService.event(message.author.id, 'chat-general')
+
+        return
+      }
+      if (message.channel.type === ChannelType.GuildVoice) {
+        await pointService.event(message.author.id, 'chat-voice')
+        return
+      }
+    } catch {
+      // Ignore
+    }
+  })()
 
   await incrUserMessageCount(message.author.id)
 
@@ -111,6 +128,7 @@ export default new Event('messageCreate', async (client, message) => {
     })
 
     try {
+      await pointService.event(message.author.id, 'gallery-create')
       const postData = await dbClient.post.create({
         data: {
           discordId: threadChannel.id,

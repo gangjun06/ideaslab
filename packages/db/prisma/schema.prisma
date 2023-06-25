@@ -34,6 +34,7 @@ model User {
   VoiceLog   VoiceLog[]
   Comment    Comment[]
   MessageLog MessageLog[]
+  Point      Point[]
 }
 
 model Category {
@@ -128,6 +129,16 @@ model MessageLog {
 
   @@unique([userDiscordId, time])
   @@index([time(sort: Desc)])
+}
+
+model Point {
+  id     Int      @id @default(autoincrement())
+  userId String
+  value  Float
+  type   String
+  reason String
+  date   DateTime @default(now()) @db.Timestamptz()
+  user   User     @relation(fields: [userId], references: [discordId])
 }
 
 model Setting {
