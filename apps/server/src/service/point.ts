@@ -101,10 +101,10 @@ export const pointService = {
       } else if (already.size === 2) {
         await message.reply('2등! 20점 획득!')
         await pointService.manual(message.author.id, 20, '2nd', 'event1')
-        collector.stop()
       } else if (already.size === 3) {
         await message.reply('3등! 15점 획득!')
         await pointService.manual(message.author.id, 15, '3rd', 'event1')
+        collector.stop()
       }
     })
 
