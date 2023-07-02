@@ -16,13 +16,11 @@ export default new SlashCommand(
       const { user } = interaction
 
       const point = (await pointService.get(user.id))._sum.value ?? 0
-      const rank = await pointService.rankUser(user.id)
+      // const rank = await pointService.rankUser(user.id)
 
       const embed = new Embed(client, 'info')
         .setTitle(`${user.username}님의 포인트`)
-        .setDescription(
-          `<@${user.id}>님의 포인트는 **${point}**점 이에요.\n현재 랭킹은 상위 **${rank.percent}%** 이내에 있어요!`,
-        )
+        .setDescription(`<@${user.id}>님의 포인트는 **${point}**점 이에요.`)
 
       interaction.reply({ embeds: [embed], ephemeral: true })
     } else if (subcommand === '랭킹') {
