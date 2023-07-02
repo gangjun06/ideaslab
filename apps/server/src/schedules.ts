@@ -28,6 +28,9 @@ export const setupSchedule = () => {
   })
 
   scheduleJob('0 21 * * *', async () => {
-    await pointService.eventWeek1()
+    pointService.eventWeek2(0)
+  })
+  scheduleJob('0 22 * * *', async () => {
+    pointService.eventWeek2(1)
   })
 }
