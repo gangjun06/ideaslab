@@ -2,7 +2,6 @@ import { scheduleJob } from 'node-schedule'
 
 import { alertToNotVerifiedUser } from './service/auth'
 import { saveMessageCounts } from './service/message-log'
-import { pointService } from './service/point'
 
 /*
 *    *    *    *    *    *
@@ -25,12 +24,5 @@ export const setupSchedule = () => {
   // Every 10 minutes
   scheduleJob('*/10 * * * *', async () => {
     await alertToNotVerifiedUser()
-  })
-
-  scheduleJob('0 21 * * *', async () => {
-    pointService.eventWeek2(0)
-  })
-  scheduleJob('0 22 * * *', async () => {
-    pointService.eventWeek2(1)
   })
 }
