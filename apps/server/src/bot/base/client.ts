@@ -52,7 +52,10 @@ export default class BotClient extends Client {
   }
 
   public async setStatus(_status: 'dev' | 'online' = 'online', _name = '점검중...') {
-    this.user?.setPresence({ status: 'online', activities: [{ name: '아이디어스랩 관리' }] })
+    this.user?.setPresence({
+      status: 'online',
+      activities: [{ name: '아이디어스랩 서버 문의는 봇 DM으로' }],
+    })
   }
 }
 
@@ -60,6 +63,7 @@ export const initClient = async () => {
   client = new BotClient({
     intents: [
       'Guilds',
+      'GuildBans',
       'GuildVoiceStates',
       'GuildMessages',
       'MessageContent',

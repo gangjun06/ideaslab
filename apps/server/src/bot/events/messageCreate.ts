@@ -7,7 +7,7 @@ import config from '~/config'
 import { getGalleryCategory } from '~/service/gallery'
 import { incrUserMessageCount } from '~/service/message-log'
 import { pointService } from '~/service/point'
-import { ticketEventFromDM, ticketEventFromThread } from '~/service/ticket'
+import { ticketService } from '~/service/ticket'
 import { ignoreError } from '~/utils'
 
 export default new Event('messageCreate', async (client, message) => {
@@ -15,7 +15,7 @@ export default new Event('messageCreate', async (client, message) => {
   if (message.author.bot) return
 
   if (message.channel.isDMBased()) {
-    await ticketEventFromDM(message)
+    await ticketService.ticketEventFromDM(message)
     return
   }
 
@@ -43,7 +43,7 @@ export default new Event('messageCreate', async (client, message) => {
 
     // Ticket Message from manager
     if (message.channel.parent?.type === ChannelType.GuildText) {
-      await ticketEventFromThread(message)
+      await ticketService.ticketEventFromThread(message)
       return
     }
 

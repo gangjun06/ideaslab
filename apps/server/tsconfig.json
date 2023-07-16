@@ -1,23 +1,15 @@
 {
 	"extends": "@ideaslab/tsconfig/node16.json",
-	"include": [
-		"src/**/*.ts",
-	],
-	"exclude": [
-		"node_modules",
-		"dist",
-		".dev",
-		".turbo",
-	],
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "dist", ".dev", ".turbo"],
 	"compilerOptions": {
 		"outDir": "dist",
 		"target": "ESNext",
 		"module": "ESNext",
 		"composite": true,
+		"baseUrl": "./src",
 		"paths": {
-			"~/*": [
-				"./src/*"
-			]
+			"~/*": ["./*"]
 		}
-	},
+	}
 }

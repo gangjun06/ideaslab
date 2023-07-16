@@ -5,12 +5,14 @@ import { dbClient } from '@ideaslab/db'
 import { Event } from '~/bot/base/event'
 import { getSetting } from '~/service/setting'
 import { ignoreError } from '~/utils'
+import { Embed } from '~/utils/embed'
+import { mosaicNick } from '~/utils/nick'
 
-export default new Event('guildBanAdd', async (client, member) => {
+export default new Event('guildBanAdd', async (client, ban) => {
   await ignoreError(
     dbClient.user.update({
       where: {
-        discordId: member.user.id,
+        discordId: ban.user.id,
       },
       data: {
         leavedAt: new Date(),
@@ -23,16 +25,19 @@ export default new Event('guildBanAdd', async (client, member) => {
   const channel = await client.channels.fetch(blackListChannel)
   if (!channel || channel.type !== ChannelType.GuildText) return
 
-  // channel.send({
-  //   embeds: [
+  const userName = mosaicNick(ban.user.username)
+  const userAvatar = ban.user.displayAvatarURL()
+  setTimeout(() => {
+    ban.fetch().then(async (ban) => {
+      const embed = new Embed(client, 'error')
+        .setTitle(`@${userName} 이 아이디어스 랩에서 차단되었습니다`)
+        .setAuthor({
+          name: userName,
+          iconURL: userAvatar,
+        })
+        .setDescription(`**사유**:\n\`\`\`\n${ban.reason ?? '불러오는데 실패하였습니다'}\n\`\`\``)
 
-  // })
-
-  // const dmChannel = await member.createDM(true)
-
-  // const embed = new Embed(client, 'info')
-  //   .setTitle('아이디어스랩을 나가셨군요')
-  //   .setDescription('저장된 개인정보는 1주일 후 자동으로 파기될 예정이에요.')
-
-  // dmChannel.send({ embeds: [embed] })
+      await channel.send({ embeds: [embed] })
+    })
+  }, 3000)
 })
