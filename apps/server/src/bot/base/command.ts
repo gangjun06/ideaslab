@@ -17,6 +17,8 @@ export class SlashCommand {
   constructor(
     builder: Omit<
       SlashCommandBuilder,
+      | 'addSubcommand'
+      | 'addSubcommandGroup'
       | 'addBooleanOption'
       | 'addUserOption'
       | 'addChannelOption'

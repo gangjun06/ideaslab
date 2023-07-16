@@ -26,6 +26,7 @@ const SettingList = {
   welcomeChannel: SettingValueType.Channel,
   welcomeMessage: SettingValueType.LongText,
   ticketChannel: SettingValueType.Channel,
+  blacklistChannel: SettingValueType.Channel,
 } as const
 
 type SettingKeys = keyof typeof SettingList
@@ -97,6 +98,10 @@ export const settingDetails: {
   ticketChannel: {
     description: '티켓이 만들어질 채널을 설정해요.',
     cache: true,
+  },
+  blacklistChannel: {
+    description: '블랙리스트가 전송될 채널을 설정해요.',
+    cache: false,
   },
 }
 
