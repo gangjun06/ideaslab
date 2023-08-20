@@ -19,6 +19,13 @@ import { getSetting } from './setting'
 const redisVoiceOwnerKey = (key: string) => `${config.redisPrefix}voice:${key}`
 const redisVoiceOwnerExpire = 60 * 60 * 24 * 14
 
+const redisVoiceDataKey = (key: string) => `${config.redisPrefix}voice-data:${key}`
+const redisVoiceDataKeyExpire = 60 * 60 * 24 * 14
+
+interface VoiceData {
+  description: string
+}
+
 export const redisVoiceRenameRateKey = (key: string) =>
   `${config.redisPrefix}voice-rename-rate:${key}`
 export const redisVoiceRenameRateExpire = 60 * 5
@@ -29,20 +36,26 @@ export const voiceComponents = () => {
     .setLabel('이름 변경하기')
     .setCustomId('voice-rename')
 
+  const ruleButton = new ButtonBuilder()
+    .setStyle(ButtonStyle.Secondary)
+    .setLabel('규칙 변경하기')
+    .setCustomId('voice-rule')
+
   const limitButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Secondary)
     .setLabel('인원수 제한하기')
     .setCustomId('voice-limit')
 
-  const visibleButton = new ButtonBuilder()
-    .setStyle(ButtonStyle.Secondary)
-    .setLabel('공개 설정')
-    .setCustomId('voice-visible')
+  // const visibleButton = new ButtonBuilder()
+  //   .setStyle(ButtonStyle.Secondary)
+  //   .setLabel('공개 설정')
+  //   .setCustomId('voice-visible')
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     renameButton,
+    ruleButton,
     limitButton,
-    visibleButton,
+    // visibleButton,
   )
 
   return { row }
@@ -78,19 +91,35 @@ export const voiceChannelCreate = async (member: GuildMember) => {
   await channel.send({ content: `<@${member.id}>`, embeds: [embed], components: [row] })
 
   await redis.set(redisVoiceOwnerKey(channel.id), member.id, 'EX', redisVoiceOwnerExpire)
+  await redis.set(
+    redisVoiceDataKey(channel.id),
+    JSON.stringify({
+      description: '',
+    } satisfies VoiceData),
+    'EX',
+    redisVoiceDataKeyExpire,
+  )
 }
 
 export const voiceChannelDelete = async (channelId: string) => {
   const data = await redis.getdel(redisVoiceOwnerKey(channelId))
   if (data) {
+    await redis.del(redisVoiceDataKey(channelId))
     const guild = await currentGuild()
     await guild.channels.delete(channelId)
   }
 }
 
+export const voiceChannelSetDescription = async (channel: VoiceChannel, description: string) => {
+  const data = JSON.parse((await redis.get(redisVoiceDataKey(channel.id))) ?? '{}') as VoiceData
+  data.description = description
+  await redis.set(redisVoiceDataKey(channel.id), JSON.stringify(data satisfies VoiceData))
+}
+
 export const voiceChannelState = async (channel: VoiceChannel) => {
   const userRole = await getSetting('userRole')
   const owner = (await redis.get(redisVoiceOwnerKey(channel.id))) ?? ''
+  const data = JSON.parse((await redis.get(redisVoiceDataKey(channel.id))) ?? '{}') as VoiceData
   const members = await Promise.all(
     channel.permissionOverwrites.cache
       .filter(({ type }) => type === OverwriteType.Member)
@@ -99,13 +128,13 @@ export const voiceChannelState = async (channel: VoiceChannel) => {
         return member
       }),
   )
-  if (!userRole) return { isPrivate: false, members, owner }
+  if (!userRole) return { isPrivate: false, members, owner, rule: data.description }
   if (
     channel.permissionOverwrites.cache.get(userRole)?.allow.has('ViewChannel') ||
     channel.permissionsLocked
   )
-    return { isPrivate: false, members, owner }
-  return { isPrivate: true, members, owner }
+    return { isPrivate: false, members, owner, rule: data.description }
+  return { isPrivate: true, members, owner, rule: data.description }
 }
 
 export const voiceChannelVisible = async (channel: VoiceChannel, toggle: boolean) => {
