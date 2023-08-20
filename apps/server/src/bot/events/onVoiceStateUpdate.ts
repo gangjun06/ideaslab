@@ -1,8 +1,8 @@
-import { GuildMember, TextBasedChannel } from 'discord.js'
+import { GuildMember, TextBasedChannel, VoiceChannel } from 'discord.js'
 
 import { Event } from '~/bot/base/event'
 import { getSetting } from '~/service/setting'
-import { voiceChannelCreate, voiceChannelDelete } from '~/service/voice-channel'
+import { voiceChannelCreate, voiceChannelDelete, voiceChannelState } from '~/service/voice-channel'
 import { eventMemberJoin, eventMemberLeave } from '~/service/voice-log'
 import { Embed } from '~/utils/embed'
 
@@ -10,8 +10,26 @@ const sendAlert = async (
   channel: TextBasedChannel,
   type: 'join' | 'leave',
   member?: GuildMember | null,
-) =>
-  channel.send({
+) => {
+  const { rule } = await voiceChannelState(channel as VoiceChannel)
+  if (type === 'join' && rule) {
+    await channel.send({
+      content: `<@${member?.user.id}>`,
+      embeds: [
+        new Embed(channel.client, type === 'join' ? 'info' : 'error')
+          .setTitle(
+            type === 'join' ? '맴버가 음성채팅방에 들어왔어요.' : '맴버가 음성채팅방에서 나갔어요.',
+          )
+          .setAuthor({
+            name: member?.displayName ?? '알 수 없음',
+            iconURL: member?.user.displayAvatarURL(),
+          })
+          .setDescription(`**아래의 규칙을 지켜주세요**:\n\`\`\`\n${rule}\n\`\`\``),
+      ],
+    })
+    return
+  }
+  await channel.send({
     embeds: [
       new Embed(channel.client, type === 'join' ? 'info' : 'error')
         .setTitle(
@@ -23,6 +41,7 @@ const sendAlert = async (
         }),
     ],
   })
+}
 
 export default new Event('voiceStateUpdate', async (_client, before, after) => {
   const voiceRoomCreateChannel = await getSetting('voiceRoomCreateChannel')
