@@ -9,7 +9,8 @@ import {
 import { currentGuildMember } from '~/bot/base/client'
 import { Button } from '~/bot/base/interaction'
 import { redis } from '~/lib/redis'
-import { redisVoiceRenameRateKey, voiceChannelOwnerCheck } from '~/service/voice-channel'
+import { voiceChannelOwnerCheck } from '~/service/voice-channel'
+import { redisVoiceRenameRateKey } from '~/service/voice-channel/redis'
 import { formatSeconds } from '~/service/voice-log'
 
 export default new Button(['voice-rename'], async (client, interaction) => {

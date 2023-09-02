@@ -29,18 +29,18 @@ export default new SlashCommand(
       return false
     }
 
-    const { owner: ownerId, rule } = await voiceChannelState(interaction.channel)
+    const { owner: ownerId, data } = await voiceChannelState(interaction.channel)
 
     const { row } = voiceComponents()
 
-    const owner = interaction.channel.members.get(ownerId)
+    const owner = interaction.channel.members.get(ownerId ?? '')
 
     const embed = new Embed(client, 'info')
       .setTitle(interaction.channel.name)
       .setDescription('아래의 버튼을 눌러 원하는 설정을 하실 수 있어요.')
       .addFields({
-        name: '규칙',
-        value: rule,
+        name: '채널 규칙',
+        value: data.customRule,
       })
       .setAuthor({
         name: `관리자: ${owner?.displayName ?? '불러오기 실패'}`,
