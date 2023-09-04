@@ -7,24 +7,30 @@ import {
 } from 'discord.js'
 
 import { Button } from '~/bot/base/interaction'
-import { voiceChannelOwnerCheck, voiceChannelState } from '~/service/voice-channel'
+import { findChatroomRule, voiceChannelState } from '~/service/voice-channel'
 
-export default new Button(['voice-rule'], async (client, interaction) => {
+export default new Button(['voice-rule-edit'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
-  if (!(await voiceChannelOwnerCheck(interaction))) return
 
-  const modal = new ModalBuilder().setCustomId('modal.voice-rule').setTitle('음성채팅방 규칙 변경')
+  const { data } = await voiceChannelState(interaction.channel)
 
-  const { rule } = await voiceChannelState(interaction.channel)
+  const ruleDetail = findChatroomRule(data.ruleId)
 
-  const favoriteColorInput = new TextInputBuilder()
+  const modal = new ModalBuilder()
+    .setCustomId(`modal.voice-rule-edit:${data.ruleId}`)
+    .setTitle(`음성채널 생성 - ${ruleDetail?.name}`)
+
+  const customRuleInput = new TextInputBuilder()
     .setCustomId('ruleInput')
-    .setLabel('변경할 규칙을 입력해 주세요.')
-    .setValue(rule)
-    .setPlaceholder(`예시: 게임 O, 큰 소리 X, 작업 이외의 화공 X ...`)
+    .setLabel('음성채팅방 규칙 커스텀')
+    .setPlaceholder('바꿀 규칙을 입력해주세요.')
+    .setMinLength(1)
+    .setRequired(true)
+    .setMaxLength(100)
     .setStyle(TextInputStyle.Paragraph)
+    .setValue(`${data.customRule}`)
 
-  const firstActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(favoriteColorInput)
+  const firstActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(customRuleInput)
 
   modal.addComponents(firstActionRow)
 

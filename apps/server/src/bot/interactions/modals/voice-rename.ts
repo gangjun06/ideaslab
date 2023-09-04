@@ -2,7 +2,11 @@ import { ChannelType } from 'discord.js'
 
 import { Modal } from '~/bot/base/interaction'
 import { redis } from '~/lib/redis'
-import { redisVoiceRenameRateExpire, voiceChannelState } from '~/service/voice-channel'
+import {
+  findChatroomRule,
+  redisVoiceRenameRateExpire,
+  voiceChannelState,
+} from '~/service/voice-channel'
 import { redisVoiceRenameRateKey } from '~/service/voice-channel'
 import { Embed } from '~/utils/embed'
 
@@ -22,14 +26,12 @@ export default new Modal('modal.voice-rename', async (client, interaction) => {
     return
   }
 
-  const { isPrivate } = await voiceChannelState(interaction.channel)
-
-  if (isPrivate) {
-    newName = `[비공개] ${newName}`
-  }
+  const { data } = await voiceChannelState(interaction.channel)
 
   try {
-    await interaction.channel.setName(newName)
+    const rule = findChatroomRule(data.ruleId)
+    // await interaction.channel.setName(`[${rule?.emoji} ${rule?.name}] ${newName}`)
+    await interaction.channel.setName(`[${rule?.emoji}] ${newName}`)
   } catch {
     await interaction.reply({
       embeds: [new Embed(client, 'error').setTitle('채널 이름 설정에 실패했어요.')],
