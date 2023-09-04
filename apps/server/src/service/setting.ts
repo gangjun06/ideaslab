@@ -16,6 +16,7 @@ enum SettingValueType {
 
 const SettingList = {
   voiceRoomCreateChannel: SettingValueType.Channel,
+  archiveCategory: SettingValueType.Category,
   voiceRoomCategory: SettingValueType.Category,
   userRole: SettingValueType.Role,
   notVerifiedChannel: SettingValueType.Channel,
@@ -54,6 +55,10 @@ export const settingDetails: {
     cache: boolean
   }
 } = {
+  archiveCategory: {
+    description: '아카이브 카테고리를 설정해요.',
+    cache: true,
+  },
   welcomeChannel: {
     description: '새로운 유저가 입장했을때, 반겨줄 채널을 설정해요.',
     cache: true,

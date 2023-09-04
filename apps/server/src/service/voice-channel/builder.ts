@@ -79,15 +79,16 @@ export const voiceRuleSettingMessageContent = ({
         .setTitle('음성채팅방 규칙 설정')
         .setDescription(`음성채팅방에서 무슨 활동을 할 수 있는지 설정할 수 있습니다.`)
         .setFields({
-          name: '현재 규칙',
-          value: `[${selectedRule?.emoji} ${selectedRule?.name}]\n${customRule}`,
-        })
-        .addFields(
-          chatroomList.map((item) => ({
-            name: `${selected === item.id ? '(선택됨) ' : ''}${item.emoji} ${item.name}`,
-            value: `${item.description}\n\`\`\`${item.rule}\`\`\``,
-          })),
-        ),
+          name: '**<현재 규칙>**',
+          value: `**[${selectedRule?.emoji} ${selectedRule?.name}]**\n${customRule}`,
+        }),
+
+      new Embed(client, 'info').setTitle('음성채팅방 규칙 카테고리').addFields(
+        chatroomList.map((item) => ({
+          name: `${selected === item.id ? '(선택됨) ' : ''}${item.emoji} ${item.name}`,
+          value: `${item.description}\n\`\`\`기본규칙:\n${item.rule}\`\`\``,
+        })),
+      ),
     ]
   }
 
@@ -103,7 +104,7 @@ export const voiceComponents = () => {
   const ruleButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Secondary)
     .setLabel('규칙 변경하기')
-    .setCustomId('voice-start-rule-edit')
+    .setCustomId('voice-rule-start-edit')
 
   const limitButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Secondary)

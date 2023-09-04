@@ -9,9 +9,7 @@ import {
 import { Button } from '~/bot/base/interaction'
 import { findChatroomRule, voiceChannelState } from '~/service/voice-channel'
 
-export default new Button(['voice-start-rule-edit'], async (client, interaction) => {
-  console.log('VOICE RULE EDIT')
-  console.log(interaction.channel)
+export default new Button(['voice-rule-edit'], async (client, interaction) => {
   if (!interaction.channel || interaction.channel.type !== ChannelType.GuildVoice) return
 
   const { data } = await voiceChannelState(interaction.channel)

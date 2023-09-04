@@ -8,7 +8,8 @@ import {
   VoiceChannel,
 } from 'discord.js'
 
-import { client, currentGuild } from '~/bot/base/client'
+import { client, currentGuild, currentGuildChannel } from '~/bot/base/client'
+import { redis } from '~/lib/redis'
 import { Embed } from '~/utils/embed'
 
 import { getSetting } from '../setting'
@@ -19,6 +20,8 @@ import {
   getDelVoiceOwner,
   getVoiceData,
   getVoiceOwner,
+  redisVoiceRenameRateExpire,
+  redisVoiceRenameRateKey,
   setVoiceData,
   setVoiceOwner,
 } from './redis'
@@ -41,7 +44,8 @@ export const voiceChannelCreate = async (
   const rule = findChatroomRule(ruleId) ?? chatroomList.at(-1)!
 
   const channel = await guild.channels.create({
-    name: `[${rule.emoji} ${rule.name}] ${name}`,
+    // name: `[${rule.emoji} ${rule.name}] ${name}`,
+    name: `[${rule.emoji}] ${name}`,
     parent: parentId,
     type: ChannelType.GuildVoice,
   })
@@ -76,26 +80,26 @@ export const voiceChannelCreate = async (
   return channel
 }
 
-export const voiceChannelDelete = async (channelId: string) => {
-  const data = await getDelVoiceOwner(channelId)
-  if (data) {
-    await delVoiceData(channelId)
-    const guild = await currentGuild()
-    await guild.channels.delete(channelId)
-  }
-}
-
 export const voiceChannelSetRule = async (
-  channelId: string,
+  channel: VoiceChannel,
   customRule: string,
   ruleId?: string,
 ) => {
-  const data = await getVoiceData(channelId)
+  const data = await getVoiceData(channel.id)
   const newRule = { ...data }
   newRule.ruleId = ruleId ?? data.ruleId
   newRule.customRule = customRule
 
-  await setVoiceData(channelId, data)
+  await setVoiceData(channel.id, newRule)
+  const rule = findChatroomRule(newRule.ruleId)
+  if (data.ruleId !== newRule.ruleId) {
+    // await channel.setName(
+    //   `[${rule?.emoji} ${rule?.name}] ${channel.name.split('] ').slice(1).join('] ')}`,
+    // )
+    await channel.setName(`[${rule?.emoji}] ${channel.name.split('] ').slice(1).join('] ')}`)
+    await redis.set(redisVoiceRenameRateKey(channel.id), '1', 'EX', redisVoiceRenameRateExpire)
+  }
+
   return data
 }
 
@@ -167,6 +171,21 @@ export const voiceChannelClaim = async (channel: VoiceChannel, memberId: string)
   if (currentOwner && channel.members.get(currentOwner)) return false
   await setVoiceOwner(channel.id, memberId)
   return true
+}
+
+export const archiveVoiceChannel = async (channel: VoiceChannel) => {
+  try {
+    const categoryId = await getSetting('archiveCategory')
+    if (!categoryId) throw new Error('')
+    currentGuildChannel(categoryId)
+    await channel.setParent(categoryId)
+    const data = await getDelVoiceOwner(channel.id)
+    if (data) {
+      await delVoiceData(channel.id)
+    }
+  } catch {
+    await channel.delete()
+  }
 }
 
 export * from './builder'

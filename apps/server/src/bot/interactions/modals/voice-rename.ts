@@ -30,7 +30,8 @@ export default new Modal('modal.voice-rename', async (client, interaction) => {
 
   try {
     const rule = findChatroomRule(data.ruleId)
-    await interaction.channel.setName(`[${rule?.emoji} ${rule?.name}] ${newName}`)
+    // await interaction.channel.setName(`[${rule?.emoji} ${rule?.name}] ${newName}`)
+    await interaction.channel.setName(`[${rule?.emoji}] ${newName}`)
   } catch {
     await interaction.reply({
       embeds: [new Embed(client, 'error').setTitle('채널 이름 설정에 실패했어요.')],

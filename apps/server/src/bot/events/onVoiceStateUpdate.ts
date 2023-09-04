@@ -1,7 +1,7 @@
 import { GuildMember, TextBasedChannel, VoiceChannel } from 'discord.js'
 
 import { Event } from '~/bot/base/event'
-import { voiceChannelDelete, voiceChannelState } from '~/service/voice-channel'
+import { archiveVoiceChannel, findChatroomRule, voiceChannelState } from '~/service/voice-channel'
 import { eventMemberJoin, eventMemberLeave } from '~/service/voice-log'
 import { Embed } from '~/utils/embed'
 
@@ -12,6 +12,7 @@ const sendAlert = async (
 ) => {
   const { data } = await voiceChannelState(channel as VoiceChannel)
   if (type === 'join' && data?.customRule) {
+    const ruleDetail = findChatroomRule(data.ruleId)
     await channel.send({
       content: `<@${member?.user.id}>`,
       embeds: [
@@ -23,7 +24,11 @@ const sendAlert = async (
             name: member?.displayName ?? '알 수 없음',
             iconURL: member?.user.displayAvatarURL(),
           })
-          .setDescription(`**아래의 규칙을 지켜주세요**:\n\`\`\`\n${data.customRule}\n\`\`\``),
+          .setDescription(`**아래의 규칙을 지켜주세요**`)
+          .setFields({
+            name: `**${ruleDetail?.emoji} ${ruleDetail?.name}**`,
+            value: `\`\`\`${data.customRule}\`\`\``,
+          }),
       ],
     })
     return
@@ -55,6 +60,10 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
   if (before.channelId != null && before.channelId !== after.channelId && after.channelId) {
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
 
+    if ((before.channel?.members.size ?? 0) < 1) {
+      return await archiveVoiceChannel(before.channel as VoiceChannel)
+    }
+
     if (!after.member) return
 
     await sendAlert(after.channel as TextBasedChannel, 'join', after.member)
@@ -66,7 +75,7 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
     eventMemberLeave(before.member.id, before.channel?.name ?? '')
 
     if ((before.channel?.members.size ?? 0) < 1) {
-      return await voiceChannelDelete(before.channelId)
+      return await archiveVoiceChannel(before.channel as VoiceChannel)
     }
 
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
