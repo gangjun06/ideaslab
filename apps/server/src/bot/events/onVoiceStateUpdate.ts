@@ -61,12 +61,10 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
 
     if ((before.channel?.members.size ?? 0) < 1) {
-      return await archiveVoiceChannel(before.channel as VoiceChannel)
+      await archiveVoiceChannel(before.channel as VoiceChannel)
     }
 
-    if (!after.member) return
-
-    await sendAlert(after.channel as TextBasedChannel, 'join', after.member)
+    await sendAlert(after.channel as TextBasedChannel, 'join', before.member)
     return
   }
 
