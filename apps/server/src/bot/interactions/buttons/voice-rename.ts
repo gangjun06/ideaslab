@@ -35,8 +35,15 @@ export default new Button(['voice-rename'], async (client, interaction) => {
   const favoriteColorInput = new TextInputBuilder()
     .setCustomId('nameInput')
     .setLabel('변경할 이름을 입력해 주세요.')
-    .setValue(interaction.channel.name.replace(/^\[비공개\] /, ''))
+    .setValue(
+      interaction.channel.name
+        .replace(/^\[비공개\] /, '')
+        .split('] ')
+        .slice(1)
+        .join('] '),
+    )
     .setPlaceholder(`${member.displayName}님의 채널`)
+    .setMinLength(1)
     .setMaxLength(32)
     .setStyle(TextInputStyle.Short)
 

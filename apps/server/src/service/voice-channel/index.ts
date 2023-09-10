@@ -97,7 +97,7 @@ export const voiceChannelSetRule = async (
     // await channel.setName(
     //   `[${rule?.emoji} ${rule?.name}] ${channel.name.split('] ').slice(1).join('] ')}`,
     // )
-    await channel.setName(`[${rule?.emoji}] ${channel.name.split('] ').slice(1).join('] ')}`)
+    await channel.setName(`[${rule?.emoji ?? '.'}] ${channel.name.split('] ').slice(1).join('] ')}`)
     await redis.set(redisVoiceRenameRateKey(channel.id), '1', 'EX', redisVoiceRenameRateExpire)
   }
 
