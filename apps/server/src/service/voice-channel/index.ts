@@ -5,6 +5,7 @@ import {
   ButtonStyle,
   ChannelType,
   GuildMember,
+  PermissionFlagsBits,
   VoiceChannel,
 } from 'discord.js'
 
@@ -120,7 +121,6 @@ export const voiceChannelOwnerCheck = async (interaction: BaseInteraction) => {
     !(interaction.isAnySelectMenu() || interaction.isButton() || interaction.isModalSubmit())
   )
     return false
-
   if (!interaction.channel.members.get(interaction.user.id)) {
     await interaction.reply({
       embeds: [new Embed(client, 'error').setTitle('채널에 먼저 접속하여 주세요.')],
@@ -128,6 +128,8 @@ export const voiceChannelOwnerCheck = async (interaction: BaseInteraction) => {
     })
     return false
   }
+
+  if (interaction.memberPermissions?.has(PermissionFlagsBits.ManageChannels)) return true
 
   const owner = (await getVoiceOwner(interaction.channelId)) ?? ''
   if (interaction.user.id !== owner) {
