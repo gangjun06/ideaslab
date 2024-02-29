@@ -2,7 +2,6 @@ import { ChannelType } from 'discord.js'
 
 import { Event } from '~/bot/base/event'
 import { getGalleryCategory } from '~/service/gallery'
-import { pointService } from '~/service/point'
 
 export default new Event('threadCreate', async (client, threadChannel, newly) => {
   if (!newly) return
@@ -12,6 +11,5 @@ export default new Event('threadCreate', async (client, threadChannel, newly) =>
   {
     const category = await getGalleryCategory(threadChannel.parentId)
     if (category) return
-    pointService.event(threadChannel.ownerId, 'thread-create')
   }
 })
