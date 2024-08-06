@@ -86,14 +86,15 @@
 # Install dependencies
 yarn install
 
-# Start dev server (http://localhost:8000)
-docker-compose -f docker-compose.dev.yml up -d --build --force-recreate
+# Start data server
+docker-compose -f docker-compose.dev.yml up -d
 
-# Show Logs
-docker-compose -f docker-compose.dev.yml logs -f <main | nginx>
+# Start dev server
+yarn run dev
 
-# Stop dev server
+# Stop data server
 docker-compose -f docker-compose.dev.yml down
+
 ```
 
 ### 빌드
