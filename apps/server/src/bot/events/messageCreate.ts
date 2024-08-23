@@ -1,4 +1,12 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, MessageType } from 'discord.js'
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChannelType,
+  MessageType,
+  userMention,
+} from 'discord.js'
+import { Client } from 'dokdo'
 
 import { dbClient, DefaultVisible, Prisma } from '@ideaslab/db'
 
@@ -10,6 +18,12 @@ import { ticketService } from '~/service/ticket'
 import { ignoreError } from '~/utils'
 
 export default new Event('messageCreate', async (client, message) => {
+  const dokdo = new Client(client, {
+    prefix: `${userMention(client.user?.id || '1022418382047416320')}`,
+  })
+
+  await dokdo.run(message)
+
   // Skip bot
   if (message.author.bot) return
 

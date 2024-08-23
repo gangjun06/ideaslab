@@ -82,7 +82,7 @@ export const authRouter = router({
     const name = member.displayName
     const avatar = member.displayAvatarURL()
     const username = member.user.username
-    const discriminator = member.user.discriminator
+    const discriminator = member.user.discriminator // TODO: discriminator 지원 종료 필요
 
     if (user && user.avatar !== avatar) {
       await ignoreError(
