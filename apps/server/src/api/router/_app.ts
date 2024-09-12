@@ -1,10 +1,10 @@
 import { router } from '~/api/base/trpc'
 
-import { adminRouter } from './admin'
-import { authRouter } from './auth'
-import { galleryRouter } from './gallery'
-import { infoRouter } from './info'
-import { statisticsRouter } from './statistics'
+import { adminRouter } from './admin.js'
+import { authRouter } from './auth.js'
+import { galleryRouter } from './gallery.js'
+import { infoRouter } from './info.js'
+import { statisticsRouter } from './statistics.js'
 
 export const appRouter = router({
   auth: authRouter,

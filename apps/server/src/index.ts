@@ -10,9 +10,9 @@ import { createContext } from '~/api/base/context'
 import { client, initClient } from '~/bot/base/client'
 import { Logger } from '~/utils/logger'
 
-import { appRouter } from './api/router/_app'
-import config from './config'
-import { setupSchedule } from './schedules'
+import { appRouter } from './api/router/_app.js'
+import config from './config.js'
+import { setupSchedule } from './schedules.js'
 
 export type { AppRouter } from '~/api/router/_app'
 

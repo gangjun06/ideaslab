@@ -4,14 +4,14 @@ import { config as dotenvConfig } from 'dotenv'
 import config from '~/config'
 import { Logger } from '~/utils/logger'
 
-import { SlashCommand } from './command'
-import CommandManager from './command-manager'
-import ErrorManager from './error-manager'
-import { Event } from './event'
-import EventManager from './event-manager'
-import { BaseInteraction } from './interaction'
+import { SlashCommand } from './command.js'
+import CommandManager from './command-manager.js'
+import ErrorManager from './error-manager.js'
+import { Event } from './event.js'
+import EventManager from './event-manager.js'
+import { BaseInteraction } from './interaction.js'
 // import DatabaseManager from './database-manager'
-import InteractionManager from './interaction-manager'
+import InteractionManager from './interaction-manager.js'
 
 const logger = new Logger('bot')
 

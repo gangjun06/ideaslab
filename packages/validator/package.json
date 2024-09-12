@@ -1,31 +1,39 @@
 {
-  "name": "@ideaslab/validator",
-  "version": "1.0.0",
-  "main": "./src/index.ts",
-  "files": [
-    "dist/**"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "build": "tsup --format esm,cjs",
-    "lint": "TIMING=1 eslint \"src/**/*.ts\"",
-    "dev": "tsup --format esm --watch --dts"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.7.1",
-    "zod": "^3.20.2"
-  },
-  "devDependencies": {
-    "@ideaslab/eslint-config": "*",
-    "tsup": "^6.5.0",
-    "typescript": "^4.9.4"
-  },
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true
-  }
+	"name": "@ideaslab/validator",
+	"version": "1.0.0",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"typings": "./dist/index.d.ts",
+	"exports": {
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.js",
+		"types": "./dist/index.d.ts"
+	},
+	"files": [
+		"dist/**"
+	],
+	"license": "MIT",
+	"scripts": {
+		"build": "tsup --format esm,cjs",
+		"lint": "TIMING=1 eslint \"src/**/*.ts\"",
+		"dev": "tsup --format esm --watch --dts"
+	},
+	"dependencies": {
+		"@prisma/client": "^4.7.1",
+		"zod": "^3.20.2"
+	},
+	"devDependencies": {
+		"@ideaslab/eslint-config": "*",
+		"eslint": "8.23.1",
+		"tsup": "^6.5.0",
+		"typescript": "^5.5.4"
+	},
+	"tsup": {
+		"entry": [
+			"src/index.ts"
+		],
+		"splitting": false,
+		"sourcemap": true,
+		"clean": true
+	}
 }

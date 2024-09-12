@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { IronSession } from 'iron-session'
 
-import { middleware, publicProcedure } from './trpc'
+import { middleware, publicProcedure } from './trpc.js'
 
 const checkAuth = (type: 'admin' | 'logined' | 'verified' | 'unverified') =>
   middleware(async ({ next, ctx }) => {

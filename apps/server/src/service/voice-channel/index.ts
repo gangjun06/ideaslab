@@ -13,9 +13,9 @@ import { client, currentGuild, currentGuildChannel } from '~/bot/base/client'
 import { redis } from '~/lib/redis'
 import { Embed } from '~/utils/embed'
 
-import { getSetting } from '../setting'
-import { voiceComponents } from './builder'
-import { chatroomList } from './constants'
+import { getSetting } from '../setting.js'
+import { voiceComponents } from './builder.js'
+import { chatroomList } from './constants.js'
 import {
   delVoiceData,
   getDelVoiceOwner,
@@ -25,7 +25,7 @@ import {
   redisVoiceRenameRateKey,
   setVoiceData,
   setVoiceOwner,
-} from './redis'
+} from './redis.js'
 
 export const voiceService = {}
 
@@ -190,6 +190,6 @@ export const archiveVoiceChannel = async (channel: VoiceChannel) => {
   }
 }
 
-export * from './builder'
-export * from './constants'
-export * from './redis'
+export * from './builder.js'
+export * from './constants.js'
+export * from './redis.js'

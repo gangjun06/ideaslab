@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
-import type { AppRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 import { adminSaveSettingsValidator, z } from '@ideaslab/validator'
 
 import { ChannelSelector } from '~/components/channel-selector'
