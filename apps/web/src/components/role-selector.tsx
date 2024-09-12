@@ -3,7 +3,7 @@ import { Combobox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 
-import type { AppRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { Unarray } from '~/types/utils'
 import { trpc } from '~/utils'

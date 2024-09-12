@@ -1,4 +1,4 @@
-import { type Client, type EmbedData, EmbedBuilder } from 'discord.js'
+import { type EmbedData, Client, EmbedBuilder } from 'discord.js'
 
 import { EmbedType } from '~/bot/types'
 
@@ -9,8 +9,8 @@ export class Embed extends EmbedBuilder {
     const EmbedJSON: EmbedData = {
       timestamp: new Date().toISOString(),
       footer: {
-        iconURL: client.user.avatarURL() ?? undefined,
-        text: client.user.username,
+        iconURL: client.user?.avatarURL() ?? undefined,
+        text: client.user?.username ?? ' ',
       },
     }
 

@@ -10,7 +10,6 @@
 	"scripts": {
 		"dev": "yarn generate && tsx watch src/index.ts",
 		"build": "yarn generate && tsc && tsc-alias",
-		"build:types": "tsc --emitDeclarationOnly && tsc-alias",
 		"start": "node ./dist",
 		"register": "node ./dist --register",
 		"generate": "node scripts/generator.js",

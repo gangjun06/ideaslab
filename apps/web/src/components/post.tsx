@@ -14,7 +14,7 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import type { AppRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { useResponsiveSize } from '~/hooks/useWindowe'

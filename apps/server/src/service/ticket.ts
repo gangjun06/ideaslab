@@ -159,7 +159,7 @@ const ticketCreateConfirm = async (message: Message) => {
     const isAnonSupport = interaction.customId === 'submit-anon-support'
     if (interaction.customId === 'submit-support' || isAnonSupport) {
       status = 'success'
-      collector.emit('end')
+      collector.stop()
       await interaction.deferReply()
       const member = await currentGuildMember(interaction.user.id)
       await createTicket({
@@ -174,7 +174,7 @@ const ticketCreateConfirm = async (message: Message) => {
       })
     } else {
       status = 'canceled'
-      collector.emit('end')
+      collector.stop()
       await interaction.deferReply()
       await interaction.deleteReply()
     }

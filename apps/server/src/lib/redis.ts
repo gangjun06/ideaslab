@@ -5,6 +5,16 @@ import { Logger } from '~/utils/logger'
 
 const logger = new Logger('redis')
 
+/**
+ * EventEmitter 인터페이스에 타입이 없음으로 redis 쪽에서 오류남
+ * TODO: 해결 필요
+ */
+declare module 'node:events' {
+  interface EventEmitter {
+    on(eventEmitter: string, callback: (...args: any[]) => void): void
+  }
+}
+
 declare global {
   // eslint-disable-next-line no-var
   var redis: Redis | undefined

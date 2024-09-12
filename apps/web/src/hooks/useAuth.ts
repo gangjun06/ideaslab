@@ -2,7 +2,7 @@ import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import toast from 'react-hot-toast'
 
-import type { AppRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 import { trpc } from '~/utils'
 
