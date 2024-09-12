@@ -7,8 +7,8 @@ import { ignoreError } from '~/utils'
 import { Embed } from '~/utils/embed'
 import { Logger } from '~/utils/logger'
 
-import BaseManager from './base-manager'
-import BotClient from './client'
+import BaseManager from './base-manager.js'
+import BotClient from './client.js'
 
 /**
  * @extends BaseManager

@@ -1,7 +1,7 @@
 import { scheduleJob } from 'node-schedule'
 
-import { alertToNotVerifiedUser } from './service/auth'
-import { saveMessageCounts } from './service/message-log'
+import { alertToNotVerifiedUser } from './service/auth.js'
+import { saveMessageCounts } from './service/message-log.js'
 
 /*
 *    *    *    *    *    *

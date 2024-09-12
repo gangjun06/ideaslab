@@ -4,7 +4,7 @@ import { currentGuild, currentGuildChannel } from '~/bot/base/client'
 import config from '~/config'
 import { redis } from '~/lib/redis'
 
-import { getSetting } from './setting'
+import { getSetting } from './setting.js'
 
 const loginTokenExpire = 60 * 30 // 10 minutes
 

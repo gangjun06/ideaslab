@@ -14,7 +14,7 @@ import config from '~/config'
 import { redis } from '~/lib/redis'
 import { Embed } from '~/utils/embed'
 
-import { getSetting } from './setting'
+import { getSetting } from './setting.js'
 
 const redisTicketKey = (by: 'userId' | 'channelId', id: string) =>
   `${config.redisPrefix}ticket:${by}:${id}`

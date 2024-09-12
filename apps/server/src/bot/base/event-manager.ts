@@ -1,9 +1,9 @@
 import { events } from '~/_generated/events'
 import { Logger } from '~/utils/logger'
 
-import BaseManager from './base-manager'
-import type BotClient from './client'
-import { Event } from './event'
+import BaseManager from './base-manager.js'
+import type BotClient from './client.js'
+import { Event } from './event.js'
 
 /**
  * @extends {BaseManager}

@@ -5,7 +5,7 @@ import { dbClient } from '@ideaslab/db'
 import { Event } from '~/bot/base/event'
 import { ignoreError } from '~/utils'
 
-import { currentGuildChannel } from '../base/client'
+import { currentGuildChannel } from '../base/client.js'
 
 export default new Event('threadUpdate', async (client, _oldThreadChannel, threadChannel) => {
   if (!threadChannel.parentId) return

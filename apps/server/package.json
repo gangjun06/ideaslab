@@ -3,12 +3,13 @@
 	"version": "1.0.0",
 	"license": "AGPL",
 	"files": [
-		"dist/src/**"
+		"dist/**"
 	],
-	"types": "dist/src/index.d.ts",
+	"types": "dist/index.d.ts",
+	"type": "module",
 	"scripts": {
-		"dev": "yarn generate && concurrently \"node ./scripts/esbuild.dev.js\" \"nodemon --watch .dev/index.js .dev/index.js\"",
-		"build": "yarn generate && node ./scripts/esbuild.js",
+		"dev": "yarn generate && tsx watch src/index.ts",
+		"build": "yarn generate && tsc && tsc-alias",
 		"build:types": "tsc --emitDeclarationOnly && tsc-alias",
 		"start": "node ./dist",
 		"register": "node ./dist --register",
@@ -40,12 +41,13 @@
 		"@types/uuid": "^9.0.0",
 		"chokidar": "^3.5.3",
 		"concurrently": "^7.6.0",
-		"esbuild": "^0.16.14",
+		"eslint": "^8.29.0",
 		"fast-glob": "^3.2.12",
 		"nodemon": "^2.0.20",
 		"ts-node": "^10.9.1",
 		"tsc-alias": "^1.8.2",
 		"tsconfig-paths": "^4.1.1",
-		"typescript": "^4.9.4"
+		"tsx": "^4.19.0",
+		"typescript": "^5.5.4"
 	}
 }
