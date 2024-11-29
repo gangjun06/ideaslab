@@ -71,12 +71,14 @@ export default new Event('voiceStateUpdate', async (_client, before, after) => {
   // Member Leave
   if (before.member && before.channelId && after.channelId === null) {
     eventMemberLeave(before.member.id, before.channel?.name ?? '')
-
-    if ((before.channel?.members.size ?? 0) < 1) {
-      return await archiveVoiceChannel(before.channel as VoiceChannel)
-    }
-
     await sendAlert(before.channel as TextBasedChannel, 'leave', before.member)
+
+    const state = await voiceChannelState(before.channel as VoiceChannel)
+    if (state?.data?.ruleId) {
+      if ((before.channel?.members.size ?? 0) < 1) {
+        return await archiveVoiceChannel(before.channel as VoiceChannel)
+      }
+    }
     return
   }
 })
