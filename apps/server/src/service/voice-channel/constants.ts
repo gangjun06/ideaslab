@@ -15,9 +15,16 @@ export const chatroomList = [
   },
   {
     id: '3',
-    name: '자유 통화방',
-    description: '자유롭게 통화를 할 수 있는 방입니다.',
-    rule: '게임 O, 마이크 O',
+    name: '수다방',
+    description: '자유롭게 대화할 수 있는 방입니다.',
+    rule: '마이크 O, 서버원과 멀티플레이 게임 X(마크, 롤 음성대화 등)',
     emoji: '💬',
+  },
+  {
+    id: '4',
+    name: '게임방',
+    description: '서버원과 파티로 게임을 하는 방입니다.',
+    rule: '마이크 O, 게임 O',
+    emoji: '🎮',
   },
 ]
