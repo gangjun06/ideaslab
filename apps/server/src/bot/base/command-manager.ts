@@ -6,9 +6,9 @@ import { InteractionType } from '~/bot/types'
 import config from '~/config'
 import { Logger } from '~/utils/logger'
 
-import BaseManager from './base-manager'
-import BotClient from './client'
-import { SlashCommand } from './command'
+import BaseManager from './base-manager.js'
+import BotClient from './client.js'
+import { SlashCommand } from './command.js'
 
 export default class CommandManager extends BaseManager {
   private logger = new Logger('CommandManager')

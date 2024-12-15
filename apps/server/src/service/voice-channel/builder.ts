@@ -8,7 +8,7 @@ import {
 
 import { Embed } from '~/utils/embed'
 
-import { chatroomList } from './constants'
+import { chatroomList } from './constants.js'
 
 export const voiceRuleSettingMessageContent = ({
   client,

@@ -1,4 +1,4 @@
-import BotClient from './client'
+import BotClient from './client.js'
 
 export default class BaseManager {
   public client: BotClient

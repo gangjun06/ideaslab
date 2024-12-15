@@ -1,29 +1,12 @@
 {
 	"extends": "@ideaslab/tsconfig/nextjs.json",
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx"
-	],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
 	"compilerOptions": {
 		"composite": true,
 		"baseUrl": "src",
 		"paths": {
-			"~/*": [
-				"*"
-			],
-			"@ideaslab/server/app": [
-				"../../server/dist/src/api/router/_app"
-			]
+			"~/*": ["*"]
 		}
 	},
-	"exclude": [
-		"node_modules",
-		".next"
-	],
-	"references": [
-		{
-			"path": "../server"
-		}
-	]
+	"exclude": ["node_modules", ".next"]
 }

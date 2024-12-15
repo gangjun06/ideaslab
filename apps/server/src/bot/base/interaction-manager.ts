@@ -1,9 +1,9 @@
 import { interactions } from '~/_generated/interactions'
 import { Logger } from '~/utils/logger'
 
-import BaseManager from './base-manager'
-import BotClient from './client'
-import { BaseInteraction } from './interaction'
+import BaseManager from './base-manager.js'
+import BotClient from './client.js'
+import { BaseInteraction } from './interaction.js'
 
 export default class InteractionManager extends BaseManager {
   private logger = new Logger('InteractionManager')
