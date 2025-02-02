@@ -31,5 +31,5 @@ redis.on('connect', () => {
 })
 
 redis.on('error', (err) => {
-  logger.error(err)
+  logger.error(err.message)
 })

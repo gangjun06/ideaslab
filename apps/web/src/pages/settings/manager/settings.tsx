@@ -102,7 +102,7 @@ const FieldArray = ({
           ...acc,
           [cur.key]: cur,
         }),
-        {} as Record<string, typeof settings[number]>,
+        {} as Record<string, (typeof settings)[number]>,
       ),
     [settings],
   )

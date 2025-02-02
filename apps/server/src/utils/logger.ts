@@ -29,9 +29,9 @@ const myFormat = printf(({ level, message, label, ms }) => {
     .toString()
     .padStart(2, '0')}]`
   const labelStr = _level === 'chat' ? '' : `[${label}] `
-  return `${chalk.grey(dateStr)} ${labelStr} ${level} ${colorizer(message)} ${chalk.magentaBright(
-    ms,
-  )}`
+  return `${chalk.grey(dateStr)} ${labelStr} ${level} ${colorizer(
+    message as string,
+  )} ${chalk.magentaBright(ms)}`
 })
 
 const myCustomLevels = {

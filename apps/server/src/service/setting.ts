@@ -112,7 +112,7 @@ export const settingDetails: {
 
 export const setSetting = async <T extends SettingKeys>(
   key: SettingKeys,
-  value: SettingValueTypeConvert<typeof SettingList[T]>,
+  value: SettingValueTypeConvert<(typeof SettingList)[T]>,
 ) => {
   const stringified = JSON.stringify(value)
 
@@ -133,7 +133,7 @@ export const setSetting = async <T extends SettingKeys>(
 
 export const getSetting = async <T extends SettingKeys>(
   key: SettingKeys,
-): Promise<SettingValueTypeConvert<typeof SettingList[T]> | null> => {
+): Promise<SettingValueTypeConvert<(typeof SettingList)[T]> | null> => {
   let value: any = null
   if (settingDetails[key].cache) value = await redis.get(redisSettingKey(key))
 
