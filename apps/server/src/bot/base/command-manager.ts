@@ -1,9 +1,11 @@
 import { ApplicationCommandDataResolvable, Collection, REST, Routes } from 'discord.js'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { commands } from '~/_generated/commands'
 import { InteractionData } from '~/bot/types'
 import { InteractionType } from '~/bot/types'
 import config from '~/config'
+import { readAllFiles } from '~/utils/index.js'
 import { Logger } from '~/utils/logger'
 
 import BaseManager from './base-manager.js'
@@ -23,22 +25,32 @@ export default class CommandManager extends BaseManager {
   /**
    * Load Commands from "../commands" folder
    */
-  public load(): void {
+  public async load(
+    commandPath: string = resolve(dirname(fileURLToPath(import.meta.url)), '../commands'),
+  ) {
     this.logger.debug('Loading commands...')
 
-    commands.forEach((command) => {
-      try {
-        this.commands.set(command.data.name, command)
+    const commandFiles = readAllFiles(commandPath)
 
-        this.logger.debug(`Loaded command ${command.data.name}`)
-      } catch (error: any) {
-        this.logger.error(`Error loading command '${command.data.name}'.\n` + error.stack)
-      } finally {
-        this.logger.debug(`Succesfully loaded commands. count: ${this.commands.size}`)
-        // eslint-disable-next-line no-unsafe-finally
-        return this.commands
-      }
-    })
+    await Promise.all(
+      commandFiles.map(async (commandFile) => {
+        try {
+          const { default: command } = await import(pathToFileURL(commandFile).toString())
+
+          if (!command.data.name)
+            return this.logger.debug(`command ${commandFile} has no data name. Skipping.`)
+
+          this.commands.set(command.data.name, command)
+
+          this.logger.debug(`Loaded command ${command.data.name}`)
+        } catch (error: any) {
+          this.logger.error(`Error loading command '${commandFile}'.\n` + error.stack)
+        }
+      }),
+    )
+
+    this.logger.info(`Succesfully loaded commands. count: ${this.commands.size}`)
+    return this.commands
   }
 
   public get(commandName: string): SlashCommand | undefined {
@@ -75,6 +87,7 @@ export default class CommandManager extends BaseManager {
     })
 
     this.client.commands.forEach((command) => {
+      this.logger.debug(`${command.data.name} command added`)
       interactions.set(command.data.name, command.data)
     })
 

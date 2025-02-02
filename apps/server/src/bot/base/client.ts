@@ -1,4 +1,5 @@
 import { Client, ClientEvents, ClientOptions, Collection, Partials } from 'discord.js'
+import { Client as Dokdo } from 'dokdo'
 import { config as dotenvConfig } from 'dotenv'
 
 import config from '~/config'
@@ -12,7 +13,6 @@ import EventManager from './event-manager.js'
 import { BaseInteraction } from './interaction.js'
 // import DatabaseManager from './database-manager'
 import InteractionManager from './interaction-manager.js'
-
 const logger = new Logger('bot')
 
 export let client: BotClient
@@ -31,6 +31,7 @@ export default class BotClient extends Client {
   public event: EventManager = new EventManager(this)
   public error: ErrorManager = new ErrorManager(this)
   public interaction: InteractionManager = new InteractionManager(this)
+  public dokdo = new Dokdo(this, { prefix: '!' })
 
   public constructor(options: ClientOptions = { intents: 130815 }) {
     super(options)

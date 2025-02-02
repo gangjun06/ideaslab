@@ -23,6 +23,8 @@ export default new SlashCommand(
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button)
 
+    if (!interaction.channel?.isSendable()) return
+
     interaction.channel?.send({ components: [row] })
   },
 )

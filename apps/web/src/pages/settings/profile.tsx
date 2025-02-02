@@ -65,7 +65,7 @@ const ProfileSetting: NextPage = () => {
           label="디스코드 유저 정보"
           description="연결된 디스코드 계정의 정보에요."
           disabled={true}
-          value={`${profile?.username}#${profile?.discriminator}`}
+          value={`${profile?.username}`}
         />
         <Input
           label="닉네임"

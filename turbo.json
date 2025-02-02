@@ -1,6 +1,9 @@
 {
 	"$schema": "https://turbo.build/schema.json",
-	"pipeline": {
+	"globalDependencies": [
+		".env"
+	],
+	"tasks": {
 		"build": {
 			"dependsOn": [
 				"@ideaslab/db#db:generate"
@@ -19,11 +22,13 @@
 		"@ideaslab/web#build": {
 			"dependsOn": [
 				"@ideaslab/server#build:types"
+			],
+			"outputs": [
+				"dist/**",
+				"build/**"
 			]
 		},
-		"lint": {
-			"outputs": []
-		},
+		"lint": {},
 		"dev": {
 			"dependsOn": [
 				"@ideaslab/db#db:generate"
@@ -37,18 +42,17 @@
 		"db:push": {
 			"cache": false
 		},
+		"db:migrate:dev": {
+			"cache": false
+		},
 		"@ideaslab/server#generate": {
 			"cache": false
 		},
 		"@ideaslab/server#build:types": {
 			"dependsOn": [
-				"@ideaslab/server#generate",
 				"@ideaslab/db#db:generate"
 			],
 			"cache": false
 		}
-	},
-	"globalDependencies": [
-		".env"
-	]
+	}
 }

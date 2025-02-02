@@ -1,4 +1,7 @@
-import { events } from '~/_generated/events'
+import { readdirSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { Logger } from '~/utils/logger'
 
 import BaseManager from './base-manager.js'
@@ -20,19 +23,25 @@ export default class EventManager extends BaseManager {
     this.events = client.events
   }
 
-  public async load() {
+  public async load(eventPath = join(dirname(fileURLToPath(import.meta.url)), '../events')) {
     this.logger.debug('Loading events...')
 
-    events.forEach(async (event) => {
-      try {
-        if (!event.name) return this.logger.debug(`Event has no name. Skipping.`)
+    const eventFiles = readdirSync(eventPath)
+    await Promise.all(
+      eventFiles.map(async (eventFile) => {
+        try {
+          const { default: event } = await import(`../events/${eventFile}`)
 
-        this.events.set(event.name, event)
-      } catch (error: any) {
-        this.logger.error(`Error loading events '${event.name}'.\n` + error.stack)
-      }
-    })
-    this.logger.debug(`Succesfully loaded events. count: ${this.events.size}`)
+          if (!event.name) return this.logger.debug(`Event ${eventFile} has no name. Skipping.`)
+
+          this.events.set(event.name, event)
+          this.logger.debug(`Loaded event ${eventFile}`)
+        } catch (error: any) {
+          this.logger.error(`Error loading events '${eventFile}'.\n` + error.stack)
+        }
+      }),
+    )
+    this.logger.info(`Succesfully loaded events. count: ${this.events.size}`)
 
     this.start()
   }

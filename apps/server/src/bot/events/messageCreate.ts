@@ -18,6 +18,7 @@ export default new Event('messageCreate', async (client, message) => {
     return
   }
 
+  client.dokdo.run(message)
   await incrUserMessageCount(message.author.id)
 
   {
@@ -118,7 +119,7 @@ export default new Event('messageCreate', async (client, message) => {
           authorId: threadChannel.ownerId,
           content: message.content ?? '',
           title: threadChannel.name,
-          attachments: attachments as unknown as Prisma.JsonArray,
+          attachments: attachments as unknown as Prisma.JsonArray[],
           visible: user.defaultVisible,
           tags: {
             connectOrCreate: postTags.map((tag) => ({

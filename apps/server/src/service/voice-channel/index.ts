@@ -6,6 +6,7 @@ import {
   ChannelType,
   GuildMember,
   PermissionFlagsBits,
+  VoiceBasedChannel,
   VoiceChannel,
 } from 'discord.js'
 
@@ -104,7 +105,7 @@ export const voiceChannelSetRule = async (
   return data
 }
 
-export const voiceChannelState = async (channel: VoiceChannel) => {
+export const voiceChannelState = async (channel: VoiceBasedChannel) => {
   const userRole = await getSetting('userRole')
   const owner = await getVoiceOwner(channel.id)
   const data = await getVoiceData(channel.id)

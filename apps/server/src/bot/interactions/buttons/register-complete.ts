@@ -23,7 +23,7 @@ export default new Button(['register-complete'], async (client, interaction) => 
   }
   const token = await getLoginToken(
     interaction.user.id,
-    `${interaction.user.username}#${interaction.user.discriminator}`,
+    `${interaction.user.username}`,
     interaction.user.displayAvatarURL(),
     false,
   )

@@ -10,7 +10,9 @@ const sendAlert = async (
   type: 'join' | 'leave',
   member?: GuildMember | null,
 ) => {
-  const { data } = await voiceChannelState(channel as VoiceChannel)
+  if (!channel.isVoiceBased()) return
+
+  const { data } = await voiceChannelState(channel)
   if (type === 'join' && data?.customRule) {
     const ruleDetail = findChatroomRule(data.ruleId)
     await channel.send({

@@ -8,17 +8,17 @@
 	"types": "dist/index.d.ts",
 	"type": "module",
 	"scripts": {
-		"dev": "yarn generate && tsx watch src/index.ts",
-		"build": "yarn generate && tsc && tsc-alias",
+		"dev": "tsx watch src/index.ts",
+		"build": "tsc && tsc-alias",
 		"start": "node ./dist",
 		"register": "node ./dist --register",
-		"generate": "node scripts/generator.js",
 		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"
 	},
 	"dependencies": {
 		"@trpc/server": "^10.5.0",
 		"axios": "^1.2.1",
-		"discord.js": "^14.8.0",
+		"discord.js": "^14.17.3",
+		"dokdo": "patch:dokdo@npm%3A1.0.1#~/.yarn/patches/dokdo-npm-1.0.1-3b43b27044.patch",
 		"dotenv": "^16.0.3",
 		"form-data": "^4.0.0",
 		"ioredis": "^5.2.4",
@@ -46,7 +46,7 @@
 		"ts-node": "^10.9.1",
 		"tsc-alias": "^1.8.2",
 		"tsconfig-paths": "^4.1.1",
-		"tsx": "^4.19.0",
-		"typescript": "^5.5.4"
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.3"
 	}
 }
