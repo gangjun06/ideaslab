@@ -10,10 +10,10 @@ import { createContext } from '~/api/base/context'
 import { client, initClient } from '~/bot/base/client'
 import { Logger } from '~/utils/logger'
 
-import { appRouter } from './api/router/_app'
-import config from './config'
-import { setupSchedule } from './schedules'
-
+import { appRouter } from './api/router/_app.js'
+import config from './config.js'
+import { setupSchedule } from './schedules.js'
+import { setTimeout } from 'timers/promises'
 export type { AppRouter } from '~/api/router/_app'
 
 const logger = new Logger('main')
@@ -23,9 +23,10 @@ logger.log('Starting up...')
 process.on('uncaughtException', (e) => logger.error(e.stack as string))
 process.on('unhandledRejection', (e: Error) => logger.error(e.stack as string))
 
-initClient()
+await initClient()
 
 if (process.argv.includes('--register')) {
+  await setTimeout(2000)
   logger.info('Registering slash commands...')
   client.command.slashCommandSetup(config.guildId ?? '').then(() => {
     exit(1)

@@ -19,6 +19,8 @@ export default new SlashCommand(
         customRule: '',
       })
 
+      if (!interaction.channel?.isSendable()) return
+
       await interaction.channel?.send({ embeds, components })
     } catch (error) {
       console.error(error)

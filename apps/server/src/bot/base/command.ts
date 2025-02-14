@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { SlashCommandOptionsOnlyBuilder } from 'discord.js'
 
 import { InteractionData, SlashCommandFunction } from '~/bot/types'
 
@@ -14,23 +14,7 @@ import { InteractionData, SlashCommandFunction } from '~/bot/types'
  */
 export class SlashCommand {
   public data: InteractionData
-  constructor(
-    builder: Omit<
-      SlashCommandBuilder,
-      | 'addSubcommand'
-      | 'addSubcommandGroup'
-      | 'addBooleanOption'
-      | 'addUserOption'
-      | 'addChannelOption'
-      | 'addRoleOption'
-      | 'addAttachmentOption'
-      | 'addMentionableOption'
-      | 'addStringOption'
-      | 'addIntegerOption'
-      | 'addNumberOption'
-    >,
-    public execute: SlashCommandFunction,
-  ) {
+  constructor(builder: SlashCommandOptionsOnlyBuilder, public execute: SlashCommandFunction) {
     this.data = builder.toJSON()
   }
 }

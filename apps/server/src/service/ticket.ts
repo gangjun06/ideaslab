@@ -14,7 +14,7 @@ import config from '~/config'
 import { redis } from '~/lib/redis'
 import { Embed } from '~/utils/embed'
 
-import { getSetting } from './setting'
+import { getSetting } from './setting.js'
 
 const redisTicketKey = (by: 'userId' | 'channelId', id: string) =>
   `${config.redisPrefix}ticket:${by}:${id}`
@@ -159,7 +159,7 @@ const ticketCreateConfirm = async (message: Message) => {
     const isAnonSupport = interaction.customId === 'submit-anon-support'
     if (interaction.customId === 'submit-support' || isAnonSupport) {
       status = 'success'
-      collector.emit('end')
+      collector.stop()
       await interaction.deferReply()
       const member = await currentGuildMember(interaction.user.id)
       await createTicket({
@@ -174,7 +174,7 @@ const ticketCreateConfirm = async (message: Message) => {
       })
     } else {
       status = 'canceled'
-      collector.emit('end')
+      collector.stop()
       await interaction.deferReply()
       await interaction.deleteReply()
     }
@@ -214,7 +214,7 @@ export const ticketService = {
     if (channel?.type !== ChannelType.PublicThread) return
 
     await channel.send({
-      content: `> ${isAnon ? '익명' : `${member.displayName} (<@${member.id}>)` ?? '??'}: ${
+      content: `> ${isAnon ? '익명' : `${member.displayName} (<@${member.id}>)` || '??'}: ${
         message.content
       }
     ${message.attachments.map((attachment) => attachment.url).join('\n') ?? ''}
@@ -271,7 +271,7 @@ export const ticketService = {
       if (!channel) return false
       if (channel.type !== ChannelType.PublicThread) return false
 
-      channel.setArchived(true)
+      channel.setLocked(true)
 
       await channel.send({
         content: '대화가 종료되었습니다.',

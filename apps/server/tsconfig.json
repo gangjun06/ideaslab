@@ -6,10 +6,13 @@
 		"outDir": "dist",
 		"target": "ESNext",
 		"module": "ESNext",
-		"composite": true,
 		"baseUrl": "./src",
 		"paths": {
 			"~/*": ["./*"]
-		}
+		},
+		"moduleDetection": "force"
+	},
+	"tsc-alias": {
+		"resolveFullPaths": true
 	}
 }

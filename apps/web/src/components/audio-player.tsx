@@ -11,7 +11,7 @@ export const AudioPlayer = ({ title, url }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   const audioRef = useRef(new Audio(url))
-  const intervalRef = useRef<null | NodeJS.Timer>(null)
+  const intervalRef = useRef<null | NodeJS.Timeout>(null)
   const isReady = useRef(false)
 
   // Destructure for conciseness

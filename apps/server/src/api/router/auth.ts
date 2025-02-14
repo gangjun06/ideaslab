@@ -82,7 +82,6 @@ export const authRouter = router({
     const name = member.displayName
     const avatar = member.displayAvatarURL()
     const username = member.user.username
-    const discriminator = member.user.discriminator
 
     if (user && user.avatar !== avatar) {
       await ignoreError(
@@ -101,7 +100,6 @@ export const authRouter = router({
       name,
       avatar,
       username,
-      discriminator,
       roles: user?.roles,
       introduce: user?.introduce,
       isVerified: user ? true : false,

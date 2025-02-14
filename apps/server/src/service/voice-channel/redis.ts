@@ -1,7 +1,7 @@
 import config from '~/config'
 import { redis } from '~/lib/redis'
 
-import { VoiceData } from './types'
+import { VoiceData } from './types.js'
 
 export const redisVoiceOwnerKey = (key: string) => `${config.redisPrefix}voice:${key}`
 export const redisVoiceOwnerExpire = 60 * 60 * 24 * 14

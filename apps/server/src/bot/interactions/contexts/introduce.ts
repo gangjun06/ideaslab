@@ -10,7 +10,10 @@ export default new ContextMenu(
   ApplicationCommandType.User,
   new ContextMenuCommandBuilder().setName('자기소개-확인하기'),
   async (client, interaction) => {
-    const { targetMember } = interaction
+    let { targetMember } = interaction
+
+    if (!targetMember)
+      targetMember = await interaction.guild.members.fetch(interaction.targetUser.id)
 
     const user = await dbClient.user.findFirst({ where: { discordId: targetMember.id } })
     if (!user) {

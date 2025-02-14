@@ -13,7 +13,7 @@ export default new SlashCommand(
     const isAdmin = interaction.memberPermissions?.has('Administrator') ?? false
     const { token, pin } = await getLoginToken(
       interaction.user.id,
-      `${interaction.user.username}#${interaction.user.discriminator}`,
+      `${interaction.user.username}`,
       interaction.user.displayAvatarURL(),
       isAdmin,
     )

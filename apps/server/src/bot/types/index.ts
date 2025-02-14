@@ -77,6 +77,6 @@ export const enum ReportType {
   Text,
 }
 
-export * from './structures'
+export * from './structures.js'
 
 export type Empty = Record<string, never>

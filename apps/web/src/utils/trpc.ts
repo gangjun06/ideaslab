@@ -2,7 +2,7 @@ import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import superjson from 'superjson'
 
-import type { AppRouter } from '@ideaslab/server/app'
+import type { AppRouter } from '@ideaslab/server'
 
 const getBaseUrl = (isServer: boolean) => {
   if (isServer) {
