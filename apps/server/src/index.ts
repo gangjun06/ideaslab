@@ -14,7 +14,7 @@ import { appRouter } from './api/router/_app.js'
 import config from './config.js'
 import { setupSchedule } from './schedules.js'
 import { setTimeout } from 'timers/promises'
-export type { AppRouter } from '~/api/router/_app'
+export type { AppRouter, OutputTypes } from '~/api/router/_app'
 
 const logger = new Logger('main')
 

@@ -1,15 +1,7 @@
 {
-	"extends": "@ideaslab/tsconfig/node16.json",
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		"tsup.config.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
-	],
+	"extends": "@ideaslab/tsconfig/node20.json",
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tsup.config.ts"],
+	"exclude": ["node_modules", "dist"],
 	"compilerOptions": {
 		"isolatedModules": false
 	}

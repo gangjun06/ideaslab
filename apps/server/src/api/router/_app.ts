@@ -1,3 +1,5 @@
+import { inferRouterOutputs } from '@trpc/server'
+
 import { router } from '~/api/base/trpc'
 
 import { adminRouter } from './admin.js'
@@ -15,3 +17,5 @@ export const appRouter = router({
 })
 
 export type AppRouter = typeof appRouter
+
+export type OutputTypes = inferRouterOutputs<AppRouter>

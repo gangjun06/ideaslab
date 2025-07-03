@@ -14,7 +14,7 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import type { AppRouter } from '@ideaslab/server'
+import type { AppRouter, OutputTypes } from '@ideaslab/server'
 
 import { useDisclosure } from '~/hooks/useDisclosure'
 import { useResponsiveSize } from '~/hooks/useWindowe'
@@ -275,7 +275,7 @@ export const PostDetail = ({
   post,
   forDialog = false,
 }: {
-  post?: Unarray<AppRouter['gallery']['postDetail']['_def']['_output_out']>
+  post?: Unarray<OutputTypes['gallery']['postDetail']>
   forDialog?: boolean
 }) => {
   const attachments = useMemo(() => {
@@ -401,85 +401,7 @@ export const PostDetail = ({
             디스코드에서 보기
           </ButtonLink>
         </div>
-        {post.comments && (
-          <section className="py-8 lg:py-16">
-            <div className="max-w-2xl mx-auto px-4">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-                  디스코드 댓글
-                </h2>
-              </div>
-              {post.comments?.length === 0 && (
-                <div>아직 작성된 댓글이 없어요. 디스코드에서 먼저 댓글을 남겨보세요!</div>
-              )}
-              {post.comments?.map(({ parent, ...comment }) => (
-                <Comment
-                  key={comment.discordId}
-                  avatar={comment.author.avatar}
-                  username={comment.author.name}
-                  content={comment.content}
-                  time={comment.createdAt}
-                  parent={
-                    parent
-                      ? {
-                          avatar: parent.author.avatar,
-                          content: parent.content,
-                          username: parent.author.name,
-                        }
-                      : comment.hasParent
-                      ? { content: '원본 메시지가 삭제되었어요.' }
-                      : null
-                  }
-                />
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     </>
-  )
-}
-
-const Comment = ({
-  avatar,
-  username,
-  time,
-  content,
-  parent,
-}: {
-  avatar: string
-  time: Date
-  content: string
-  username: string
-  parent?: {
-    avatar?: string
-    username?: string
-    content: string
-  } | null
-}) => {
-  return (
-    <article className={classNames('p-4 mb-6 text-base card')}>
-      {parent && (
-        <div className="flex mb-3 card px-2 py-2 items-center">
-          {parent.avatar && (
-            <Image width={24} height={24} className="rounded-full" src={parent.avatar} alt="" />
-          )}
-          {parent.username && <div className="ml-1.5 text-sm">{parent.username}</div>}
-          <div className="ml-2 text-description-color text-ellipsis text-sm">{parent.content}</div>
-        </div>
-      )}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center">
-          <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-            <Image width={24} height={24} className="mr-2 rounded-full" src={avatar} alt="" />
-            <div className="ml-1.5">{username}</div>
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            <TimeDynamic date={time} formatType="relative" />
-          </div>
-        </div>
-      </div>
-      <p className="text-gray-500 dark:text-gray-400">{content}</p>
-    </article>
   )
 }
