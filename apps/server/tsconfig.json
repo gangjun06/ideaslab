@@ -1,7 +1,7 @@
 {
-	"extends": "@ideaslab/tsconfig/node16.json",
+	"extends": "@ideaslab/tsconfig/node20.json",
 	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules", "dist", ".dev", ".turbo"],
+	"exclude": ["node_modules", "dist", ".dev", ".turbo", "../../node_modules"],
 	"compilerOptions": {
 		"outDir": "dist",
 		"target": "ESNext",
@@ -10,7 +10,8 @@
 		"paths": {
 			"~/*": ["./*"]
 		},
-		"moduleDetection": "force"
+		"moduleDetection": "force",
+		"skipLibCheck": true
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true

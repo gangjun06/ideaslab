@@ -96,6 +96,7 @@ const FieldArray = ({
   })
 
   const items = fields.map((item, index) => (
+    // @ts-expect-error - version issue
     <Draggable key={item.id} index={index} draggableId={item.id}>
       {(provided, snapshot) => (
         <div
@@ -145,14 +146,16 @@ const FieldArray = ({
       }
       error={error}
     >
+      {/* @ts-expect-error - version issue */}
       <DragDropContext
         onDragEnd={({ source, destination }) => move(source.index, destination?.index || 0)}
       >
+        {/* @ts-expect-error - version issue */}
         <Droppable droppableId="list" direction="vertical">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {items}
-              {provided.placeholder}
+              {provided.placeholder?.toString()}
             </div>
           )}
         </Droppable>

@@ -16,6 +16,7 @@ import 'swiper/css/thumbs'
 
 function App({ Component, pageProps }: AppProps) {
   return (
+    // @ts-expect-error - deprecated
     <TooltipProvider>
       <Component {...pageProps} />
     </TooltipProvider>

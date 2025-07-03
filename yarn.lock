@@ -967,7 +967,7 @@ __metadata:
     react-infinite-scroll-component: "npm:^6.1.0"
     react-markdown: "npm:^8.0.7"
     react-masonry-css: "npm:^1.0.16"
-    react-tooltip: "npm:^5.28.0"
+    react-tooltip: "npm:5.28.0"
     react-typed: "npm:^1.2.0"
     sass: "npm:^1.83.4"
     superjson: "npm:^2.2.2"
@@ -2091,6 +2091,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^20.17.17":
+  version: 20.19.4
+  resolution: "@types/node@npm:20.19.4"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10/43ff00d92503b159bc2fc8a97f3f4c7db2fbfe9b08d4957661a775b4bdd407b87d3a41212d01c6f939827a77a115633cfc2ce6128ed94438e2d2e8611f42f101
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*, @types/prop-types@npm:^15.0.0":
   version: 15.7.5
   resolution: "@types/prop-types@npm:15.7.5"
@@ -2143,13 +2152,11 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*":
-  version: 18.0.26
-  resolution: "@types/react@npm:18.0.26"
+  version: 19.1.8
+  resolution: "@types/react@npm:19.1.8"
   dependencies:
-    "@types/prop-types": "npm:*"
-    "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/2c20b70468511f3393a60c39d2633d554c5f8a85b48ec7beff396fc01b4bfdb655a277a8d1d9c3bf6e944f8573bc693d8c95973f379c9534a4368bb8d430b0d1
+  checksum: 10/a3e6fe0f60f22828ef887f30993aa147b71532d7b1219dd00d246277eb7a9ca01ec533096237fa21ca1bccb3653373b4e8e59e5ae59f9c793058384bbc1f4d5c
   languageName: node
   linkType: hard
 
@@ -2160,13 +2167,6 @@ __metadata:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 10/7fdd8b853e0d291d4138133f93f8d5c333da918e5804afcea61a923aab4bdfc9bb15eb21a5640959b452972b8715ddf10ffb12b3bd071898b9e37738636463f2
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:*":
-  version: 0.16.2
-  resolution: "@types/scheduler@npm:0.16.2"
-  checksum: 10/b6b4dcfeae6deba2e06a70941860fb1435730576d3689225a421280b7742318d1548b3d22c1f66ab68e414f346a9542f29240bc955b6332c5b11e561077583bc
   languageName: node
   linkType: hard
 
@@ -5492,6 +5492,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:^19.6.1"
     "@commitlint/config-conventional": "npm:^19.6.0"
+    "@types/node": "npm:^20.17.17"
     husky: "npm:^8.0.3"
     prettier: "npm:^2.8.8"
     turbo: "npm:^2.4.0"
@@ -8246,7 +8247,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:^5.28.0":
+"react-tooltip@npm:5.28.0":
   version: 5.28.0
   resolution: "react-tooltip@npm:5.28.0"
   dependencies:
@@ -9956,6 +9957,13 @@ __metadata:
   version: 6.20.0
   resolution: "undici-types@npm:6.20.0"
   checksum: 10/583ac7bbf4ff69931d3985f4762cde2690bb607844c16a5e2fbb92ed312fe4fa1b365e953032d469fa28ba8b224e88a595f0b10a449332f83fa77c695e567dbe
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
   languageName: node
   linkType: hard
 

@@ -9,7 +9,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
-		"build": "tsc && tsc-alias",
+		"build": "tsc --project tsconfig.json && tsc-alias",
 		"start": "node ./dist",
 		"register": "node ./dist --register",
 		"lint": "TIMING=1 eslint \"src/**/*.ts\" --fix"

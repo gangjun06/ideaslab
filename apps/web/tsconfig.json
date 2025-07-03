@@ -1,12 +1,14 @@
 {
 	"extends": "@ideaslab/tsconfig/nextjs.json",
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+	"include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
 	"compilerOptions": {
 		"composite": true,
 		"baseUrl": "src",
 		"paths": {
 			"~/*": ["*"]
-		}
+		},
+		"skipLibCheck": true,
+		"types": []
 	},
-	"exclude": ["node_modules", ".next"]
+	"exclude": ["node_modules", ".next", "../../node_modules"]
 }

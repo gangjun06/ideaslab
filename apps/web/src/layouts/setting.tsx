@@ -21,7 +21,7 @@ type Props = Omit<ComponentProps<typeof MainLayout>, 'showTitle' | 'tinyContaine
 type NavFieldType = {
   url: string
   name: string
-  icon: (props: React.ComponentProps<'svg'>) => JSX.Element
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   description: string
 }
 
