@@ -6,6 +6,7 @@
 	"tasks": {
 		"build": {
 			"dependsOn": [
+				"^build",
 				"@ideaslab/db#db:generate"
 			],
 			"outputs": [
