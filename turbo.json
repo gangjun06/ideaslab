@@ -7,7 +7,7 @@
 		"build": {
 			"dependsOn": [
 				"^build",
-				"@ideaslab/db#db:generate"
+				"^@ideaslab/db#db:generate"
 			],
 			"outputs": [
 				".next/**",
