@@ -22,7 +22,8 @@
 		},
 		"@ideaslab/web#build": {
 			"dependsOn": [
-				"^@ideaslab/server#build:types"
+				"^build",
+				"^build:types"
 			],
 			"outputs": [
 				"dist/**",
@@ -49,11 +50,11 @@
 		"@ideaslab/server#generate": {
 			"cache": false
 		},
+		"build:types": {},
 		"@ideaslab/server#build:types": {
 			"dependsOn": [
 				"^@ideaslab/db#db:generate"
-			],
-			"cache": false
+			]
 		}
 	}
 }
